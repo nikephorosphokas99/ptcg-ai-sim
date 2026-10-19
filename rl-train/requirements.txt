@@ -1,0 +1,8 @@
+# Self-play training (python -m ptcg_rl.train). The engine is the official
+# competition binary in rl-train/engine/sample_submission/cg.
+gymnasium>=1.0
+stable-baselines3>=2.3
+sb3-contrib>=2.3
+torch>=2.2
+numpy
+tensorboard

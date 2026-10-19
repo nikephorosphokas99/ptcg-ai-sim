@@ -1,1 +1,0 @@
-simulator/card_images_en/*.webp filter=lfs diff=lfs merge=lfs -text

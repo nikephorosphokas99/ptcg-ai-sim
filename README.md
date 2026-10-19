@@ -1,56 +1,48 @@
-# Pokémon TCG — play against a trained agent
+# Pokémon TCG — self-play RL agent
 
-A browser simulator for the Pokémon Trading Card Game where a human plays a full
-match against a reinforcement-learning agent, on the official competition engine
-from the [Pokémon TCG AI Battle Challenge](https://www.kaggle.com/competitions/pokemon-tcg-ai-battle).
+Reinforcement learning for the Pokémon Trading Card Game on the official engine
+from the [Pokémon TCG AI Battle Challenge](https://www.kaggle.com/competitions/the-pokemon-company-ptcg-ai-battle-challenge-playground).
+The agent is trained with MaskablePPO (Stable-Baselines3 + sb3-contrib) by
+self-play against a pool of its own earlier snapshots and a random player.
 
-Built for research and study: the point is to make a trained policy's play
-*legible* — to watch an agent take its turn one decision at a time, from the
-same seat and with the same hidden information a human opponent would have.
+    cd rl-train
+    pip install -r requirements.txt
+    python -m ptcg_rl.train --run runs/first --n-envs 16 --timesteps 20_000_000
+    tensorboard --logdir runs/first/tb
+    python -m ptcg_rl.evaluate runs/first/final.zip --games 50
 
-    cd simulator
-    ./build_engine.sh                 # compiles the engine from C++ source (~30s)
-    python server.py --port 8000      # then open http://127.0.0.1:8000
-
-Python 3.12+, a C++20 compiler, and `fastapi`/`uvicorn`. The agent bundle also
-needs `torch`.
-
-## What is here
+## Layout
 
 | | |
 | --- | --- |
-| `simulator/` | the whole application — engine, agent, web front end |
-| `simulator/README.md` | **the detailed write-up**: design decisions and why each one was made |
+| `rl-train/engine/` | the official competition package, unchanged: C++ source, prebuilt `libcg` binaries, card data |
+| `rl-train/decks/main_agent.csv` | the deck the agent learns to pilot (60 card ids) |
+| `rl-train/decks/opponents/` | opponent decks drawn from each episode; empty files are skipped |
+| `rl-train/ptcg_rl/engine.py` | ctypes bindings with one engine handle per game |
+| `rl-train/ptcg_rl/env.py` | single-agent Gymnasium env; the opponent plays inside `step` |
+| `rl-train/ptcg_rl/encoding.py` | observation encoding, action mask, multi-select handling |
+| `rl-train/ptcg_rl/policy.py` | features extractor: card embeddings + static card features |
+| `rl-train/ptcg_rl/train.py` | MaskablePPO over `SubprocVecEnv`, self-play snapshot pool |
+| `rl-train/ptcg_rl/evaluate.py` | win rate per opponent deck |
 
-The training pipeline that produced the agent (behavioural cloning on ~10⁵
-replays, then PPO) lives in a separate repository; this one is the simulator and
-the packaged inference code it plays against.
+## Notes
 
-## Points of interest
+**Parallel games.** The engine keeps each battle in its own heap object, so many
+games can run in one process. The competition's `cg/game.py` wrapper stores the
+battle pointer on a class attribute, which limits it to one game per process;
+`ptcg_rl/engine.py` keeps a pointer per game instead. Training runs one env per
+worker process.
 
-**Imperfect information is structural, not cosmetic.** The engine emits an
-observation for the seat that owns the current decision, with the other seat's
-hand, deck and prizes erased. The server keeps only the human's observations and
-discards the agent's, so the payload the browser receives cannot contain the
-opponent's hand — there is nothing hidden client-side to uncover.
+**Card ids** are the official engine's, as listed in
+`rl-train/engine/EN_Card_Data_R2_full.csv`. `load_deck` rejects a deck containing
+an id the engine does not implement.
 
-**An agent's turn is replayed, not applied.** A turn arrives from the engine as
-one batch. The server snapshots the board after each of the agent's decisions,
-and the browser rewinds to the position before the agent moved and walks it
-forward — one action per second, with the card that moved flying between zones,
-so the narration and the board change together.
+**Not reproducible from a seed.** The engine seeds its RNG from
+`std::random_device`, so `reset(seed=...)` fixes only the env's own choices
+(seat, opponent deck, opponent policy).
 
-**The engine is built from source, not shipped as a binary.** `build_engine.sh`
-compiles the C++ package into the `libcg.so` the Python bindings load, and
-installs the same binary into each agent bundle, so there is one engine
-everywhere and no stale binary in version control.
+## Licensing
 
-## Attribution and licensing
-
-`simulator/ptcg_engine/` is the competition's engine package, provided for
-competition use only under the licence in its `src/LICENSES/` directory; it is
-not open-source and is included here only so the simulator runs. Pokémon, card
-names, card text and card artwork are trademarks and copyright of
-Pokémon/Nintendo/Creatures/GAME FREAK. Card scans are not distributed with this
-repository. Everything else — the simulator, the server, the front end — is my
-own work.
+`rl-train/engine/` is the competition's engine package, provided for competition
+use only under the licence in its `LICENSES/` directory. Pokémon, card names and
+card text are trademarks and copyright of Pokémon/Nintendo/Creatures/GAME FREAK.
