@@ -18,3 +18,6 @@ Opponent decks drawn for training games (`--opponent-decks decks/training_pool/*
   125180090, 125181129); the same cards as `teal_mask_ogerpon`, likewise doubled.
 * `lucario_gravity_mountain` — a Mega Lucario ex build with Gravity Mountain, Air Balloon and
   Maximum Belt (52/60 cards shared with `mega_lucario_ex`, which stays as it is).
+* `dragapult_raihan` — Raihan Ramadistra's Dragapult ex / Munkidori (Crushing Hammer, Dunsparce, Risky Ruins)
+  list from Kaggle episode 125184564; also the agent's own deck (`decks/main_agent.csv`) from 2026-10-22.
+* `marnie_grimmsnarl_ex` — the agent's previous deck (Marnie's Grimmsnarl ex), kept as an opponent.

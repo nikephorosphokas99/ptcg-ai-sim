@@ -138,7 +138,7 @@ def play_game(ours: AgentProcess, theirs: AgentProcess, our_seat: int, max_decis
     decks = [ours.deck(), theirs.deck()]
     if our_seat == 1:
         decks.reverse()
-    game = Game(*decks)
+    game = Game(*decks, search_input=True)  # as Kaggle's cabt observations
     try:
         while not game.done and t.decisions < max_decisions:
             mine = game.to_move == our_seat

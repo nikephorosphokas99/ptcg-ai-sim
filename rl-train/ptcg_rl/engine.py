@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import ctypes
 import json
+import threading
 import os
 import platform
 from functools import lru_cache
@@ -83,14 +84,23 @@ def lib() -> ctypes.CDLL:
     return cdll
 
 
+# The engine is not thread-safe, and ctypes releases the GIL during a call: threads
+# sharing one process (the benchmark's parallel games) corrupted its buffers
+# ("buffer full. capacity:7", then a segfault). Every battle call holds this lock.
+_ENGINE_LOCK = threading.Lock()
+
+
 class Game:
     """One battle. ``obs`` is always the engine's current observation dict."""
 
-    def __init__(self, deck0: list[int], deck1: list[int]):
+    def __init__(self, deck0: list[int], deck1: list[int], search_input: bool = False):
+        """``search_input`` adds ``obs["search_begin_input"]`` as Kaggle's cabt does (for agents that search)."""
+        self.search_input = search_input
         if len(deck0) != 60 or len(deck1) != 60:
             raise ValueError("decks must contain 60 cards")
         cards = (ctypes.c_int * 120)(*(deck0 + deck1))
-        start = lib().BattleStart(cards)
+        with _ENGINE_LOCK:
+            start = lib().BattleStart(cards)
         if not start.battlePtr:
             raise ValueError(
                 f"engine rejected deck of player {start.errorPlayer} (errorType {start.errorType})"
@@ -99,8 +109,14 @@ class Game:
         self.obs = self._fetch()
 
     def _fetch(self) -> dict:
-        sd = lib().GetBattleData(self._ptr)
-        return json.loads(sd.json.decode())
+        with _ENGINE_LOCK:
+            sd = lib().GetBattleData(self._ptr)
+            raw = sd.json.decode()
+            sbi = ctypes.string_at(sd.data, sd.count).decode("ascii") if self.search_input else None
+        obs = json.loads(raw)
+        if sbi is not None:
+            obs["search_begin_input"] = sbi
+        return obs
 
     @property
     def result(self) -> int:
@@ -118,7 +134,8 @@ class Game:
 
     def select(self, picks: list[int]) -> dict:
         arg = (ctypes.c_int * max(1, len(picks)))(*picks)
-        err = lib().Select(self._ptr, arg, len(picks))
+        with _ENGINE_LOCK:
+            err = lib().Select(self._ptr, arg, len(picks))
         if err != 0:
             raise ValueError(f"engine rejected selection {picks} (error {err})")
         self.obs = self._fetch()
@@ -126,7 +143,8 @@ class Game:
 
     def close(self) -> None:
         if self._ptr:
-            lib().BattleFinish(self._ptr)
+            with _ENGINE_LOCK:
+                lib().BattleFinish(self._ptr)
             self._ptr = None
 
     def __del__(self):

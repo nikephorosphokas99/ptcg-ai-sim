@@ -127,7 +127,44 @@ def _arch(policy) -> dict:
     }
 
 
-def _write_bundle(model: MaskablePPO, deck: list[int], out: Path) -> None:
+def _search_files(out: Path, config: dict) -> None:
+    """search.json switches main.py's lookahead on; opp_decks.json is what it guesses opponents hold."""
+    decks = [load_deck(p) for p in sorted((TRAIN_ROOT / "decks" / "training_pool").glob("*.csv"))]
+    decks += [load_deck(p) for p in sorted((TRAIN_ROOT / "benchmarks").glob("*/deck.csv"))]
+    (out / "opp_decks.json").write_text(json.dumps(decks))
+    (out / "search.json").write_text(json.dumps(config, indent=2) + "\n")
+
+
+def _check_value(model: MaskablePPO, deck: list[int], bundle: Path, positions: int = 50) -> float:
+    """Largest difference between the bundle's value head and SB3's, on real positions."""
+    sys.path.insert(0, str(bundle))
+    try:
+        net_spec = importlib.util.spec_from_file_location("bundle_value_net", bundle / "ptcg_policy" / "net.py")
+        net_module = importlib.util.module_from_spec(net_spec)
+        net_spec.loader.exec_module(net_module)
+    finally:
+        sys.path.remove(str(bundle))
+    net, _, meta = net_module.load(bundle)
+    attacks, rng, worst, seen = attack_table(), np.random.default_rng(1), 0.0, 0
+    with torch.no_grad():
+        while seen < positions:
+            game = Game(deck, deck)
+            while not game.done and seen < positions:
+                d = Decision(game.obs)
+                features = encode(d, attacks, my_deck=deck, opp_seen=set(), opp_recent=(), card_meta=meta)
+                _, ours = net.evaluate({k: v.astype(np.float32) for k, v in features.items()})
+                sb3_obs = {k: torch.as_tensor(features[k][None].astype(np.float32)) for k in model.observation_space.spaces}
+                theirs = float(model.policy.predict_values(sb3_obs)[0, 0])
+                worst, seen = max(worst, abs(ours - theirs)), seen + 1
+                while not d.complete:
+                    if d.apply(int(rng.choice(np.flatnonzero(d.mask())))):
+                        break
+                game.select(d.picked)
+            game.close()
+    return worst
+
+
+def _write_bundle(model: MaskablePPO, deck: list[int], out: Path, value: bool = False) -> None:
     if out.exists():
         shutil.rmtree(out)
     shutil.copytree(TEMPLATE, out, ignore=shutil.ignore_patterns("__pycache__"))
@@ -146,6 +183,8 @@ def _write_bundle(model: MaskablePPO, deck: list[int], out: Path) -> None:
     policy = model.policy
     keep = ("features_extractor.", "mlp_extractor.policy_net.", "action_net.",
             "mlp_extractor.query.", "mlp_extractor.score.", "mlp_extractor.stop.")
+    if value:  # the lookahead scores positions with the critic
+        keep += ("mlp_extractor.value.", "value_net.")
     # numpy, not torch: Kaggle's agent runtime has no torch (see submission/ptcg_policy/net.py).
     arrays = {k: v.detach().cpu().numpy() for k, v in policy.state_dict().items() if k.startswith(keep)}
     arrays["card_static"] = policy.features_extractor.card_static.cpu().numpy()
@@ -231,6 +270,9 @@ def main() -> None:
     p.add_argument("--out", type=Path, default=TRAIN_ROOT / "submissions")
     p.add_argument("--check-games", type=int, default=20)
     p.add_argument("--visualizer", metavar="NAME", help="also install as a visualizer opponent under this name")
+    p.add_argument("--search", action="store_true",
+                   help="lookahead bundle: the engine's search API + value head (ptcg_policy/search.py)")
+    p.add_argument("--search-seconds", type=float, default=1.0, help="most thinking time per searched decision")
     args = p.parse_args()
 
     name = args.name or f"{args.model.resolve().parent.name}_{args.model.stem}"
@@ -238,11 +280,17 @@ def main() -> None:
     deck = load_deck(args.deck)
     model = load_model(args.model, "cpu")
 
-    _write_bundle(model, deck, bundle)
+    _write_bundle(model, deck, bundle, value=args.search)
     diff = _check_parity(model, deck, bundle)
     print(f"parity: bundle vs SB3 log-probabilities differ by at most {diff:.2e}")
     if diff > 1e-4:
         raise SystemExit("bundle network does not match the trained policy")
+    if args.search:
+        vdiff = _check_value(model, deck, bundle)
+        print(f"value parity: bundle vs SB3 values differ by at most {vdiff:.2e}")
+        if vdiff > 1e-4:
+            raise SystemExit("bundle value head does not match the trained critic")
+        _search_files(bundle, {"max_seconds": args.search_seconds})
 
     check = subprocess.run([sys.executable, "-I", "-c", PLAY_CHECK, str(args.check_games), str(bundle.resolve())],
                            cwd=bundle.parent, capture_output=True, text=True)

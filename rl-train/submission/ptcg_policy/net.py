@@ -83,7 +83,18 @@ class Net:
     def _ff(self, name: str, x: np.ndarray) -> np.ndarray:
         return self._lin(f"{name}.linear2", _relu(self._lin(f"{name}.linear1", x)))
 
-    def _entity(self, obs: dict[str, np.ndarray]) -> np.ndarray:
+    def evaluate(self, obs: dict[str, np.ndarray]) -> tuple[np.ndarray, float]:
+        """(logits, value) for one unbatched entity observation; needs the bundle's value weights."""
+        logits, state = self._entity(obs, with_state=True)
+        h = np.tanh(self._lin("mlp_extractor.value.0", state[None]))
+        h = np.tanh(self._lin("mlp_extractor.value.2", h))
+        return logits, float(self._lin("value_net", h)[0, 0])
+
+    @property
+    def has_value(self) -> bool:
+        return "value_net.weight" in self.p
+
+    def _entity(self, obs: dict[str, np.ndarray], with_state: bool = False):
         p, fe = self.p, "features_extractor"
         rows = np.concatenate([p[f"{fe}.embedding.weight"], p["card_static"], p["card_text"]], axis=-1)
         table = self._lin(f"{fe}.card.2", _relu(self._lin(f"{fe}.card.0", rows)))
@@ -136,7 +147,7 @@ class Net:
         logits = np.full(65, padded, dtype=np.float32)
         logits[:n] = self._lin(f"{head}.score.2", _relu(self._lin(f"{head}.score.0", options)))[:, 0]
         logits[-1] = self._lin(f"{head}.stop.2", _relu(self._lin(f"{head}.stop.0", state)))[0]
-        return logits
+        return (logits, state) if with_state else logits
 
     def _common(self, obs: dict[str, np.ndarray], bags: tuple[str, ...]):
         table = self._card_table()
