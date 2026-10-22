@@ -17,11 +17,22 @@ __pycache__/
 *.dylib
 !/rl-train/engine/sample_submission/cg/*
 
+# The visualizer's agents ship ready to play: their weights, and the official
+# libcg.so the older bundle's own cg/ loads.
+!/rl-train/visualizer/agents/*/cg/*
+
 # Training output: checkpoints, the self-play pool and TensorBoard logs.
 /rl-train/runs/
+/rl-train/submissions/
 /rl-train/**/*.pt
 /rl-train/**/*.parquet
 /rl-train/**/*.npz
+!/rl-train/visualizer/agents/**/*.pt
+# Card art (fetch_card_images.py), its light re-encode, and saved games.
+/rl-train/visualizer/card_images_en/
+/rl-train/visualizer/.image_cache/
+/rl-train/visualizer/replays/
+/rl-train/visualizer/server.log
 
 # WSL leaves these behind next to files copied from Windows.
 *Zone.Identifier

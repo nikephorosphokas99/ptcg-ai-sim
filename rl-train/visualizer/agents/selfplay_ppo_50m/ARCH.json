@@ -1,0 +1,8 @@
+{
+  "family": "Card-embedding MLP (MaskablePPO actor)",
+  "parameters": 2165345,
+  "dim": 64,
+  "layers": 8,
+  "trainedBy": "self-play PPO, 50,003,968 steps",
+  "checkpoint": "first/final.zip -> policy.pt"
+}

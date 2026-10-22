@@ -1,0 +1,8 @@
+# The card scans are the bulk of this repository: 1267 files, 683 MB, never
+# edited. Git LFS keeps them out of the git object store, and the Docker build
+# copies them into the image so a cold start does not download anything.
+*.webp filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+
+# The agent's weights.
+*.pt filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,5 @@
+# Nothing here belongs in the image. deploy/ is deliberately *not* excluded:
+# the Dockerfile installs deploy/requirements.txt.
+__pycache__/
+*.pyc
+.git/

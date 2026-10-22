@@ -1,0 +1,11 @@
+{
+  "checkpoint": "challenger/bc_policy_xattn.pt",
+  "source": "behavioural cloning",
+  "episode": null,
+  "update": null,
+  "best_eval": null,
+  "actor_arch": "challenger",
+  "decision_chain_size": 30,
+  "opponent_history_size": 30,
+  "decode": "train.rollout_action(greedy=True) \u2014 stop logit biased to -4.0 (no RL stop head in a BC checkpoint)"
+}

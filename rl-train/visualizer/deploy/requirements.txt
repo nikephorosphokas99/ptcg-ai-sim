@@ -1,0 +1,22 @@
+# The server itself.
+fastapi==0.121.1
+uvicorn[standard]==0.38.0
+pydantic==2.12.4
+
+# The agent bundle's inference. Installed from PyTorch's CPU index (see the
+# Dockerfile): a Space runs on CPU, and the CUDA build is a 2.5 GB image layer
+# that would never be used. The checkpoint is loaded with weights_only=True, so
+# any recent 2.x reads it.
+torch==2.9.1
+
+# Not imported by anything here, but torch prints "Failed to initialize NumPy"
+# on every worker start without it, and that warning is the first thing anyone
+# reads in the Space's logs when something else goes wrong.
+numpy==2.3.5
+
+# Saved battle logs are Parquet (replay_log.py): every game writes one, so the
+# server does not start without it.
+pyarrow==25.0.0
+
+# Only with PTCG_LIGHT_IMAGES=1, which re-encodes card art for metered tunnels.
+pillow==12.3.0

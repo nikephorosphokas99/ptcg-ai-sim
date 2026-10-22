@@ -1,0 +1,19 @@
+{
+  "family": "Cross-attention pointer transformer",
+  "parameters": 2685443,
+  "dim": 64,
+  "heads": 2,
+  "ffMult": 2,
+  "dropout": 0.1,
+  "towers": {
+    "decision_chain": 8,
+    "decision_context": 2,
+    "opponent_history": 8,
+    "option_cross": 2
+  },
+  "layers": 20,
+  "trainedBy": "behavioural cloning",
+  "decisionChain": 30,
+  "opponentHistory": 30,
+  "checkpoint": "actor_critic.pt"
+}

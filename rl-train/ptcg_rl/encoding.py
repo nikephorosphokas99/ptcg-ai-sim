@@ -12,10 +12,14 @@ step so the policy only ever chooses a single index.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
-from gymnasium import spaces
 
 from .engine import N_ENERGY_TYPES
+
+if TYPE_CHECKING:  # gymnasium is imported where needed, so the submission bundle runs without it
+    from gymnasium import spaces
 
 MAX_OPTIONS = 64
 STOP = MAX_OPTIONS
@@ -26,6 +30,10 @@ SLOTS = 2 * (1 + BENCH_SLOTS)  # active + bench, mine then opponent's
 HAND_SLOTS = 40
 PILE_SLOTS = 60
 MISC_IDS = 3  # stadium, select.contextCard, select.effect
+DECK_SLOTS = 60  # my_unseen_ids / opp_seen_ids
+ATTACH_SLOTS = 8  # tools then energy cards attached to one Pokémon
+RECENT_SLOTS = 16  # opponent cards from the latest log events
+TACTICAL_FEATURES = 7  # per attack option, see _tactical
 
 # AreaType
 DECK, HAND, DISCARD, ACTIVE, BENCH, PRIZE, STADIUM = 1, 2, 3, 4, 5, 6, 7
@@ -34,6 +42,7 @@ N_AREAS = 13
 # OptionType
 PLAY, ATTACH, EVOLVE, ABILITY, DISCARD_OPT = 7, 8, 9, 10, 11
 TOOL_CARD, ENERGY_CARD, ENERGY = 4, 5, 6
+RETREAT = 12
 ATTACK, SKILL = 13, 15
 N_OPTION_TYPES = 17
 N_SELECT_TYPES = 11
@@ -48,6 +57,8 @@ _CONDITIONS = ("poisoned", "burned", "asleep", "paralyzed", "confused")
 
 
 def observation_space(max_card_id: int) -> spaces.Dict:
+    from gymnasium import spaces
+
     ids = lambda n: spaces.Box(0, max_card_id, shape=(n,), dtype=np.int32)  # noqa: E731
     feats = lambda *s: spaces.Box(-np.inf, np.inf, shape=s, dtype=np.float32)  # noqa: E731
     return spaces.Dict({
@@ -62,7 +73,48 @@ def observation_space(max_card_id: int) -> spaces.Dict:
         "opt_ids": ids(MAX_OPTIONS),
         "opt_target_ids": ids(MAX_OPTIONS),
         "opt_feats": feats(MAX_OPTIONS, OPTION_FEATURES),
+        # Memory, added for the pointer policy; older policies read only the keys above.
+        "my_unseen_ids": ids(DECK_SLOTS),  # my decklist minus every card of mine in view
+        "opp_seen_ids": ids(DECK_SLOTS),   # distinct opponent cards seen face-up this game
+        # Added for the entity policy (v3); older policies ignore them.
+        "slot_attach_ids": spaces.Box(0, max_card_id, shape=(SLOTS, ATTACH_SLOTS), dtype=np.int32),
+        "opt_src_slot": spaces.Box(-1, SLOTS - 1, shape=(MAX_OPTIONS,), dtype=np.int32),  # board slot acting
+        "opt_tgt_slot": spaces.Box(-1, SLOTS - 1, shape=(MAX_OPTIONS,), dtype=np.int32),  # board slot targeted
+        "opt_tactical": feats(MAX_OPTIONS, TACTICAL_FEATURES),
+        "opp_recent_ids": ids(RECENT_SLOTS),
     })
+
+
+def recent_opponent_cards(obs: dict, me: int) -> list[int]:
+    """Opponent card ids named in this observation's log events, oldest first.
+
+    The caller keeps the last ``RECENT_SLOTS`` across observations: the engine
+    hands each seat the events since that seat's previous observation.
+    """
+    out = []
+    for log in obs.get("logs") or []:
+        if log.get("playerIndex") == 1 - me:
+            out += [log[k] for k in ("cardId", "cardIdAfter") if log.get(k)]
+    return out
+
+
+def visible_cards(state: dict, player: int) -> list[int]:
+    """Ids of every face-up card ``player`` owns: hand, discard, prizes, in play."""
+    ps = state["players"][player]
+    out = [_cid(c) for c in (ps["hand"] or []) + ps["discard"] + ps["prize"] if c]
+    for mon in ps["active"] + ps["bench"]:
+        if mon:
+            out.append(mon["id"])
+            out += [_cid(c) for c in mon["energyCards"] + mon["tools"] + mon["preEvolution"] if c]
+    out += [c["id"] for c in state["stadium"] if c and c.get("playerIndex") == player]
+    return out
+
+
+def unseen_own(deck: list[int], state: dict, player: int) -> list[int]:
+    """Cards of ``deck`` not in view: what the deck and face-down prizes hold."""
+    from collections import Counter
+
+    return sorted((Counter(deck) - Counter(visible_cards(state, player))).elements())
 
 
 class Decision:
@@ -191,7 +243,68 @@ def _slot(feats: np.ndarray, mon: dict, is_active: bool) -> None:
             feats[9 + e] += 0.25
 
 
-def encode(decision: Decision, attack_table: np.ndarray) -> dict[str, np.ndarray]:
+def _slot_index(side: int, area: int | None, index: int | None) -> int:
+    """Board slot (0-8 mine, 9-17 the opponent's; active first) or -1."""
+    base = side * (1 + BENCH_SLOTS)
+    if area == ACTIVE:
+        return base
+    if area == BENCH and index is not None and 0 <= index < BENCH_SLOTS:
+        return base + 1 + index
+    return -1
+
+
+def _option_slots(opt: dict, me: int) -> tuple[int, int]:
+    """(slot the option acts from, slot it targets), -1 where none."""
+    t = opt["type"]
+    side = 0 if opt.get("playerIndex", me) == me else 1
+    area, index = opt.get("area"), opt.get("index")
+    if t == ATTACK:
+        return 0, 1 + BENCH_SLOTS
+    if t == RETREAT:
+        return 0, -1
+    if t in (ATTACH, EVOLVE):
+        return -1, _slot_index(0, opt.get("inPlayArea"), opt.get("inPlayIndex"))
+    if t in (ABILITY, DISCARD_OPT):
+        return _slot_index(0, area, index), -1
+    if t in (TOOL_CARD, ENERGY_CARD, ENERGY) or area in (ACTIVE, BENCH):
+        return -1, _slot_index(side, area, index)
+    return -1, -1
+
+
+def _tactical(f: np.ndarray, opt: dict, state: dict, me: int, attack_table: np.ndarray,
+              card_meta: np.ndarray) -> None:
+    """What an attack would do to the opponent's Active Pokémon, before effects.
+
+    [base damage, damage after Weakness (x2) and Resistance (-30), defender HP,
+    knocks out, Prize cards for that knockout, Weakness applies, Resistance applies]
+    """
+    aid = opt.get("attackId")
+    attacker = _at(state["players"][me]["active"], 0)
+    defender = _at(state["players"][1 - me]["active"], 0)
+    if aid is None or not (0 <= aid < len(attack_table)) or attacker is None or defender is None:
+        return
+    base = float(attack_table[aid, 0]) * 300.0
+    a_type = card_meta[attacker["id"], 0]
+    weak = card_meta[defender["id"], 1] == a_type and a_type > 0
+    resist = card_meta[defender["id"], 2] == a_type and a_type > 0
+    damage = base * (2.0 if weak else 1.0)
+    damage = max(0.0, damage - 30.0) if resist else damage
+    hp = float(defender["hp"])
+    f[:] = [base / 300.0, damage / 300.0, hp / 300.0, float(damage >= hp > 0),
+            card_meta[defender["id"], 3] / 3.0, float(weak), float(resist)]
+
+
+def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | None = None,
+           opp_seen: set[int] | None = None, opp_recent: list[int] | None = None,
+           card_meta: np.ndarray | None = None) -> dict[str, np.ndarray]:
+    """Encode a decision for the player to move.
+
+    ``my_deck`` (their 60-card list) and ``opp_seen`` (opponent card ids seen
+    so far this game, kept by the caller across decisions) fill the memory
+    keys; ``opp_recent`` (the last opponent cards from the log) and
+    ``card_meta`` (``engine.card_meta_table``, for attack tactics) fill the
+    entity policy's keys. Anything not given stays empty.
+    """
     obs = decision.obs
     state, sel = obs["current"], obs["select"]
     me = state["yourIndex"]
@@ -224,6 +337,7 @@ def encode(decision: Decision, attack_table: np.ndarray) -> dict[str, np.ndarray
 
     slot_ids = np.zeros(SLOTS, dtype=np.int32)
     slot_feats = np.zeros((SLOTS, SLOT_FEATURES), dtype=np.float32)
+    slot_attach = np.zeros((SLOTS, ATTACH_SLOTS), dtype=np.int32)
     for side, p in enumerate(seats):
         ps = state["players"][p]
         base = side * (1 + BENCH_SLOTS)
@@ -234,13 +348,21 @@ def encode(decision: Decision, attack_table: np.ndarray) -> dict[str, np.ndarray
             if mon is not None:
                 slot_ids[base + i] = mon["id"]
                 _slot(slot_feats[base + i], mon, is_active)
+                attached = [_cid(c) for c in mon["tools"] + mon["energyCards"] if c][:ATTACH_SLOTS]
+                slot_attach[base + i, : len(attached)] = attached
 
     opt_ids = np.zeros(MAX_OPTIONS, dtype=np.int32)
     opt_target_ids = np.zeros(MAX_OPTIONS, dtype=np.int32)
     opt_feats = np.zeros((MAX_OPTIONS, OPTION_FEATURES), dtype=np.float32)
+    opt_src = np.full(MAX_OPTIONS, -1, dtype=np.int32)
+    opt_tgt = np.full(MAX_OPTIONS, -1, dtype=np.int32)
+    opt_tactical = np.zeros((MAX_OPTIONS, TACTICAL_FEATURES), dtype=np.float32)
     picked = set(decision.picked)
     for i, opt in enumerate(sel["option"][: decision.n]):
         opt_ids[i], opt_target_ids[i] = _resolve(state, sel, opt, me)
+        opt_src[i], opt_tgt[i] = _option_slots(opt, me)
+        if opt["type"] == ATTACK and card_meta is not None:
+            _tactical(opt_tactical[i], opt, state, me, attack_table, card_meta)
         f = opt_feats[i]
         k = _one_hot(f, 0, opt["type"], N_OPTION_TYPES)
         k = _one_hot(f, k, opt.get("area"), N_AREAS)
@@ -275,4 +397,61 @@ def encode(decision: Decision, attack_table: np.ndarray) -> dict[str, np.ndarray
         "opt_ids": opt_ids,
         "opt_target_ids": opt_target_ids,
         "opt_feats": opt_feats,
+        "my_unseen_ids": _id_array(unseen_own(my_deck, state, me) if my_deck else [], DECK_SLOTS),
+        "opp_seen_ids": _id_array(sorted(opp_seen) if opp_seen else [], DECK_SLOTS),
+        "slot_attach_ids": slot_attach,
+        "opt_src_slot": opt_src,
+        "opt_tgt_slot": opt_tgt,
+        "opt_tactical": opt_tactical,
+        "opp_recent_ids": _id_array(list(opp_recent)[-RECENT_SLOTS:] if opp_recent else [], RECENT_SLOTS),
     }
+
+
+def _id_array(ids: list[int], n: int) -> np.ndarray:
+    out = np.zeros(n, dtype=np.int32)
+    ids = ids[:n]
+    out[: len(ids)] = ids
+    return out
+
+
+# -- shared-memory transport ----------------------------------------------------
+#
+# Workers write each game's pending observation and mask straight into one
+# shared block, one row per game, so the pipes only carry rewards and flags.
+# Pickling ~19 KB observations through pipes cost the trainer half its time.
+
+OPTION_KEYS = ("opt_ids", "opt_target_ids", "opt_feats")
+
+
+class SharedObs:
+    """Row-per-game observation and mask arrays in shared memory."""
+
+    def __init__(self, space: spaces.Dict, n: int, name: str | None = None):
+        from multiprocessing import resource_tracker, shared_memory
+
+        layout = [(k, (n, *s.shape), s.dtype) for k, s in space.spaces.items()]
+        layout.append(("mask", (n, N_ACTIONS), np.dtype(bool)))
+        size = sum(int(np.prod(shape)) * np.dtype(dt).itemsize for _, shape, dt in layout)
+        self.owner = name is None
+        self.shm = shared_memory.SharedMemory(name=name, create=self.owner, size=size)
+        if not self.owner:
+            # Python < 3.13 registers attached blocks too, and would unlink the
+            # trainer's block when this worker exits.
+            resource_tracker.unregister(self.shm._name, "shared_memory")
+        self.name = self.shm.name
+        self.arrays: dict[str, np.ndarray] = {}
+        offset = 0
+        for k, shape, dt in layout:
+            self.arrays[k] = np.ndarray(shape, dt, buffer=self.shm.buf, offset=offset)
+            offset += int(np.prod(shape)) * np.dtype(dt).itemsize
+
+    def put(self, i: int, obs: dict[str, np.ndarray], mask: np.ndarray) -> None:
+        for k, v in obs.items():
+            self.arrays[k][i] = v
+        self.arrays["mask"][i] = mask
+
+    def close(self) -> None:
+        self.arrays.clear()
+        self.shm.close()
+        if self.owner:
+            self.shm.unlink()

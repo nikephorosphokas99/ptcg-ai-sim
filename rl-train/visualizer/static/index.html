@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pokémon TCG — Player vs Agent</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>Pokémon TCG</h1>
+  <button id="newGame">New game</button>
+  <span id="loadout" class="loadout"></span>
+  <span id="build" class="loadout build"></span>
+  <label class="speedPick">Replay speed <select id="speed">
+    <option value="slow">slow</option><option value="normal">normal</option><option value="fast">fast</option>
+  </select></label>
+  <div id="turnBadge" class="turnBadge"></div>
+  <div id="status"></div>
+</header>
+
+<main>
+  <!-- The playmat: two mirrored halves, Active Spots facing each other across
+       the centre line, Bench behind each Active, Prizes on the outer left,
+       deck and discard on the outer right. -->
+  <div id="mat">
+    <section class="half opp" id="oppHalf">
+      <div class="nameplate">
+        <span class="who">Opponent</span>
+        <span class="sub" id="agentName"></span>
+        <span class="chips" id="oppChips"></span>
+      </div>
+      <div class="opp-hand" id="oppHand"></div>
+      <div class="bench-row" id="oppBench"></div>
+      <div class="main-row">
+        <div class="stack prizes" id="oppPrizes"></div>
+        <div class="active-slot" id="oppActive"></div>
+        <div class="stack piles" id="oppPiles"></div>
+      </div>
+    </section>
+
+    <div class="centre">
+      <div class="stadium-slot" id="stadium"></div>
+      <div class="turnbar" id="turnbar"></div>
+      <div class="looking" id="looking"></div>
+    </div>
+
+    <section class="half me" id="meHalf">
+      <div class="main-row">
+        <div class="stack prizes" id="mePrizes"></div>
+        <div class="active-slot" id="meActive"></div>
+        <div class="stack piles" id="mePiles"></div>
+      </div>
+      <div class="bench-row" id="meBench"></div>
+      <div class="nameplate">
+        <span class="who">You</span>
+        <span class="chips" id="meChips"></span>
+      </div>
+    </section>
+
+    <section class="handbar">
+      <h2>Your hand <span id="handCount"></span></h2>
+      <div class="hand" id="meHand"></div>
+    </section>
+  </div>
+
+  <aside>
+    <section id="choice">
+      <h2 id="prompt">No game in progress</h2>
+      <p id="choiceHint"></p>
+      <div id="options"></div>
+      <button id="confirm" hidden>Confirm</button>
+    </section>
+    <!-- Replay controls: shown in place of the choice panel while watching. -->
+    <section id="replayPanel" hidden>
+      <h2 id="rpTitle">Replay</h2>
+      <label class="rpSeat">View as <select id="rpSeat"></select></label>
+      <div class="rpControls">
+        <button id="rpPrev" title="Previous decision (Left arrow)">&larr;</button>
+        <button id="rpPlay" title="Play (Space)">&#9654; Play</button>
+        <button id="rpPause" title="Pause (Space)">&#10074;&#10074; Pause</button>
+        <button id="rpNext" title="Next decision (Right arrow)">&rarr;</button>
+      </div>
+      <input id="rpSeek" type="range" min="0" max="0" value="0">
+      <p id="rpPos" class="rpPos"></p>
+      <p id="rpDecision" class="rpDecision"></p>
+      <details id="rpRaw" class="rpRaw"><summary>Raw data</summary><pre id="rpRawText"></pre></details>
+      <button id="rpClose" class="ghost">Close replay</button>
+    </section>
+    <section id="logPanel">
+      <h2>Log</h2>
+      <div id="log"></div>
+    </section>
+  </aside>
+</main>
+
+<div id="stage"></div>
+<div id="tooltip" hidden></div>
+<!-- New game: deck picked in a dialog, either a prebuilt list shown as
+     [image] x N or one built by hand from the whole card pool. -->
+<div id="setupView" hidden><div class="setupInner">
+  <div class="setupHead">
+    <h2>New game</h2>
+    <div class="setupOpts">
+      <span class="pickedAgent" id="pickedAgent"></span>
+      <label>Seat <select id="seat">
+        <option value="-1">random</option><option value="0">player 0</option><option value="1">player 1</option>
+      </select></label>
+      <button id="startGame">Start game</button>
+      <button id="setupClose" class="ghost">Cancel</button>
+    </div>
+  </div>
+  <div class="setupBody">
+    <div class="sideList">
+      <h2 class="listHead">Your deck</h2>
+      <ul class="deckList" id="deckList"></ul>
+      <h2 class="listHead">Opponent</h2>
+      <ul class="deckList" id="agentList"></ul>
+    </div>
+    <div class="deckPane">
+      <div class="deckPaneHead">
+        <h2 id="deckTitle">Deck</h2>
+        <span id="deckStatus" class="deckStatus"></span>
+      </div>
+
+      <!-- builder utilities: only shown for "Create your own..." -->
+      <div class="builder" id="builder" hidden>
+        <div class="builderBar">
+          <input id="search" type="search" placeholder="Search cards by name, ability or attack text…" autocomplete="off">
+          <select id="kindFilter">
+            <option value="">all types</option>
+            <option value="pokemon">Pokémon</option>
+            <option value="item">Item</option>
+            <option value="tool">Tool</option>
+            <option value="supporter">Supporter</option>
+            <option value="stadium">Stadium</option>
+            <option value="energy">Energy</option>
+          </select>
+          <button id="addToDeck">Add to Deck</button>
+          <button id="addFour" class="ghost">Add x4</button>
+        </div>
+        <div class="builderBar">
+          <select id="startFrom"><option value="">start from a prebuilt deck…</option></select>
+          <button id="clearDeck" class="ghost">Clear</button>
+          <button id="exportDeck" class="ghost">Export CSV</button>
+          <button id="importDeck" class="ghost">Import CSV</button>
+          <span class="hint" id="builderHint">click a result to select it, double-click to add</span>
+        </div>
+        <div class="results" id="results"></div>
+      </div>
+
+      <div class="deckGrid" id="deckGrid"></div>
+    </div>
+  </div>
+</div></div>
+
+
+<!-- New game: first choose who you play against. -->
+<div id="modeView" class="modal" hidden><div class="modalInner modeInner">
+  <h2>New game</h2>
+  <button id="modeAgent" class="modeBtn"><b>Play vs AI</b><span>a trained RL agent pilots the other seat</span></button>
+  <button id="modeFriend" class="modeBtn"><b>2 players</b><span>invite a friend with a link and play each other</span></button>
+  <button id="modeReplays" class="modeBtn"><b>Watch replays</b><span>step through a saved game, one decision at a time</span></button>
+  <button id="modeClose" class="ghost">Cancel</button>
+</div></div>
+
+<!-- Two players: name first, then the lobby both players share at /?room=<id>. -->
+<div id="pvpView" class="modal" hidden><div class="modalInner pvpInner">
+  <div id="nameStep">
+    <h2 id="nameTitle">2 players</h2>
+    <p id="nameHint" class="hint"></p>
+    <label for="playerName">Your name</label>
+    <input id="playerName" maxlength="24" autocomplete="nickname" placeholder="e.g. Ash">
+    <p id="nameError" class="err"></p>
+    <div class="row">
+      <button id="nameGo">Create invitation link</button>
+      <button id="nameCancel" class="ghost">Cancel</button>
+    </div>
+  </div>
+  <div id="lobbyStep" hidden>
+    <h2>Lobby</h2>
+    <div id="inviteBox">
+      <label for="inviteLink">Invitation link — send this to the other player</label>
+      <div class="row"><input id="inviteLink" readonly><button id="copyInvite">Copy</button></div>
+    </div>
+    <ul id="lobbyPlayers" class="lobbyPlayers"></ul>
+    <p id="lobbyWait" class="hint"></p>
+    <label for="lobbyDeck">Your deck</label>
+    <div class="row">
+      <select id="lobbyDeck"></select>
+      <button id="lobbyBuild" class="ghost">Build a deck…</button>
+    </div>
+    <p id="lobbyError" class="err"></p>
+    <div class="row">
+      <button id="lobbyReady" disabled>Ready</button>
+      <button id="lobbyLeave" class="ghost">Leave room</button>
+    </div>
+  </div>
+</div></div>
+
+<!-- Watch replays: the saved games (replays/), newest first. -->
+<div id="replayListView" class="modal" hidden><div class="modalInner replayListInner">
+  <h2>Watch replays</h2>
+  <p id="replayListHint" class="hint"></p>
+  <div id="replayList" class="replayList"></div>
+  <div class="row"><button id="replayListClose" class="ghost">Close</button></div>
+</div></div>
+
+<div id="pileView" hidden><div class="pileInner"><h2 id="pileTitle"></h2><div id="pileCards"></div><button id="pileClose">Close</button></div></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

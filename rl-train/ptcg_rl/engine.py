@@ -191,6 +191,23 @@ def card_table() -> np.ndarray:
 
 
 @lru_cache(maxsize=1)
+def card_meta_table() -> np.ndarray:
+    """Per card id: [type, Weakness type, Resistance type, Prize cards if Knocked Out].
+
+    Types are ``EnergyType`` values, -1 for no Weakness / Resistance; Prize cards
+    are 1, 2 for Pokémon ex, 3 for Mega Evolution Pokémon ex. Used for the
+    attack features in ``encoding._tactical``.
+    """
+    cards = all_cards()
+    table = np.full((max(cards) + 1, 4), -1, dtype=np.int16)
+    for cid, c in cards.items():
+        prizes = 3 if c["megaEx"] else 2 if c["ex"] else 1
+        table[cid] = (c["energyType"], -1 if c["weakness"] is None else c["weakness"],
+                      -1 if c["resistance"] is None else c["resistance"], prizes)
+    return table
+
+
+@lru_cache(maxsize=1)
 def attack_table() -> np.ndarray:
     """(damage, energy cost) per attack id, scaled."""
     attacks = all_attacks()
