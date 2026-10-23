@@ -127,6 +127,14 @@ def _arch(policy) -> dict:
     }
 
 
+def _ismcts_files(out: Path, config: dict) -> None:
+    """ismcts.json switches main.py's search on; opp_decks.json holds the deck lists it determinizes from."""
+    decks = [load_deck(p) for p in sorted((TRAIN_ROOT / "decks" / "training_pool").glob("*.csv"))]
+    decks += [load_deck(p) for p in sorted((TRAIN_ROOT / "benchmarks").glob("*/deck.csv"))]
+    (out / "opp_decks.json").write_text(json.dumps(decks))
+    (out / "ismcts.json").write_text(json.dumps(config, indent=2) + "\n")
+
+
 def _check_value(model: MaskablePPO, deck: list[int], bundle: Path, positions: int = 50) -> float:
     """Largest difference between the bundle's value head and SB3's, on real positions."""
     sys.path.insert(0, str(bundle))
@@ -264,6 +272,9 @@ def main() -> None:
     p.add_argument("--visualizer", metavar="NAME", help="also install as a visualizer opponent under this name")
     p.add_argument("--value", action="store_true",
                    help="also ship the critic (value head) for search-based agents; checked against SB3")
+    p.add_argument("--ismcts", action="store_true",
+                   help="ISMCTS bundle (ptcg_policy/ismcts.py): ships the value head, ismcts.json, opp_decks.json")
+    p.add_argument("--ismcts-seconds", type=float, default=1.0, help="most thinking time per searched pick")
     args = p.parse_args()
 
     name = args.name or f"{args.model.resolve().parent.name}_{args.model.stem}"
@@ -271,6 +282,7 @@ def main() -> None:
     deck = load_deck(args.deck)
     model = load_model(args.model, "cpu")
 
+    args.value = args.value or args.ismcts
     _write_bundle(model, deck, bundle, value=args.value)
     diff = _check_parity(model, deck, bundle)
     print(f"parity: bundle vs SB3 log-probabilities differ by at most {diff:.2e}")
@@ -281,6 +293,8 @@ def main() -> None:
         print(f"value parity: bundle vs SB3 values differ by at most {vdiff:.2e}")
         if vdiff > 1e-4:
             raise SystemExit("bundle value head does not match the trained critic")
+    if args.ismcts:
+        _ismcts_files(bundle, {"max_seconds": args.ismcts_seconds})
 
     check = subprocess.run([sys.executable, "-I", "-c", PLAY_CHECK, str(args.check_games), str(bundle.resolve())],
                            cwd=bundle.parent, capture_output=True, text=True)

@@ -35,6 +35,16 @@ import numpy as np  # noqa: E402
 from ptcg_policy.encoding import RECENT_SLOTS, Decision, encode, recent_opponent_cards, visible_cards  # noqa: E402
 from ptcg_policy.net import load  # noqa: E402
 
+# ISMCTS bundles (``export --ismcts``) ship ismcts.json and search with the engine of
+# the bundled ``cg``, imported now while the bundle directory is still on sys.path.
+_ISMCTS_CONFIG = next((b / "ismcts.json" for b in (_ROOT, Path("/kaggle_simulations/agent"), Path.cwd())
+                       if (b / "ismcts.json").exists()), None)
+if _ISMCTS_CONFIG is not None:
+    import json  # noqa: E402
+
+    import cg.sim  # noqa: E402  (loads and initialises the engine for SearchBegin / SearchStep)
+    from ptcg_policy.ismcts import ISMCTS, EngineSearch  # noqa: E402
+
 
 def _resolve(filename: str) -> Path:
     for base in (_ROOT, Path("/kaggle_simulations/agent"), Path.cwd()):
@@ -64,6 +74,11 @@ class _Policy:
     def _load(self) -> None:
         self.net, self.attack_table, self.card_meta = load(_resolve("policy.npz").parent)
         self.deck = read_deck_csv()
+        self.search = None
+        if _ISMCTS_CONFIG is not None:
+            self.search = ISMCTS(self.net, self.attack_table, self.card_meta, self.deck,
+                                 json.loads(_resolve("opp_decks.json").read_text()),
+                                 EngineSearch(cg.sim.lib), json.loads(_ISMCTS_CONFIG.read_text()))
 
     def act(self, obs: dict) -> list[int]:
         if self.net is None:
@@ -88,6 +103,9 @@ class _Policy:
                               opp_recent=self.opp_recent, card_meta=self.card_meta)
             logits = self.net({k: v[None].astype(np.float32) for k, v in features.items()})[0]
             action = int(np.where(mask, logits, -np.inf).argmax())
+            if self.search is not None:
+                searched = self.search.choose(obs, decision, self.opp_seen, self.opp_recent)
+                action = action if searched is None else searched
             if decision.apply(action):
                 break
         return decision.picked
