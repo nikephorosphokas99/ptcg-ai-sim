@@ -35,16 +35,6 @@ import numpy as np  # noqa: E402
 from ptcg_policy.encoding import RECENT_SLOTS, Decision, encode, recent_opponent_cards, visible_cards  # noqa: E402
 from ptcg_policy.net import load  # noqa: E402
 
-# Lookahead bundles (``export --search``) ship search.json and use the engine's search
-# API from the bundled ``cg`` (imported now, while the bundle is on sys.path).
-_SEARCH_CONFIG = next((b / "search.json" for b in (_ROOT, Path("/kaggle_simulations/agent"), Path.cwd())
-                       if (b / "search.json").exists()), None)
-if _SEARCH_CONFIG is not None:
-    import json  # noqa: E402
-
-    import cg.sim  # noqa: E402,F401  (loads and initialises the engine for SearchBegin/SearchStep)
-    from ptcg_policy.search import EngineSearch, Searcher  # noqa: E402
-
 
 def _resolve(filename: str) -> Path:
     for base in (_ROOT, Path("/kaggle_simulations/agent"), Path.cwd()):
@@ -74,12 +64,6 @@ class _Policy:
     def _load(self) -> None:
         self.net, self.attack_table, self.card_meta = load(_resolve("policy.npz").parent)
         self.deck = read_deck_csv()
-        self.searcher = None
-        if _SEARCH_CONFIG is not None:
-            config = json.loads(_SEARCH_CONFIG.read_text())
-            opp_decks = json.loads(_resolve("opp_decks.json").read_text())
-            self.searcher = Searcher(self.net, self.attack_table, self.card_meta, self.deck, opp_decks,
-                                     EngineSearch(cg.sim.lib), config)
 
     def act(self, obs: dict) -> list[int]:
         if self.net is None:
@@ -103,10 +87,6 @@ class _Policy:
             features = encode(decision, self.attack_table, my_deck=self.deck, opp_seen=self.opp_seen,
                               opp_recent=self.opp_recent, card_meta=self.card_meta)
             logits = self.net({k: v[None].astype(np.float32) for k, v in features.items()})[0]
-            if self.searcher is not None:
-                picks = self.searcher.choose(obs, decision, logits, self.opp_seen, self.opp_recent)
-                if picks is not None:
-                    return picks
             action = int(np.where(mask, logits, -np.inf).argmax())
             if decision.apply(action):
                 break

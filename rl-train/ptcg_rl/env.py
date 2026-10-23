@@ -23,7 +23,26 @@ import numpy as np
 
 from .bots import bot_deck, bot_move, load_bot, random_legal
 from .encoding import RECENT_SLOTS, Decision, encode, recent_opponent_cards, visible_cards
-from .engine import Game, attack_table, card_meta_table, load_deck
+from .engine import Game, all_attacks, all_cards, attack_table, card_meta_table, load_deck
+
+
+BASIC_ENERGY = range(1, 9)  # basic energy card ids, equal to the energy type they provide
+MAIN_CONTEXT, ATTACH_FROM_CONTEXT, PLAY_OPTION, ATTACH_OPTION = 0, 21, 7, 8
+ACTIVE_AREA, BENCH_AREA = 4, 5
+
+
+def _missing(energies: list[int], cost: list[int]) -> int:
+    """Energy still missing to pay ``cost`` (type ids, 0 = any type) from ``energies``."""
+    need: dict[int, int] = {}
+    for t in cost:
+        need[t] = need.get(t, 0) + 1
+    have: dict[int, int] = {}
+    for t in energies:
+        have[t] = have.get(t, 0) + 1
+    typed = {t: min(n, have.get(t, 0)) for t, n in need.items() if t != 0}
+    missing = sum(need[t] - typed[t] for t in typed)
+    spare = len(energies) - sum(typed.values())
+    return missing + max(0, need.get(0, 0) - spare)
 
 
 @dataclass
@@ -57,6 +76,7 @@ class Match:
         agent_deck: str | Path,
         opponent_decks: list[str | Path] | None = None,
         prize_reward: float = 0.05,
+        energy_penalty: float = 0.0,
         skip_forced: bool = True,
         max_steps: int = 1000,
         bots: list[str] | None = None,
@@ -71,6 +91,10 @@ class Match:
                 empty or None means a mirror match with ``agent_deck``.
             prize_reward: shaping per Prize card taken (and minus per Prize card
                 given up), on top of +1 / -1 for a win / loss.
+            energy_penalty: subtracted when the learner attaches a basic Energy (from
+                hand, or by an effect such as Crispin) to a Pokémon it does not help
+                towards any attack, while another of its Pokémon in play could have
+                used it (e.g. a third Energy on an already powered Dragapult ex).
             skip_forced: play decisions with exactly one legal action
                 automatically, for either seat.
             max_steps: learner decisions before the game is truncated.
@@ -84,6 +108,15 @@ class Match:
         if not self.opponent_decks:
             self.opponent_decks = {"mirror": self.agent_deck}
         self.prize_reward = prize_reward
+        self.energy_penalty = energy_penalty
+        if energy_penalty:
+            attacks = all_attacks()
+            cards = all_cards()
+            self._costs = {cid: [attacks[a]["energies"] for a in c["attacks"] if a in attacks]
+                           for cid, c in cards.items() if c["cardType"] == 0}
+            self._stage2 = {cid for cid, c in cards.items() if c["cardType"] == 0 and c["stage2"]}
+            # Supporters whose whole effect is attaching Energy to a Stage 2 Pokémon
+            self._stage2_chargers = {cid for cid, c in cards.items() if c["name"] == "Rosa's Encouragement"}
         self.skip_forced = skip_forced
         self.max_steps = max_steps
         self.bots = [Path(b) for b in bots or []]
@@ -126,6 +159,7 @@ class Match:
     def step(self, action: int) -> StepResult:
         learner_moved = self._game.to_move == self.seat
         prizes_before = self._prizes()
+        penalty = self._wasted_energy(int(action)) if learner_moved and self.energy_penalty else 0.0
         if self._decision.apply(int(action)):
             self._select(self._decision.picked)
             self._decision = None
@@ -137,7 +171,7 @@ class Match:
         mine, theirs = self._prizes()
         taken = max(0, prizes_before[0] - mine)
         lost = max(0, prizes_before[1] - theirs)
-        reward = self.prize_reward * (taken - lost)
+        reward = self.prize_reward * (taken - lost) - penalty
 
         info = {"opp_deck": self.opp_deck_name, "bot": self.bot_name, "bot_failures": self.bot_failures}
         if self._stalled:  # a bot looping in its own turn: end the game, score nothing
@@ -175,6 +209,60 @@ class Match:
         if obs.get("current") is not None and not self._game.done:
             me = obs["current"]["yourIndex"]
             self._recent[me].extend(recent_opponent_cards(obs, me))
+
+    def _helps(self, mon: dict, energy: int) -> bool:
+        """Whether one more ``energy`` brings ``mon`` closer to paying any of its attacks."""
+        have = list(mon["energies"])
+        return any(_missing(have + [energy], cost) < _missing(have, cost) for cost in self._costs.get(mon["id"], []))
+
+    def _wasted_energy(self, action: int) -> float:
+        """``energy_penalty`` if this pick attaches a basic Energy where it helps no attack
+        while another of our Pokémon in play could use it; else 0."""
+        obs = self._game.obs
+        sel, d = obs["select"], self._decision
+        if action >= d.n:
+            return 0.0
+        opt, me = sel["option"][action], obs["current"]["players"][self.seat]
+        if sel["context"] == MAIN_CONTEXT and opt["type"] == PLAY_OPTION:
+            card = (me["hand"] or [None] * (opt["index"] + 1))[opt["index"]]
+            if card and card["id"] in self._stage2_chargers:  # e.g. Rosa onto Dragapult ex that is already powered
+                stage2 = [m for m in me["active"] + me["bench"] if m and m["id"] in self._stage2]
+                if stage2 and all(self._powered(m) for m in stage2):
+                    return self.energy_penalty
+            return 0.0
+        if sel["context"] == MAIN_CONTEXT and opt["type"] == ATTACH_OPTION:
+            card = (me["hand"] or [None] * (opt["index"] + 1))[opt["index"]]
+            area, index = opt.get("inPlayArea"), opt.get("inPlayIndex")
+        elif sel["context"] == ATTACH_FROM_CONTEXT and opt.get("playerIndex", self.seat) == self.seat:
+            card = sel.get("contextCard")
+            area, index = opt.get("area"), opt.get("index")
+            if card is None:  # e.g. Rosa's Encouragement: the engine picks the Energy after the target
+                return self._wasted_target(sel["option"], me, area, index)
+        else:
+            return 0.0
+        if not card or card["id"] not in BASIC_ENERGY or area not in (ACTIVE_AREA, BENCH_AREA):
+            return 0.0
+        mons = me["active"] if area == ACTIVE_AREA else me["bench"]
+        target = mons[index] if index is not None and index < len(mons) else None
+        if target is None or self._helps(target, card["id"]):
+            return 0.0
+        others = [m for m in me["active"] + me["bench"] if m and m is not target]
+        return self.energy_penalty if any(self._helps(m, card["id"]) for m in others) else 0.0
+
+    def _powered(self, mon: dict) -> bool:
+        return all(_missing(mon["energies"], cost) == 0 for cost in self._costs.get(mon["id"], []))
+
+    def _wasted_target(self, options: list[dict], me: dict, area: int | None, index: int | None) -> float:
+        """Energy of unknown type going to ``area``/``index``: wasted if that Pokémon can already
+        pay every attack while another offered Pokémon cannot."""
+        def mon(a, i):
+            mons = me["active"] if a == ACTIVE_AREA else me["bench"] if a == BENCH_AREA else []
+            return mons[i] if i is not None and i < len(mons) else None
+        target = mon(area, index)
+        if target is None or not self._powered(target):
+            return 0.0
+        others = [mon(o.get("area"), o.get("index")) for o in options]
+        return self.energy_penalty if any(m and m is not target and not self._powered(m) for m in others) else 0.0
 
     def _prizes(self) -> tuple[int, int]:
         """Prize cards left (learner, opponent). Fewer left means more taken."""

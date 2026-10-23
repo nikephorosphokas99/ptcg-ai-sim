@@ -21,3 +21,7 @@ Opponent decks drawn for training games (`--opponent-decks decks/training_pool/*
 * `dragapult_raihan` — Raihan Ramadistra's Dragapult ex / Munkidori (Crushing Hammer, Dunsparce, Risky Ruins)
   list from Kaggle episode 125184564; also the agent's own deck (`decks/main_agent.csv`) from 2026-10-22.
 * `marnie_grimmsnarl_ex` — the agent's previous deck (Marnie's Grimmsnarl ex), kept as an opponent.
+* `dhelmise_banette` — the meta Dhelmise / Banette / Sinistcha list, from per-deck average card counts
+  (2026-10-23) rounded to 60 (Night Stretcher and Explorer's Guidance rounded up to fill it; cards
+  averaging under 0.5 copies left out). Telepathic Psychic Energy is "Telepath Psychic Energy" (POR 87)
+  in this engine. `dhelmise` (4 Sinistcha, 4 Explorer's Guidance, Spiritomb) stays as it is.

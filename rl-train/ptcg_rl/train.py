@@ -103,6 +103,8 @@ def main() -> None:
     p.add_argument("--active-snapshots", type=int, default=2,
                    help="snapshots new games draw from at once, re-drawn every update")
     p.add_argument("--prize-reward", type=float, default=0.05)
+    p.add_argument("--energy-penalty", type=float, default=0.0,
+                   help="reward subtracted for a basic Energy attached where it helps no attack (see Match)")
     p.add_argument("--lr", type=float, default=3e-4)
     p.add_argument("--lr-end", type=float, help="decay the learning rate linearly to this by the end")
     p.add_argument("--target-kl", type=float,
@@ -128,6 +130,7 @@ def main() -> None:
         agent_deck=args.agent_deck,
         opponent_decks=args.opponent_decks,
         prize_reward=args.prize_reward,
+        energy_penalty=args.energy_penalty,
     )
     if args.bot_frac > 0:
         from .benchmark import BENCHMARKS, compat_cg

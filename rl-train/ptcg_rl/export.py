@@ -127,14 +127,6 @@ def _arch(policy) -> dict:
     }
 
 
-def _search_files(out: Path, config: dict) -> None:
-    """search.json switches main.py's lookahead on; opp_decks.json is what it guesses opponents hold."""
-    decks = [load_deck(p) for p in sorted((TRAIN_ROOT / "decks" / "training_pool").glob("*.csv"))]
-    decks += [load_deck(p) for p in sorted((TRAIN_ROOT / "benchmarks").glob("*/deck.csv"))]
-    (out / "opp_decks.json").write_text(json.dumps(decks))
-    (out / "search.json").write_text(json.dumps(config, indent=2) + "\n")
-
-
 def _check_value(model: MaskablePPO, deck: list[int], bundle: Path, positions: int = 50) -> float:
     """Largest difference between the bundle's value head and SB3's, on real positions."""
     sys.path.insert(0, str(bundle))
@@ -270,9 +262,8 @@ def main() -> None:
     p.add_argument("--out", type=Path, default=TRAIN_ROOT / "submissions")
     p.add_argument("--check-games", type=int, default=20)
     p.add_argument("--visualizer", metavar="NAME", help="also install as a visualizer opponent under this name")
-    p.add_argument("--search", action="store_true",
-                   help="lookahead bundle: the engine's search API + value head (ptcg_policy/search.py)")
-    p.add_argument("--search-seconds", type=float, default=1.0, help="most thinking time per searched decision")
+    p.add_argument("--value", action="store_true",
+                   help="also ship the critic (value head) for search-based agents; checked against SB3")
     args = p.parse_args()
 
     name = args.name or f"{args.model.resolve().parent.name}_{args.model.stem}"
@@ -280,17 +271,16 @@ def main() -> None:
     deck = load_deck(args.deck)
     model = load_model(args.model, "cpu")
 
-    _write_bundle(model, deck, bundle, value=args.search)
+    _write_bundle(model, deck, bundle, value=args.value)
     diff = _check_parity(model, deck, bundle)
     print(f"parity: bundle vs SB3 log-probabilities differ by at most {diff:.2e}")
     if diff > 1e-4:
         raise SystemExit("bundle network does not match the trained policy")
-    if args.search:
+    if args.value:
         vdiff = _check_value(model, deck, bundle)
         print(f"value parity: bundle vs SB3 values differ by at most {vdiff:.2e}")
         if vdiff > 1e-4:
             raise SystemExit("bundle value head does not match the trained critic")
-        _search_files(bundle, {"max_seconds": args.search_seconds})
 
     check = subprocess.run([sys.executable, "-I", "-c", PLAY_CHECK, str(args.check_games), str(bundle.resolve())],
                            cwd=bundle.parent, capture_output=True, text=True)
