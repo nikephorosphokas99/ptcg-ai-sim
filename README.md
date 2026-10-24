@@ -108,9 +108,11 @@ as model artifacts. `vs_deck/<deck>` is the learner's win rate against each oppo
 deck (games against itself and its snapshots).
 
 **Two GPUs (Kaggle T4 x2).** `--device cuda:0 --collect-device cuda:1 --pipeline --amp`:
-the PPO update runs in fp16 (`ppo.PTCGPPO`) on GPU 0 while GPU 1 plays the next
-rollout's games with a copy of the weights, refreshed after each update, so an
-iteration takes max(collect, train) rather than their sum. Splitting the update
+the PPO update runs in fp16 (`ppo.PTCGPPO`) in its own process on GPU 0
+(`learner.py`) while the main process plays the next rollout's games on GPU 1 with
+a copy of the weights, refreshed after each update. Both GPUs work at once, so an
+iteration takes max(collect, train) rather than their sum. (Two threads in one
+process cannot do this: both halves are Python-bound and take turns on the GIL.) Splitting the update
 itself across both GPUs (DDP) would only shorten the update half and leave
 collection waiting. If fp16 keeps overflowing, the update falls back to fp32 on its own.
 

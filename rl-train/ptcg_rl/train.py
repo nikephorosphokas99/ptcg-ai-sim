@@ -12,15 +12,15 @@ Opponents: ``--self-play-frac`` of games are played against the current learner
 (both seats then train it); the rest against the random player or a frozen
 snapshot, one taken every ``--snapshot-every`` steps and kept on the GPU.
 
-Collection and the update run in turn by default. Overlapping them on a thread
-measured no faster on a fast GPU, where both halves are Python-bound and share
-the GIL. On a slow GPU (a Kaggle T4) the update is GPU-bound and waits on the GPU
-with the GIL released, so ``--pipeline`` trains on one rollout while the next is
-collected, ideally with ``--collect-device`` on a second GPU: an iteration then
-takes max(collect, train) instead of their sum. The rollout being collected uses
-weights one update older than the learner's; PPO's ratio uses the stored
-log-probs, so that is corrected for like any off-policy sample. ``--amp`` runs
-the update in fp16 (``ppo.PTCGPPO``), for the T4's tensor cores.
+Collection and the update run in turn by default. With ``--pipeline`` the update
+runs in a separate process (``learner.py``) on ``--device`` while this process
+keeps collecting on ``--collect-device``: with two GPUs (Kaggle T4 x2: ``--device
+cuda:0 --collect-device cuda:1``) both work at once and an iteration takes
+max(collect, train) instead of their sum. (Two threads in one process do not do
+this: both halves are Python-bound and take turns on the GIL.) The rollout being
+collected uses weights one update older than the learner's; PPO's ratio uses the
+stored log-probs, so that is corrected for like any off-policy sample. ``--amp``
+runs the update in fp16 (``ppo.PTCGPPO``), for the T4's tensor cores.
 
 On disk a run keeps ``latest.zip`` (rewritten at each snapshot, for
 ``--resume``), a checkpoint every ``--save-every`` steps, ``final.zip`` and
@@ -36,7 +36,6 @@ import json
 import os
 import re
 import time
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import gymnasium as gym
@@ -48,6 +47,7 @@ from .collector import BASELINE, RANDOM, SELF, SelfPlayCollector, frozen_copy
 from .encoding import N_ACTIONS, observation_space
 from .engine import AGENT_DECK, card_table, default_opponent_decks
 from .env import Match
+from .learner import RemoteLearner
 from .policy import EntityPolicy, PointerPolicy, PTCGExtractor
 from .ppo import PTCGPPO
 from .storage import GPURolloutBuffer, Rollout
@@ -133,7 +133,8 @@ def main() -> None:
                    help="where game inference, the sample store and snapshots live (default: --device); "
                         "with two GPUs, e.g. --device cuda:0 --collect-device cuda:1 --pipeline")
     p.add_argument("--pipeline", action="store_true",
-                   help="train on each rollout while the next one is collected")
+                   help="run the update in its own process on --device while the next rollout is collected "
+                        "on --collect-device (both GPUs busy at once)")
     p.add_argument("--amp", action="store_true", help="run the PPO update in fp16 autocast (CUDA only)")
     p.add_argument("--resume", type=Path, help="a saved model .zip to continue from")
     p.add_argument("--arch", choices=("entity", "pointer", "flat"), default="entity",
@@ -201,7 +202,11 @@ def main() -> None:
         wandb_run.define_metric("time/total_timesteps")
         wandb_run.define_metric("*", step_metric="time/total_timesteps")
 
-    device = get_device(args.device)
+    learner_device = get_device(args.device)
+    collect_device = get_device(args.collect_device) if args.collect_device else learner_device
+    # With --pipeline this process only collects: its model is the actor, on the collecting
+    # GPU, and the learner process trains its own copy on --device.
+    device = collect_device if args.pipeline else learner_device
     if args.resume:
         model = load_model(args.resume, device, tensorboard_log=tb_log)
     else:
@@ -241,10 +246,9 @@ def main() -> None:
     trained = 0.0
     budget = args.max_hours * 3600 if args.max_hours else None
 
-    collect_device = get_device(args.collect_device) if args.collect_device else device
-    # The collector plays the learner with its own copy of the weights when the update
-    # runs elsewhere or at the same time; the copy is refreshed after every update.
-    separate = collect_device != device or args.pipeline
+    # Without --pipeline but with the update on another GPU, the collector plays with its
+    # own copy of the weights, refreshed after every update.
+    separate = collect_device != device
     actor = frozen_copy(model.policy, collect_device) if separate else model.policy
     collector = SelfPlayCollector(
         match_kwargs, actor, args.workers, args.matches_per_worker, collect_device,
@@ -256,16 +260,30 @@ def main() -> None:
     if args.baseline:
         collector.add_opponent(BASELINE, load_model(args.baseline, collect_device).policy)
     print(f"policy {type(model.policy).__name__} ({sum(p.numel() for p in model.policy.parameters()):,} parameters)")
-    print(f"{collector.n} games across {args.workers} workers; games on {collect_device}, update on {device}"
-          f"{' (fp16)' if args.amp else ''}{', pipelined' if args.pipeline else ''}; "
+    print(f"{collector.n} games across {args.workers} workers; games on {collect_device}, update on {learner_device}"
+          f"{' (fp16)' if args.amp else ''}{' in its own process, in parallel' if args.pipeline else ''}; "
           f"{model.n_steps} samples per update; sample store {collector.store.nbytes / 2**30:.1f} GB")
+
+    learner = None
+    if args.pipeline:
+        init = args.run / "learner_init.zip"
+        model.save(init)
+        learner = RemoteLearner(init, learner_device, dict(
+            learning_rate=model.learning_rate, target_kl=args.target_kl, amp=args.amp))
+        init.unlink()
+
+    def save(path: Path) -> None:
+        # The learner's model is the trained one, optimizer state included.
+        if learner is not None:
+            learner.save(path, model.num_timesteps)
+        else:
+            model.save(path)
 
     def timed_train() -> float:
         start = time.time()
         model.train()
         return time.time() - start
 
-    executor = ThreadPoolExecutor(max_workers=1) if args.pipeline else None
     samples = None  # with --pipeline, the rollout collected during the previous update
 
     next_snapshot = model.num_timesteps + args.snapshot_every
@@ -278,36 +296,43 @@ def main() -> None:
             if samples is None:
                 samples = collector.collect(model.n_steps)
                 collect_s = time.time() - t0
-            if separate:
-                source, ids = Rollout(collector.store, samples.ids, device, list(model.observation_space.spaces)), \
-                    np.arange(len(samples))
-            else:
-                source, ids = collector.store, samples.ids
-            model.rollout_buffer.load(source, ids, samples.actions, samples.values,
-                                      samples.log_probs, samples.advantages, samples.returns)
+            keys = list(model.observation_space.spaces)
             model.num_timesteps += len(samples)
             if budget is None:
                 model._update_current_progress_remaining(model.num_timesteps, total)
             else:
                 model._current_progress_remaining = max(0.0, 1.0 - trained / budget)
+            arrays = dict(actions=samples.actions, values=samples.values, log_probs=samples.log_probs,
+                          advantages=samples.advantages, returns=samples.returns)
 
-            if executor is not None:
-                update = executor.submit(timed_train)
+            train_logs = {}
+            if learner is not None:
+                # The learner copies this rollout to its GPU and trains while we play the next one.
+                learner.submit(Rollout(collector.store, samples.ids, collect_device, keys), arrays,
+                               model._current_progress_remaining, model.num_timesteps)
                 c0 = time.time()
                 samples = collector.collect(model.n_steps)
                 collect_s = time.time() - c0
-                train_s = update.result()
+                weights, train_logs, train_s = learner.result()
+                model.policy.load_state_dict(weights)  # the collector's actor
             else:
+                if separate:
+                    source, ids = Rollout(collector.store, samples.ids, device, keys), np.arange(len(samples))
+                else:
+                    source, ids = collector.store, samples.ids
+                model.rollout_buffer.load(source, ids, **arrays)
                 train_s = timed_train()
                 samples = None
-            if actor is not model.policy:
-                actor.load_state_dict(model.policy.state_dict())
+                if actor is not model.policy:
+                    actor.load_state_dict(model.policy.state_dict())
             t2 = time.time()
             trained += min(t2 - t0, ITERATION_CAP)
 
             stats = collector.stats
             games = stats.games - games0
             log = model.logger
+            for key, value in train_logs.items():
+                log.record(key, value)
             log.record("time/collect_s", collect_s)
             log.record("time/train_s", train_s)
             log.record("time/iteration_s", t2 - t0)
@@ -344,22 +369,26 @@ def main() -> None:
             vs_base += f" | vs bots {np.mean(kinds['vs_bot']):.2f}" if "vs_bot" in kinds else ""
             print(f"{model.num_timesteps:>13,} steps | {games / (t2 - t0):6.1f} games/s | "
                   f"collect {collect_s:4.1f}s train {train_s:4.1f}s"
-                  f"{f' (overlapped: {t2 - t0:4.1f}s)' if executor else ''}{vs_base}", flush=True)
+                  f"{f' in parallel: {t2 - t0:4.1f}s' if learner else ''}{vs_base}", flush=True)
 
             collector.rotate_opponents()
             if model.num_timesteps >= next_snapshot:
                 next_snapshot += args.snapshot_every
                 collector.add_opponent(f"snap_{model.num_timesteps}", model.policy)
-                model.save(args.run / "latest.zip")
+                save(args.run / "latest.zip")
             if model.num_timesteps >= next_save:
                 next_save += args.save_every
                 checkpoint = args.run / "checkpoints" / f"step_{model.num_timesteps}.zip"
-                model.save(checkpoint)
+                save(checkpoint)
                 _log_model(wandb_run, args, checkpoint, model.num_timesteps)
     finally:
-        if executor is not None:
-            executor.shutdown(wait=True)
-        model.save(args.run / "final.zip")
+        try:
+            save(args.run / "final.zip")
+        except Exception as e:  # the learner died: keep its last weights, without optimizer state
+            print(f"learner could not save ({e}); saving the collector's copy of the weights")
+            model.save(args.run / "final.zip")
+        if learner is not None:
+            learner.close()
         collector.close()
         if wandb_run is not None:
             _log_model(wandb_run, args, args.run / "final.zip", model.num_timesteps, final=True)

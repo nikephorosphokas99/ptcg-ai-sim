@@ -74,6 +74,15 @@ class Rollout:
         self.obs = {k: t.to(device) for k, t in obs.items()}
         self.masks = masks.to(device)
 
+    @classmethod
+    def from_tensors(cls, obs: dict[str, torch.Tensor], masks: torch.Tensor, device: torch.device) -> Rollout:
+        """A rollout of already gathered samples, moved to ``device`` (``learner.py``)."""
+        self = cls.__new__(cls)
+        self.device, self.capacity = device, masks.shape[0]
+        self.obs = {k: t.to(device) for k, t in obs.items()}
+        self.masks = masks.to(device)
+        return self
+
     def gather(self, ids: torch.Tensor, keys=None) -> tuple[dict[str, torch.Tensor], torch.Tensor]:
         return {k: self.obs[k][ids] for k in (keys or self.obs)}, self.masks[ids]
 
