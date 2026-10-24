@@ -152,7 +152,14 @@ def main() -> None:
     p.add_argument("--wandb-id", help="W&B run id to continue, e.g. when resuming a run")
     p.add_argument("--wandb-mode", choices=("online", "offline", "disabled"), default="online")
     p.add_argument("--wandb-log-model", action="store_true",
-                   help="upload each checkpoint and final.zip to W&B as a model artifact")
+                   help="upload checkpoints to W&B as versions of the model artifact --wandb-artifact: "
+                        "latest.zip every --backup-every-min minutes, each --save-every checkpoint and final.zip")
+    p.add_argument("--wandb-artifact", default="ptcg-checkpoint",
+                   help="W&B artifact the checkpoints are uploaded to; the same name across runs, so "
+                        "<artifact>:latest is always the newest model to resume from")
+    p.add_argument("--backup-every-min", type=float, default=30.0,
+                   help="with --wandb-log-model, also save and upload latest.zip this often (0: off), "
+                        "so a crashed or killed session loses at most this much training")
     args = p.parse_args()
 
     (args.run / "checkpoints").mkdir(parents=True, exist_ok=True)
@@ -286,6 +293,8 @@ def main() -> None:
 
     samples = None  # with --pipeline, the rollout collected during the previous update
 
+    backup_every = args.backup_every_min * 60 if wandb_run is not None and args.wandb_log_model else 0
+    last_backup = time.time()
     next_snapshot = model.num_timesteps + args.snapshot_every
     next_save = model.num_timesteps + args.save_every
     try:
@@ -381,6 +390,12 @@ def main() -> None:
                 checkpoint = args.run / "checkpoints" / f"step_{model.num_timesteps}.zip"
                 save(checkpoint)
                 _log_model(wandb_run, args, checkpoint, model.num_timesteps)
+                last_backup = time.time()
+            if backup_every and time.time() - last_backup >= backup_every:
+                # Off-Kaggle backup: a killed session keeps everything up to here in W&B.
+                save(args.run / "latest.zip")
+                _log_model(wandb_run, args, args.run / "latest.zip", model.num_timesteps)
+                last_backup = time.time()
     finally:
         try:
             save(args.run / "final.zip")
@@ -396,16 +411,22 @@ def main() -> None:
 
 
 def _log_model(run, args, path: Path, steps: int, final: bool = False) -> None:
-    """Upload a saved model as a W&B artifact (``--wandb-log-model``); never fails the run."""
-    if run is None or not args.wandb_log_model:
+    """Upload a saved model as a new version of the W&B artifact ``--wandb-artifact``.
+
+    Only with ``--wandb-log-model``; never fails the run. The upload happens in the
+    background, from a copy W&B takes now, so ``path`` may be overwritten right after.
+    """
+    if run is None or not args.wandb_log_model or not path.exists():
         return
     try:
         import wandb
 
-        artifact = wandb.Artifact(re.sub(r"[^A-Za-z0-9_.-]", "-", f"{run.name}-model"), type="model",
-                                  metadata={"timesteps": steps, "file": path.name})
-        artifact.add_file(str(path))
+        artifact = wandb.Artifact(re.sub(r"[^A-Za-z0-9_.-]", "-", args.wandb_artifact), type="model",
+                                  metadata={"timesteps": steps, "file": path.name, "run": run.name,
+                                            "run_id": run.id, "final": final})
+        artifact.add_file(str(path), name="model.zip")
         run.log_artifact(artifact, aliases=["latest", f"step_{steps}"] + (["final"] if final else []))
+        print(f"W&B backup: {path.name} at {steps:,} steps -> {args.wandb_artifact}:latest", flush=True)
     except Exception as e:  # a network hiccup must not cost a training run
         print(f"W&B model upload failed: {e}")
 
