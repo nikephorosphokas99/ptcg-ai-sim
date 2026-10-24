@@ -95,6 +95,9 @@ def main() -> None:
     p.add_argument("--opponent-weights", type=Path,
                    help="JSON {deck file stem: relative weight} for drawing opponent decks "
                         "(e.g. decks/training_pool/weights.json); default: every deck equally")
+    p.add_argument("--sacrifice-refund", action="store_true",
+                   help="don't count the Prize card given up for the learner's own self-Knock-Out Abilities "
+                        "(Cursed Blast) against it in --prize-reward (see env.Match)")
     p.add_argument("--no-rules", action="store_true",
                    help="let the policy place 'any way you like' damage counters and end turns with an "
                         "attack available, instead of the rules env.Match applies by default")
@@ -179,6 +182,7 @@ def main() -> None:
         prize_reward=args.prize_reward,
         energy_penalty=args.energy_penalty,
         rules=not args.no_rules,
+        sacrifice_refund=args.sacrifice_refund,
     )
     if args.bot_frac > 0:
         from .benchmark import BENCHMARKS, compat_cg
@@ -365,9 +369,14 @@ def main() -> None:
                 log.record(f"vs_baseline_by_deck/{deck}", float(np.mean(outcomes)))
             for deck, outcomes in stats.by_deck.items():
                 log.record(f"vs_deck/{deck}", float(np.mean(outcomes)))
+            # Per finished game, what the learner seat did: usage/play Dusknoir, usage/ability Dusknoir, ...
+            for key, count in stats.usage.items():
+                log.record(f"usage/{key}", count / max(stats.usage_games, 1))
             stats.outcomes.clear()
             stats.baseline_by_deck.clear()
             stats.by_deck.clear()
+            stats.usage.clear()
+            stats.usage_games = 0
             log.record("time/total_timesteps", model.num_timesteps)
             log.record("time/trained_hours", trained / 3600)
             if wandb_run is not None:

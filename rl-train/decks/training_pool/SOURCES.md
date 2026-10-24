@@ -54,3 +54,8 @@ archetypes that were 19% of its games but had no list here. Each is the opponent
 Kaggle. Mega Lucario ex (16% of games, 29% won), Ogerpon / Hydrapple (9%, 31%) and Crustle
 (10%, 35%) get the most; Alakazam (19%, 69%) and Archaludon (5%, 81%) less than their share.
 Decks missing from the file are drawn with weight 1.0.
+
+2026-10-25: the three Crustle lists go from 4.01 to 6.0 each (~12% to ~17% of games). At 25M steps
+of the Dragapult / Dusknoir agent they were still won 5% (`crustle_bot`), 11% (`crustle_cook`) and
+20% (`crustle`) of the time, flat since 5M: Crustle takes no damage from Pokémon ex, and the deck's
+answer (damage counters from Cursed Blast and Phantom Dive) needs practice.

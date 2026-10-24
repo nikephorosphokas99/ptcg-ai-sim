@@ -34,7 +34,7 @@ import json
 import os
 import subprocess
 import sys
-from collections import defaultdict, deque
+from collections import Counter, defaultdict, deque
 from dataclasses import dataclass, field
 from multiprocessing.connection import Listener
 
@@ -59,6 +59,9 @@ class Stats:
     baseline_by_deck: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
     # Learner-seat outcomes by opponent deck, against the learner itself and its snapshots
     by_deck: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
+    # Learner-seat card usage summed over usage_games finished games (Match info["usage"])
+    usage: Counter = field(default_factory=Counter)
+    usage_games: int = 0
     # Bounded: a day-long run finishes millions of games.
     episode_lengths: deque[int] = field(default_factory=lambda: deque(maxlen=20_000))
 
@@ -337,6 +340,9 @@ class SelfPlayCollector:
                 self.stats.baseline_by_deck[info["opp_deck"]].append(info["outcome"])
             if not info.get("bot") and self._opponent[i] != RANDOM:
                 self.stats.by_deck[info["opp_deck"]].append(info["outcome"])
+        if "usage" in info:
+            self.stats.usage.update(info["usage"])
+            self.stats.usage_games += 1
         self.stats.episode_lengths.append(int(self._length[i]))
         self.stats.games += 1
         self._new_game(i, learner)

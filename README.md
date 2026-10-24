@@ -105,7 +105,12 @@ without a drawback (`engine.safe_attack_ids`) cannot be ended without attacking.
 **Logging.** TensorBoard under `<run>/tb`; with `--wandb-project` the same values go
 to Weights & Biases, and `--wandb-log-model` uploads each checkpoint and `final.zip`
 as model artifacts. `vs_deck/<deck>` is the learner's win rate against each opponent
-deck (games against itself and its snapshots).
+deck (games against itself and its snapshots), and `usage/<kind> <card>` what the
+learner's seat does per game (`usage/ability Dusknoir`, `usage/evolve Dragapult ex`,
+`usage/attack Phantom Dive`, ...). `vs_self` and `vs_snapshot` stay near 50% by
+design; `--baseline` (a fixed earlier model) gives `win_rate/vs_baseline`, the curve
+that shows real progress. `--sacrifice-refund` stops counting the Prize card given
+up for the learner's own Cursed Blast against it in the prize shaping.
 
 **Two GPUs (Kaggle T4 x2).** `--device cuda:0 --collect-device cuda:1 --pipeline --amp`:
 the PPO update runs in fp16 (`ppo.PTCGPPO`) in its own process on GPU 0

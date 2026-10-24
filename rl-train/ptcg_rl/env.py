@@ -23,7 +23,8 @@ reproducible; ``seed`` only fixes this match's own choices (seat, deck).
 
 from __future__ import annotations
 
-from collections import deque
+import re
+from collections import Counter, deque
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -35,8 +36,11 @@ from .engine import Game, all_attacks, all_cards, attack_table, card_meta_table,
 
 
 BASIC_ENERGY = range(1, 9)  # basic energy card ids, equal to the energy type they provide
-MAIN_CONTEXT, ATTACH_FROM_CONTEXT, PLAY_OPTION, ATTACH_OPTION = 0, 21, 7, 8
+MAIN_CONTEXT, ATTACH_FROM_CONTEXT, PLAY_OPTION, ATTACH_OPTION, ABILITY_OPTION = 0, 21, 7, 8, 10
 ACTIVE_AREA, BENCH_AREA = 4, 5
+LOG_PLAY, LOG_EVOLVE, LOG_ATTACK = 10, 12, 15
+# Abilities whose cost is the Pokémon itself, e.g. Cursed Blast: "... this Pokémon is Knocked Out."
+SELF_KO = re.compile(r"this pok[eé]mon is knocked out", re.IGNORECASE)
 
 
 def _missing(energies: list[int], cost: list[int]) -> int:
@@ -92,6 +96,7 @@ class Match:
         bot_frac: float = 0.0,
         bot_cg: str | None = None,
         rules: bool = True,
+        sacrifice_refund: bool = False,
         seed: int | None = None,
     ):
         """
@@ -116,6 +121,16 @@ class Match:
             bot_cg: parent folder of the ``cg`` the bots import (``benchmark.compat_cg``).
             rules: place "any way you like" damage counters by plan and never end
                 a turn that offers a drawback-free attack, for both seats.
+            sacrifice_refund: when the learner uses an Ability that Knocks Out its
+                own Pokémon (Cursed Blast), the Prize card the opponent takes for it
+                is not counted against the learner in ``prize_reward``. Otherwise
+                every such play costs a Prize card's shaping at once while its
+                payoff (a knockout from the counters) often comes later, which
+                taught the policy to leave Dusclops / Dusknoir unused.
+
+        Finished games report ``info["usage"]``: per game, the learner seat's cards
+        played, evolutions, attacks and Abilities by card name (from the engine log
+        and the learner's own picks; the game's very last events can be missed).
         """
         self.agent_deck = load_deck(agent_deck)
         self.opponent_decks = {Path(p).stem: load_deck(p) for p in opponent_decks or []}
@@ -147,6 +162,15 @@ class Match:
         self._meta = card_meta_table()
         self._safe_attacks = safe_attack_ids() if rules else None
         self._planners = [CounterPlanner(self._meta), CounterPlanner(self._meta)] if rules else None
+        cards = all_cards()
+        self._card_names = {cid: c["name"] for cid, c in cards.items()}
+        self._attack_names = {aid: a["name"] for aid, a in all_attacks().items()}
+        self.sacrifice_refund = sacrifice_refund
+        self._self_ko_abilities = {
+            cid for cid, c in cards.items()
+            if any(SELF_KO.search(s.get("text") or "") for s in c.get("skills") or [])}
+        self._usage: Counter = Counter()
+        self._sacrifice_turn: int | None = None
         self._game: Game | None = None
         self._decision: Decision | None = None
 
@@ -169,6 +193,8 @@ class Match:
         self._recent = [deque(maxlen=RECENT_SLOTS), deque(maxlen=RECENT_SLOTS)]
         for planner in self._planners or ():
             planner.reset()
+        self._usage = Counter()
+        self._sacrifice_turn = None
         self._game = Game(*decks)
         self._observe()
         self._decision = None
@@ -183,6 +209,8 @@ class Match:
         learner_moved = self._game.to_move == self.seat
         prizes_before = self._prizes()
         penalty = self._wasted_energy(int(action)) if learner_moved and self.energy_penalty else 0.0
+        if learner_moved:
+            self._note_ability(int(action))
         if self._decision.apply(int(action)):
             self._select(self._decision.picked)
             self._decision = None
@@ -194,6 +222,16 @@ class Match:
         mine, theirs = self._prizes()
         taken = max(0, prizes_before[0] - mine)
         lost = max(0, prizes_before[1] - theirs)
+        current = (self._game.obs or {}).get("current")
+        if self._sacrifice_turn is not None and current is not None:
+            turn_now = current["turn"]
+            if lost and turn_now - self._sacrifice_turn <= 1:
+                # The Prize card the opponent took for our own Cursed Blast-style knockout.
+                lost -= 1
+                self._usage["refunded sacrifice"] += 1
+                self._sacrifice_turn = None
+            elif turn_now - self._sacrifice_turn > 1:
+                self._sacrifice_turn = None
         reward = self.prize_reward * (taken - lost) - penalty
 
         info = {"opp_deck": self.opp_deck_name, "bot": self.bot_name, "bot_failures": self.bot_failures}
@@ -202,11 +240,31 @@ class Match:
         if self._game.done:
             result = self._game.result
             outcome = 0.5 if result == 2 else float(result == self.seat)
-            return StepResult(reward + 2.0 * outcome - 1.0, done=True, info={**info, "outcome": outcome})
+            return StepResult(reward + 2.0 * outcome - 1.0, done=True,
+                              info={**info, "outcome": outcome, "usage": dict(self._usage)})
         turn = self._turn()
         if self._steps >= self.max_steps:
-            return StepResult(reward, done=True, truncated=True, turn=turn, info=info)
+            return StepResult(reward, done=True, truncated=True, turn=turn, info={**info, "usage": dict(self._usage)})
         return StepResult(reward, turn=turn)
+
+    def _note_ability(self, action: int) -> None:
+        """Count the learner's Ability uses by card, and mark a self-Knock-Out one for the refund."""
+        obs = self._game.obs
+        sel = obs.get("select")
+        if not sel or action >= len(sel["option"]):
+            return
+        opt = sel["option"][action]
+        if opt.get("type") != ABILITY_OPTION:
+            return
+        me = obs["current"]["players"][self.seat]
+        area, index = opt.get("area"), opt.get("index")
+        mons = me["active"] if area == ACTIVE_AREA else me["bench"] if area == BENCH_AREA else []
+        mon = mons[index] if index is not None and 0 <= index < len(mons) else None
+        if mon is None:
+            return
+        self._usage[f"ability {self._card_names.get(mon['id'], mon['id'])}"] += 1
+        if self.sacrifice_refund and mon["id"] in self._self_ko_abilities:
+            self._sacrifice_turn = obs["current"]["turn"]
 
     def close(self) -> None:
         if self._game is not None:
@@ -232,6 +290,20 @@ class Match:
         if obs.get("current") is not None and not self._game.done:
             me = obs["current"]["yourIndex"]
             self._recent[me].extend(recent_opponent_cards(obs, me))
+            if me == self.seat:  # each seat's logs hold the events since its own last observation
+                self._count_usage(obs.get("logs") or [])
+
+    def _count_usage(self, logs: list[dict]) -> None:
+        for log in logs:
+            if log.get("playerIndex") != self.seat:
+                continue
+            kind = log.get("type")
+            if kind == LOG_PLAY:
+                self._usage[f"play {self._card_names.get(log.get('cardId'), log.get('cardId'))}"] += 1
+            elif kind == LOG_EVOLVE:
+                self._usage[f"evolve {self._card_names.get(log.get('cardId'), log.get('cardId'))}"] += 1
+            elif kind == LOG_ATTACK:
+                self._usage[f"attack {self._attack_names.get(log.get('attackId'), log.get('attackId'))}"] += 1
 
     def _helps(self, mon: dict, energy: int) -> bool:
         """Whether one more ``energy`` brings ``mon`` closer to paying any of its attacks."""
