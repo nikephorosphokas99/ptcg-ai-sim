@@ -107,6 +107,13 @@ to Weights & Biases, and `--wandb-log-model` uploads each checkpoint and `final.
 as model artifacts. `vs_deck/<deck>` is the learner's win rate against each opponent
 deck (games against itself and its snapshots).
 
+**Two GPUs (Kaggle T4 x2).** `--device cuda:0 --collect-device cuda:1 --pipeline --amp`:
+the PPO update runs in fp16 (`ppo.PTCGPPO`) on GPU 0 while GPU 1 plays the next
+rollout's games with a copy of the weights, refreshed after each update, so an
+iteration takes max(collect, train) rather than their sum. Splitting the update
+itself across both GPUs (DDP) would only shorten the update half and leave
+collection waiting. If fp16 keeps overflowing, the update falls back to fp32 on its own.
+
 **Memory and disk.** Training samples are stored on the GPU as int16/float16,
 ~9 KB each (~11 KB for v3); `--store` (default 6 x `--rollout`) is ~3.4 GB of VRAM with the
 defaults. On an 8 GB GPU, v3 needs `--store 196608 --batch-size 1024`: past the

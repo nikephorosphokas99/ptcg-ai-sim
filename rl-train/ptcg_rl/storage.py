@@ -57,6 +57,27 @@ class SampleStore:
         return {k: self.obs[k][slots] for k in (keys or self.obs)}, self.masks[slots]
 
 
+class Rollout:
+    """One update's samples copied out of a ``SampleStore`` onto the training device.
+
+    Training reads the store in place when it runs on the collecting GPU between
+    collections. When it runs on another GPU, or alongside the next collection
+    (``train.py --pipeline``), the store keeps being written, so the samples are
+    copied out first: ~0.7 GB for a 65k rollout, a fraction of a second.
+    Addressed like the store, by ids ``0..n-1``.
+    """
+
+    def __init__(self, store: SampleStore, ids: np.ndarray, device: torch.device, keys=None):
+        obs, masks = store.gather(torch.as_tensor(ids, device=store.device), keys)
+        self.device = device
+        self.capacity = len(ids)
+        self.obs = {k: t.to(device) for k, t in obs.items()}
+        self.masks = masks.to(device)
+
+    def gather(self, ids: torch.Tensor, keys=None) -> tuple[dict[str, torch.Tensor], torch.Tensor]:
+        return {k: self.obs[k][ids] for k in (keys or self.obs)}, self.masks[ids]
+
+
 class GPURolloutBuffer(MaskableDictRolloutBuffer):
     """Serves ``MaskablePPO.train()`` from a ``SampleStore`` instead of RAM."""
 
@@ -65,7 +86,7 @@ class GPURolloutBuffer(MaskableDictRolloutBuffer):
         self.pos, self.full, self.generator_ready = 0, False, False
         self.values = self.returns = np.zeros(0, np.float32)
 
-    def load(self, store: SampleStore, ids: np.ndarray, actions: np.ndarray, values: np.ndarray,
+    def load(self, store: SampleStore | Rollout, ids: np.ndarray, actions: np.ndarray, values: np.ndarray,
              log_probs: np.ndarray, advantages: np.ndarray, returns: np.ndarray) -> None:
         dev = store.device
         self.store = store
