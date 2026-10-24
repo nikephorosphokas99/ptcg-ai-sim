@@ -57,6 +57,8 @@ class Stats:
     games: int = 0
     outcomes: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
     baseline_by_deck: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
+    # Learner-seat outcomes by opponent deck, against the learner itself and its snapshots
+    by_deck: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
     # Bounded: a day-long run finishes millions of games.
     episode_lengths: deque[int] = field(default_factory=lambda: deque(maxlen=20_000))
 
@@ -333,6 +335,8 @@ class SelfPlayCollector:
             self.stats.bot_failures += info.get("bot_failures", 0)
             if self._opponent[i] == BASELINE:
                 self.stats.baseline_by_deck[info["opp_deck"]].append(info["outcome"])
+            if not info.get("bot") and self._opponent[i] != RANDOM:
+                self.stats.by_deck[info["opp_deck"]].append(info["outcome"])
         self.stats.episode_lengths.append(int(self._length[i]))
         self.stats.games += 1
         self._new_game(i, learner)

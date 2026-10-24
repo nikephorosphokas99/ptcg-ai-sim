@@ -43,7 +43,9 @@ N_AREAS = 13
 PLAY, ATTACH, EVOLVE, ABILITY, DISCARD_OPT = 7, 8, 9, 10, 11
 TOOL_CARD, ENERGY_CARD, ENERGY = 4, 5, 6
 RETREAT = 12
-ATTACK, SKILL = 13, 15
+ATTACK, END, SKILL = 13, 14, 15
+# SelectContext
+MAIN_CONTEXT, DAMAGE_COUNTER, DAMAGE_COUNTER_ANY = 0, 13, 14
 N_OPTION_TYPES = 17
 N_SELECT_TYPES = 11
 N_CONTEXTS = 49
@@ -118,20 +120,32 @@ def unseen_own(deck: list[int], state: dict, player: int) -> list[int]:
 
 
 class Decision:
-    """One engine selection, resolved one pick at a time."""
+    """One engine selection, resolved one pick at a time.
 
-    def __init__(self, obs: dict):
+    With ``safe_attacks`` (attack ids without a drawback, ``engine.safe_attack_ids``)
+    a main-phase choice that offers one of them cannot end the turn instead: the
+    v3 policy at 216M steps passed on 7% of the turns it could attack, often with
+    a knockout or Phantom Dive's six free damage counters on the table.
+    """
+
+    def __init__(self, obs: dict, safe_attacks: frozenset[int] | None = None):
         sel = obs["select"]
         self.obs = obs
         self.n = min(len(sel["option"]), MAX_OPTIONS)
         self.max = min(sel["maxCount"], self.n)
         self.min = min(sel["minCount"], self.max)
         self.picked: list[int] = []
+        self.blocked: list[int] = []
+        if safe_attacks and sel["context"] == MAIN_CONTEXT:
+            options = sel["option"][: self.n]
+            if any(o["type"] == ATTACK and o.get("attackId") in safe_attacks for o in options):
+                self.blocked = [i for i, o in enumerate(options) if o["type"] == END]
 
     def mask(self) -> np.ndarray:
         m = np.zeros(N_ACTIONS, dtype=bool)
         m[: self.n] = True
         m[self.picked] = False
+        m[self.blocked] = False
         m[STOP] = len(self.picked) >= self.min
         return m
 
@@ -151,6 +165,84 @@ class Decision:
             raise ValueError(f"illegal pick {action}")
         self.picked.append(action)
         return self.complete
+
+
+class CounterPlanner:
+    """Places damage counters on the opponent's Pokémon for the most Prize cards.
+
+    "Put 6 damage counters on your opponent's Benched Pokémon in any way you like"
+    (Phantom Dive) reaches us as six one-counter picks. The observation shows how
+    many counters are left, not where the earlier ones went (and the engine does
+    not always lower HP between picks), so a policy cannot split them: at 216M
+    steps 93% of Phantom Dives put all six on one Pokémon, leaving ~0.46 Prize
+    cards a game on the table. ``DAMAGE_COUNTER_ANY`` picks are therefore planned
+    in full at the first pick (the most Prize cards from knockouts, then the
+    fewest counters; the rest go on the most valuable Pokémon left) and played
+    out by card serial. A ``DAMAGE_COUNTER`` pick, where one Pokémon takes every
+    counter (Cursed Blast, Adrena-Brain), takes a knockout when one is on offer.
+    Anything else, and any pick that could land on our own Pokémon, stays with
+    the policy (``pick`` returns None).
+
+    One planner per seat; ``reset`` it between games.
+    """
+
+    def __init__(self, card_meta: np.ndarray | None = None):
+        self.card_meta = card_meta
+        self.reset()
+
+    def reset(self) -> None:
+        self.plan: list[int] = []  # target serial for each counter still to place
+        self.turn = -1
+
+    def pick(self, obs: dict) -> int | None:
+        sel, state = obs.get("select"), obs.get("current")
+        if (not sel or not state or sel["context"] not in (DAMAGE_COUNTER, DAMAGE_COUNTER_ANY)
+                or sel["minCount"] != 1 or sel["maxCount"] != 1):
+            return None
+        counters = sel.get("remainDamageCounter") or 0
+        targets = self._targets(state, sel)
+        if counters <= 0 or not targets:
+            return None
+        if sel["context"] == DAMAGE_COUNTER:
+            kos = [t for t in targets if 0 < t[2] <= 10 * counters]
+            return max(kos, key=lambda t: (t[3], t[2]))[0] if kos else None
+        serials = {t[1] for t in targets}
+        if not (self.turn == state["turn"] and len(self.plan) == counters and set(self.plan) <= serials):
+            self.plan, self.turn = self._allocate(targets, counters), state["turn"]
+        serial = self.plan.pop(0)
+        return next(t[0] for t in targets if t[1] == serial)
+
+    def _targets(self, state: dict, sel: dict) -> list[tuple[int, int, int, int]] | None:
+        """(option index, serial, HP, Prize cards) per option; None unless all are the opponent's Pokémon."""
+        opp = 1 - state["yourIndex"]
+        out = []
+        for i, opt in enumerate(sel["option"][:MAX_OPTIONS]):
+            if opt.get("playerIndex") != opp or opt.get("area") not in (ACTIVE, BENCH):
+                return None
+            mon = _at(_area_list(state, sel, opp, opt["area"]), opt.get("index"))
+            if mon is None:
+                return None
+            prizes = int(self.card_meta[mon["id"], 3]) if self.card_meta is not None else 1
+            out.append((i, mon["serial"], mon["hp"], max(prizes, 1)))
+        return out
+
+    @staticmethod
+    def _allocate(targets: list[tuple[int, int, int, int]], counters: int) -> list[int]:
+        alive = [t for t in targets if t[2] > 0][:12]
+        cost = [-(-t[2] // 10) for t in alive]
+        best, best_key = (), (0, 0)
+        for subset in range(1, 1 << len(alive)):
+            chosen = [j for j in range(len(alive)) if subset >> j & 1]
+            need = sum(cost[j] for j in chosen)
+            if need <= counters:
+                key = (sum(alive[j][3] for j in chosen), -need)
+                if key > best_key:
+                    best, best_key = tuple(chosen), key
+        plan = [alive[j][1] for j in best for _ in range(cost[j])]
+        rest = [alive[j] for j in range(len(alive)) if j not in best] or alive or targets
+        # Leftovers: the most Prize cards, then the closest to a knockout next turn.
+        sink = max(rest, key=lambda t: (t[3], -t[2]))
+        return plan + [sink[1]] * (counters - len(plan))
 
 
 def _one_hot(vec: np.ndarray, offset: int, value: int | None, size: int) -> int:

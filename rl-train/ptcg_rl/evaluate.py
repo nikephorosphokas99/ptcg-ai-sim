@@ -52,6 +52,8 @@ def main() -> None:
     outcomes = [o for v in collector.stats.outcomes.values() for o in v]
     print(f"win rate {np.mean(outcomes):.3f} over {len(outcomes)} games vs {args.opponent} "
           f"(draws count 0.5; games still running at the end are not counted)")
+    for deck, results in sorted(collector.stats.by_deck.items(), key=lambda kv: np.mean(kv[1])):
+        print(f"  vs {deck:32s} {np.mean(results):.3f} over {len(results)} games")
 
 
 if __name__ == "__main__":

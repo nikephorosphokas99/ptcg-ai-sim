@@ -2,7 +2,10 @@
 
 The self-play MaskablePPO policy from ``rl-train``, decoded greedily one pick at
 a time exactly as it was trained (``Decision``: pick option indices, then STOP
-once ``minCount`` is met). Built by ``python -m ptcg_rl.export``.
+once ``minCount`` is met). Built by ``python -m ptcg_rl.export``. When the
+bundle has a ``rules.json``, the decisions training plays by rule are played
+the same way here: damage counters "in any way you like" by
+``CounterPlanner``, and no ending a turn that offers a drawback-free attack.
 
 How kaggle_environments loads this file (``agent.get_last_callable``): it
 appends the bundle directory to ``sys.path``, execs the source in a bare dict
@@ -30,9 +33,12 @@ except NameError:
     _ROOT = next((c for c in _candidates if (c / "ptcg_policy").is_dir()), Path("/kaggle_simulations/agent"))
 sys.path.insert(0, str(_ROOT))  # unconditionally: the loader removes its entry after this file runs
 
+import json  # noqa: E402
+
 import numpy as np  # noqa: E402
 
-from ptcg_policy.encoding import RECENT_SLOTS, Decision, encode, recent_opponent_cards, visible_cards  # noqa: E402
+from ptcg_policy.encoding import (  # noqa: E402
+    RECENT_SLOTS, CounterPlanner, Decision, encode, recent_opponent_cards, visible_cards)
 from ptcg_policy.net import load  # noqa: E402
 
 # ISMCTS bundles (``export --ismcts``) ship ismcts.json and search with the engine of
@@ -40,8 +46,6 @@ from ptcg_policy.net import load  # noqa: E402
 _ISMCTS_CONFIG = next((b / "ismcts.json" for b in (_ROOT, Path("/kaggle_simulations/agent"), Path.cwd())
                        if (b / "ismcts.json").exists()), None)
 if _ISMCTS_CONFIG is not None:
-    import json  # noqa: E402
-
     import cg.sim  # noqa: E402  (loads and initialises the engine for SearchBegin / SearchStep)
     from ptcg_policy.ismcts import ISMCTS, EngineSearch  # noqa: E402
 
@@ -63,6 +67,7 @@ class _Policy:
 
     def __init__(self) -> None:
         self.net = None
+        self.planner = None
         self.new_game()
 
     def new_game(self) -> None:
@@ -70,10 +75,18 @@ class _Policy:
         self.opp_seen: set[int] = set()
         self.opp_recent: deque[int] = deque(maxlen=RECENT_SLOTS)
         self.last_turn = -1
+        if self.planner is not None:
+            self.planner.reset()
 
     def _load(self) -> None:
         self.net, self.attack_table, self.card_meta = load(_resolve("policy.npz").parent)
         self.deck = read_deck_csv()
+        # rules.json (written by export): the decisions training plays by rule rather
+        # than by policy, so the agent plays them here exactly as it trained.
+        rules_path = _resolve("rules.json")
+        rules = json.loads(rules_path.read_text()) if rules_path.exists() else {}
+        self.safe_attacks = frozenset(rules["safe_attacks"]) if "safe_attacks" in rules else None
+        self.planner = CounterPlanner(self.card_meta) if rules.get("counter_planner") else None
         self.search = None
         if _ISMCTS_CONFIG is not None:
             self.search = ISMCTS(self.net, self.attack_table, self.card_meta, self.deck,
@@ -90,7 +103,10 @@ class _Policy:
         # Every observation feeds the recent-events memory, forced decisions included,
         # exactly as training's Match does.
         self.opp_recent.extend(recent_opponent_cards(obs, state["yourIndex"]))
-        decision = Decision(obs)
+        planned = self.planner.pick(obs) if self.planner is not None else None
+        if planned is not None:
+            return [planned]
+        decision = Decision(obs, self.safe_attacks)
         while not decision.complete:
             mask = decision.mask()
             if mask.sum() == 1:  # forced: training plays these without a look

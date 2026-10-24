@@ -19,6 +19,7 @@ import json
 import threading
 import os
 import platform
+import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -233,3 +234,16 @@ def attack_table() -> np.ndarray:
     for aid, a in attacks.items():
         table[aid] = (a["damage"] / 300.0, len(a["energies"]) / 5.0)
     return table
+
+
+# An attack has a drawback when its text costs us something: damage to itself,
+# discarding from itself, our hand or our deck, knocking itself out.
+_DRAWBACK = re.compile(r"to itself|from this pok[eé]mon|from your hand|of your deck|"
+                       r"this pok[eé]mon is knocked out|shuffle this pok[eé]mon", re.IGNORECASE)
+
+
+@lru_cache(maxsize=1)
+def safe_attack_ids() -> frozenset[int]:
+    """Attack ids without a drawback: a turn that offers one is not ended without attacking
+    (``encoding.Decision``)."""
+    return frozenset(aid for aid, a in all_attacks().items() if not _DRAWBACK.search(a.get("text") or ""))

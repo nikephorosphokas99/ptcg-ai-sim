@@ -17,13 +17,17 @@ was tried and measured no faster: both halves are Python-bound and share the GIL
 
 On disk a run keeps ``latest.zip`` (rewritten at each snapshot, for
 ``--resume``), a checkpoint every ``--save-every`` steps, ``final.zip`` and
-TensorBoard logs.
+TensorBoard logs. With ``--wandb-project`` every logged value also goes to
+Weights & Biases (``WANDB_API_KEY`` or ``wandb login`` for the credentials), and
+with ``--wandb-log-model`` the checkpoints are uploaded as model artifacts.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
+import re
 import time
 from pathlib import Path
 
@@ -80,6 +84,12 @@ def main() -> None:
     p.add_argument("--agent-deck", default=str(AGENT_DECK))
     p.add_argument("--opponent-decks", nargs="*", default=default_opponent_decks(),
                    help="opponent deck CSVs; none means a mirror match")
+    p.add_argument("--opponent-weights", type=Path,
+                   help="JSON {deck file stem: relative weight} for drawing opponent decks "
+                        "(e.g. decks/training_pool/weights.json); default: every deck equally")
+    p.add_argument("--no-rules", action="store_true",
+                   help="let the policy place 'any way you like' damage counters and end turns with an "
+                        "attack available, instead of the rules env.Match applies by default")
     p.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 2),
                    help="game processes (default: CPUs - 2)")
     p.add_argument("--matches-per-worker", type=int, default=64,
@@ -121,16 +131,32 @@ def main() -> None:
                    help="share of games against a rule-based bot, playing its own deck")
     p.add_argument("--baseline", type=Path,
                    help="a fixed model kept in the opponent pool for the whole run (win_rate/vs_baseline)")
+    p.add_argument("--wandb-project", help="log to this Weights & Biases project (off when not given)")
+    p.add_argument("--wandb-entity", help="W&B team or user (default: the API key's)")
+    p.add_argument("--wandb-name", help="W&B run name (default: the --run folder name)")
+    p.add_argument("--wandb-id", help="W&B run id to continue, e.g. when resuming a run")
+    p.add_argument("--wandb-mode", choices=("online", "offline", "disabled"), default="online")
+    p.add_argument("--wandb-log-model", action="store_true",
+                   help="upload each checkpoint and final.zip to W&B as a model artifact")
     args = p.parse_args()
 
     (args.run / "checkpoints").mkdir(parents=True, exist_ok=True)
     args.batch_size = args.batch_size or (2048 if args.arch == "entity" else 4096)
     args.epochs = args.epochs or (3 if args.arch == "entity" else 4)
+    opponent_weights = json.loads(args.opponent_weights.read_text()) if args.opponent_weights else None
+    if opponent_weights:
+        opponent_weights = {k: float(v) for k, v in opponent_weights.items() if not k.startswith("_")}
+        decks = {Path(d).stem for d in args.opponent_decks}
+        unknown = sorted(set(opponent_weights) - decks)
+        if unknown:
+            print(f"--opponent-weights names decks not in --opponent-decks (ignored): {unknown}")
     match_kwargs = dict(
         agent_deck=args.agent_deck,
         opponent_decks=args.opponent_decks,
+        opponent_weights=opponent_weights,
         prize_reward=args.prize_reward,
         energy_penalty=args.energy_penalty,
+        rules=not args.no_rules,
     )
     if args.bot_frac > 0:
         from .benchmark import BENCHMARKS, compat_cg
@@ -147,6 +173,19 @@ def main() -> None:
         tb_log = str(args.run / "tb")
     except ImportError:
         tb_log = None
+
+    wandb_run = None
+    if args.wandb_project and args.wandb_mode != "disabled":
+        import wandb
+
+        wandb_run = wandb.init(
+            project=args.wandb_project, entity=args.wandb_entity, name=args.wandb_name or args.run.name,
+            id=args.wandb_id, resume="allow" if args.wandb_id else None, mode=args.wandb_mode,
+            config={k: (str(v) if isinstance(v, Path) else v) for k, v in vars(args).items()},
+            dir=str(args.run),
+        )
+        wandb_run.define_metric("time/total_timesteps")
+        wandb_run.define_metric("*", step_metric="time/total_timesteps")
 
     device = get_device(args.device)
     if args.resume:
@@ -243,10 +282,16 @@ def main() -> None:
                 log.record(f"win_rate/{kind}", float(np.mean(outcomes)))
             for deck, outcomes in stats.baseline_by_deck.items():
                 log.record(f"vs_baseline_by_deck/{deck}", float(np.mean(outcomes)))
+            for deck, outcomes in stats.by_deck.items():
+                log.record(f"vs_deck/{deck}", float(np.mean(outcomes)))
             stats.outcomes.clear()
             stats.baseline_by_deck.clear()
+            stats.by_deck.clear()
             log.record("time/total_timesteps", model.num_timesteps)
             log.record("time/trained_hours", trained / 3600)
+            if wandb_run is not None:
+                wandb_run.log({k: float(v) for k, v in log.name_to_value.items()
+                               if isinstance(v, (int, float, np.number))})
             log.dump(model.num_timesteps)
             vs_base = f" | vs baseline {np.mean(kinds['vs_baseline']):.2f}" if "vs_baseline" in kinds else ""
             vs_base += f" | vs bots {np.mean(kinds['vs_bot']):.2f}" if "vs_bot" in kinds else ""
@@ -260,10 +305,30 @@ def main() -> None:
                 model.save(args.run / "latest.zip")
             if model.num_timesteps >= next_save:
                 next_save += args.save_every
-                model.save(args.run / "checkpoints" / f"step_{model.num_timesteps}.zip")
+                checkpoint = args.run / "checkpoints" / f"step_{model.num_timesteps}.zip"
+                model.save(checkpoint)
+                _log_model(wandb_run, args, checkpoint, model.num_timesteps)
     finally:
         model.save(args.run / "final.zip")
         collector.close()
+        if wandb_run is not None:
+            _log_model(wandb_run, args, args.run / "final.zip", model.num_timesteps, final=True)
+            wandb_run.finish()
+
+
+def _log_model(run, args, path: Path, steps: int, final: bool = False) -> None:
+    """Upload a saved model as a W&B artifact (``--wandb-log-model``); never fails the run."""
+    if run is None or not args.wandb_log_model:
+        return
+    try:
+        import wandb
+
+        artifact = wandb.Artifact(re.sub(r"[^A-Za-z0-9_.-]", "-", f"{run.name}-model"), type="model",
+                                  metadata={"timesteps": steps, "file": path.name})
+        artifact.add_file(str(path))
+        run.log_artifact(artifact, aliases=["latest", f"step_{steps}"] + (["final"] if final else []))
+    except Exception as e:  # a network hiccup must not cost a training run
+        print(f"W&B model upload failed: {e}")
 
 
 if __name__ == "__main__":

@@ -36,3 +36,6 @@ __pycache__/
 
 # WSL leaves these behind next to files copied from Windows.
 *Zone.Identifier
+
+# Jupyter autosaves
+.ipynb_checkpoints/

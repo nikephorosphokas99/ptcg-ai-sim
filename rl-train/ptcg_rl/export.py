@@ -8,7 +8,8 @@ Writes ``submissions/<name>/`` and ``submissions/<name>.zip`` with ``main.py``
 at the root, next to ``deck.csv``, ``policy.npz`` + ``arch.json`` (actor weights only, for numpy), the
 ``ptcg_policy`` package (the numpy ``submission/ptcg_policy/net.py`` plus this repo's
 ``encoding.py``, so the agent sees exactly the observations it trained on) and
-the official ``cg`` bindings, as in the sample submission. With
+the official ``cg`` bindings, as in the sample submission, and ``rules.json``
+(the decisions training plays by rule; see ``env.Match``). With
 ``--visualizer NAME`` the same checked bundle is also installed as an opponent
 in ``visualizer/agents/NAME`` (without ``cg``, which the agent does not use),
 with an ``ARCH.json`` for the opponent dialog.
@@ -43,7 +44,7 @@ from sb3_contrib import MaskablePPO
 from torch import nn
 
 from .encoding import RECENT_SLOTS, Decision, encode, recent_opponent_cards, visible_cards
-from .engine import AGENT_DECK, TRAIN_ROOT, Game, attack_table, card_meta_table, load_deck
+from .engine import AGENT_DECK, TRAIN_ROOT, Game, attack_table, card_meta_table, load_deck, safe_attack_ids
 from .policy import EntityPolicy, PointerPolicy
 from .train import load_model
 
@@ -164,7 +165,7 @@ def _check_value(model: MaskablePPO, deck: list[int], bundle: Path, positions: i
     return worst
 
 
-def _write_bundle(model: MaskablePPO, deck: list[int], out: Path, value: bool = False) -> None:
+def _write_bundle(model: MaskablePPO, deck: list[int], out: Path, value: bool = False, rules: bool = True) -> None:
     if out.exists():
         shutil.rmtree(out)
     shutil.copytree(TEMPLATE, out, ignore=shutil.ignore_patterns("__pycache__"))
@@ -194,6 +195,9 @@ def _write_bundle(model: MaskablePPO, deck: list[int], out: Path, value: bool = 
     arrays["card_meta"] = card_meta_table()
     np.savez(out / "policy.npz", **arrays)
     (out / "arch.json").write_text(json.dumps(_arch(policy), indent=2) + "\n")
+    if rules:  # the decisions training's Match plays by rule (env.Match, rules=True)
+        (out / "rules.json").write_text(json.dumps(
+            {"counter_planner": True, "safe_attacks": sorted(safe_attack_ids())}) + "\n")
 
 
 def _check_parity(model: MaskablePPO, deck: list[int], bundle: Path, positions: int = 300) -> float:
@@ -275,6 +279,8 @@ def main() -> None:
     p.add_argument("--ismcts", action="store_true",
                    help="ISMCTS bundle (ptcg_policy/ismcts.py): ships the value head, ismcts.json, opp_decks.json")
     p.add_argument("--ismcts-seconds", type=float, default=1.0, help="most thinking time per searched pick")
+    p.add_argument("--no-rules", action="store_true",
+                   help="leave out rules.json, for a model trained with --no-rules")
     args = p.parse_args()
 
     name = args.name or f"{args.model.resolve().parent.name}_{args.model.stem}"
@@ -283,7 +289,7 @@ def main() -> None:
     model = load_model(args.model, "cpu")
 
     args.value = args.value or args.ismcts
-    _write_bundle(model, deck, bundle, value=args.value)
+    _write_bundle(model, deck, bundle, value=args.value, rules=not args.no_rules)
     diff = _check_parity(model, deck, bundle)
     print(f"parity: bundle vs SB3 log-probabilities differ by at most {diff:.2e}")
     if diff > 1e-4:

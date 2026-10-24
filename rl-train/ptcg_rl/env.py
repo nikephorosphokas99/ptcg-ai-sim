@@ -7,7 +7,15 @@ worker processes that host matches never import torch.
 
 Each game draws a seat (0 or 1) and an opponent deck, so the learner sees both
 sides of the coin flip. With no opponent decks the opponent pilots the learner's
-own deck (mirror match).
+own deck (mirror match); with ``opponent_weights`` decks are drawn in proportion
+to them (``decks/training_pool/weights.json``: Kaggle meta share, more weight
+on the matchups the agent loses).
+
+With ``rules`` (the default) both seats play two decisions by rule instead of by
+policy, exactly as the submission does: damage counters placed "in any way you
+like" go where they take the most Prize cards (``encoding.CounterPlanner``), and
+a turn that offers an attack without a drawback is not ended without attacking
+(``encoding.Decision``).
 
 The engine seeds its RNG from ``std::random_device``, so games are not
 reproducible; ``seed`` only fixes this match's own choices (seat, deck).
@@ -22,8 +30,8 @@ from pathlib import Path
 import numpy as np
 
 from .bots import bot_deck, bot_move, load_bot, random_legal
-from .encoding import RECENT_SLOTS, Decision, encode, recent_opponent_cards, visible_cards
-from .engine import Game, all_attacks, all_cards, attack_table, card_meta_table, load_deck
+from .encoding import RECENT_SLOTS, CounterPlanner, Decision, encode, recent_opponent_cards, visible_cards
+from .engine import Game, all_attacks, all_cards, attack_table, card_meta_table, load_deck, safe_attack_ids
 
 
 BASIC_ENERGY = range(1, 9)  # basic energy card ids, equal to the energy type they provide
@@ -75,6 +83,7 @@ class Match:
         self,
         agent_deck: str | Path,
         opponent_decks: list[str | Path] | None = None,
+        opponent_weights: dict[str, float] | None = None,
         prize_reward: float = 0.05,
         energy_penalty: float = 0.0,
         skip_forced: bool = True,
@@ -82,6 +91,7 @@ class Match:
         bots: list[str] | None = None,
         bot_frac: float = 0.0,
         bot_cg: str | None = None,
+        rules: bool = True,
         seed: int | None = None,
     ):
         """
@@ -89,6 +99,8 @@ class Match:
             agent_deck: the learner's 60-card CSV.
             opponent_decks: CSVs the opponent's deck is drawn from each game;
                 empty or None means a mirror match with ``agent_deck``.
+            opponent_weights: relative draw weight per deck (file stem); decks
+                not named get 1.0. None draws every deck equally often.
             prize_reward: shaping per Prize card taken (and minus per Prize card
                 given up), on top of +1 / -1 for a win / loss.
             energy_penalty: subtracted when the learner attaches a basic Energy (from
@@ -102,11 +114,18 @@ class Match:
                 probability ``bot_frac`` a game's opponent is one of them,
                 playing its own deck, moved here without involving the trainer.
             bot_cg: parent folder of the ``cg`` the bots import (``benchmark.compat_cg``).
+            rules: place "any way you like" damage counters by plan and never end
+                a turn that offers a drawback-free attack, for both seats.
         """
         self.agent_deck = load_deck(agent_deck)
         self.opponent_decks = {Path(p).stem: load_deck(p) for p in opponent_decks or []}
         if not self.opponent_decks:
             self.opponent_decks = {"mirror": self.agent_deck}
+        self._deck_names = list(self.opponent_decks)
+        weights = np.array([(opponent_weights or {}).get(n, 1.0) for n in self._deck_names], dtype=float)
+        if (weights < 0).any() or weights.sum() <= 0:
+            raise ValueError("opponent_weights must be non-negative and not all zero")
+        self._deck_p = weights / weights.sum()
         self.prize_reward = prize_reward
         self.energy_penalty = energy_penalty
         if energy_penalty:
@@ -126,6 +145,8 @@ class Match:
         self._rng = np.random.default_rng(seed)
         self._attacks = attack_table()
         self._meta = card_meta_table()
+        self._safe_attacks = safe_attack_ids() if rules else None
+        self._planners = [CounterPlanner(self._meta), CounterPlanner(self._meta)] if rules else None
         self._game: Game | None = None
         self._decision: Decision | None = None
 
@@ -138,7 +159,7 @@ class Match:
             self.bot, self.bot_name = load_bot(bundle, self.bot_cg), bundle.name
             self.opp_deck_name, opp_deck = f"bot:{bundle.name}", self._bot_decks[bundle.name]
         else:
-            self.opp_deck_name = list(self.opponent_decks)[self._rng.integers(len(self.opponent_decks))]
+            self.opp_deck_name = self._deck_names[self._rng.choice(len(self._deck_names), p=self._deck_p)]
             opp_deck = self.opponent_decks[self.opp_deck_name]
         decks = [self.agent_deck, opp_deck]
         if self.seat == 1:
@@ -146,6 +167,8 @@ class Match:
         self._decks = decks
         self._seen: list[set[int]] = [set(), set()]  # opponent cards each seat has seen
         self._recent = [deque(maxlen=RECENT_SLOTS), deque(maxlen=RECENT_SLOTS)]
+        for planner in self._planners or ():
+            planner.reset()
         self._game = Game(*decks)
         self._observe()
         self._decision = None
@@ -274,7 +297,7 @@ class Match:
         return self._since_learner > STALL_DECISIONS
 
     def _advance(self) -> None:
-        """Resolve empty and forced decisions, and bot moves, until a policy has a real choice."""
+        """Resolve empty, forced and rule-played decisions, and bot moves, until a policy has a real choice."""
         game = self._game
         while not game.done and not self._stalled:
             if self.bot is not None and game.to_move != self.seat:
@@ -290,11 +313,14 @@ class Match:
                 self.bot_failures += failed
                 continue
             if self._decision is None:
-                self._decision = Decision(game.obs)
+                self._decision = Decision(game.obs, self._safe_attacks)
             d = self._decision
             mask = d.mask()
+            planned = self._planners[game.to_move].pick(game.obs) if self._planners and not d.picked else None
             if d.complete:  # e.g. maxCount == 0: nothing to choose
                 pass
+            elif planned is not None:
+                d.apply(planned)
             elif self.skip_forced and mask.sum() == 1:
                 if not d.apply(int(np.flatnonzero(mask)[0])):
                     continue

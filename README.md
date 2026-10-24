@@ -8,7 +8,9 @@ by default in mirror matches with the agent's own deck.
 
     cd rl-train
     pip install -r requirements.txt
-    python -m ptcg_rl.train --run runs/first --timesteps 50_000_000
+    python -m ptcg_rl.train --run runs/first --timesteps 50_000_000 \
+        --opponent-decks decks/training_pool/*.csv --opponent-weights decks/training_pool/weights.json \
+        --wandb-project ptcg-ai-sim          # optional; needs `wandb login` or WANDB_API_KEY
     tensorboard --logdir runs/first/tb
     python -m ptcg_rl.evaluate runs/first/final.zip --games 500
     python -m ptcg_rl.export runs/first/final.zip      # -> submissions/first_final.zip
@@ -30,7 +32,7 @@ by default in mirror matches with the agent's own deck.
 | `rl-train/ptcg_rl/policy.py` | policies: `EntityPolicy` (v3, default), `PointerPolicy`, and the first-generation flat `PTCGExtractor` |
 | `rl-train/ptcg_rl/cardtext.py` | card rules text as fixed features (TF-IDF + SVD, plus mechanic flags) |
 | `rl-train/ptcg_rl/bots.py` | the rule-based bots as in-process training opponents |
-| `rl-train/decks/training_pool/` | the 18 opponent decks used in training |
+| `rl-train/decks/training_pool/` | the opponent decks used in training, and `weights.json` for how often each is drawn |
 | `rl-train/ptcg_rl/train.py` | MaskablePPO training loop, snapshot pool, checkpoints |
 | `rl-train/ptcg_rl/evaluate.py` | win rate against the random player or a checkpoint |
 | `rl-train/ptcg_rl/export.py` | builds and checks a submission zip from a trained model |
@@ -79,14 +81,31 @@ the bot (they keep per-game state in module globals); a bot that errors or loops
 in its own turn is replaced by a random legal move or has the game ended.
 Benchmark numbers against bots used in training are optimistic.
 
-**Opponents.** Opponent decks come from `--opponent-decks` (none means mirror matches).
-Half the games (`--self-play-frac`) are against the current
+**Opponents.** Opponent decks come from `--opponent-decks` (none means mirror matches),
+drawn in proportion to `--opponent-weights` (`decks/training_pool/weights.json`: each archetype's
+share of Kaggle games, weighted towards the matchups the last submission lost; see
+`decks/training_pool/SOURCES.md`). Half the games (`--self-play-frac`) are against the current
 learner, and both seats then produce training samples. The rest are against the
 random player or a frozen snapshot: one is taken every `--snapshot-every` steps,
 the newest `--max-pool` are kept on the GPU, and new games draw from
 `--active-snapshots` of them at a time (each one in play costs a forward pass
 per tick). `--baseline model.zip` keeps one fixed earlier model in the pool for
 the whole run, logged as `win_rate/vs_baseline`.
+
+**Rules.** Two kinds of decision are played by rule, not by the policy, for both
+seats in training (`Match`, `rules=True`) and in the submission (`rules.json` in the
+bundle). Damage counters placed "in any way you like" (Phantom Dive) go where they
+take the most Prize cards (`encoding.CounterPlanner`): the engine asks for them one
+counter at a time and the policy cannot see where the earlier ones went, so the 216M
+policy put all six on one Pokémon in 93% of its Kaggle Phantom Dives; on those same
+positions the planner takes 715 Prize cards to its 509. And a turn that offers an attack
+without a drawback (`engine.safe_attack_ids`) cannot be ended without attacking.
+`--no-rules` (train) and `--no-rules` (export) turn both off.
+
+**Logging.** TensorBoard under `<run>/tb`; with `--wandb-project` the same values go
+to Weights & Biases, and `--wandb-log-model` uploads each checkpoint and `final.zip`
+as model artifacts. `vs_deck/<deck>` is the learner's win rate against each opponent
+deck (games against itself and its snapshots).
 
 **Memory and disk.** Training samples are stored on the GPU as int16/float16,
 ~9 KB each (~11 KB for v3); `--store` (default 6 x `--rollout`) is ~3.4 GB of VRAM with the
