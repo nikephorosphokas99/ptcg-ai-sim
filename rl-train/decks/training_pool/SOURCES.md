@@ -59,3 +59,8 @@ Decks missing from the file are drawn with weight 1.0.
 of the Dragapult / Dusknoir agent they were still won 5% (`crustle_bot`), 11% (`crustle_cook`) and
 20% (`crustle`) of the time, flat since 5M: Crustle takes no damage from Pokémon ex, and the deck's
 answer (damage counters from Cursed Blast and Phantom Dive) needs practice.
+
+2026-10-25: the agent switched to a Dragapult ex / Blaziken ex list (`decks/main_agent.csv`; 53 of its
+60 cards are shared with `dragapult_blaziken`). `dragapult_dusknoir_agent` is the Dragapult ex /
+Dusknoir list it played before (submissions `dusknoir_25M`, `dusknoir_50M`), kept as an opponent with
+the other Dragapult lists' weight.

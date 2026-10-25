@@ -143,6 +143,12 @@ def main() -> None:
     p.add_argument("--arch", choices=("entity", "pointer", "flat"), default="entity",
                    help="policy for a new model (ignored with --resume): entity = v3 attention over "
                         "board/hand/option tokens; pointer = per-option head with deck memory; flat = first generation")
+    # Entity network size (new models only; a resumed model keeps the size it was saved with).
+    p.add_argument("--dim", type=int, default=128, help="entity: token width")
+    p.add_argument("--heads", type=int, default=4, help="entity: attention heads (must divide --dim)")
+    p.add_argument("--board-layers", type=int, default=2, help="entity: self-attention layers over the board")
+    p.add_argument("--option-layers", type=int, default=2, help="entity: decoder layers over the options")
+    p.add_argument("--ff", type=int, default=256, help="entity: feed-forward width inside each layer")
     p.add_argument("--bots", nargs="*", default=None,
                    help="rule-based agent bundles to train against (default: every benchmarks/* with a deck)")
     p.add_argument("--bot-frac", type=float, default=0.0,
@@ -222,7 +228,11 @@ def main() -> None:
         model = load_model(args.resume, device, tensorboard_log=tb_log)
     else:
         if args.arch == "entity":
-            policy, policy_kwargs = EntityPolicy, {}
+            if args.dim % args.heads:
+                raise SystemExit(f"--heads {args.heads} must divide --dim {args.dim}")
+            policy, policy_kwargs = EntityPolicy, dict(features_extractor_kwargs=dict(
+                dim=args.dim, heads=args.heads, board_layers=args.board_layers,
+                option_layers=args.option_layers, ff=args.ff))
         elif args.arch == "pointer":
             policy, policy_kwargs = PointerPolicy, {}
         else:
