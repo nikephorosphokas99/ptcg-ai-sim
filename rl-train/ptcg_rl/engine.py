@@ -209,30 +209,143 @@ def card_table() -> np.ndarray:
     return table
 
 
+# Card flags, column META_FLAGS of card_meta_table.
+FLAG_EX, FLAG_BASIC, FLAG_ABILITY, FLAG_TERA, FLAG_STEVENS, FLAG_RULE_BOX, FLAG_SPECIAL_ENERGY = (
+    1, 2, 4, 8, 16, 32, 64)
+# A damage rule: where its card has to be for it to protect the defending (Active) Pokémon ...
+ON_SELF, ON_TOOL, ON_IN_PLAY, ON_BENCH, ON_STADIUM = 1, 2, 3, 4, 5
+# ... what the attacking Pokémon must be or have (param: a count or a type bit mask) ...
+ATT_ANY, ATT_EX, ATT_BASIC_EX, ATT_ABILITY, ATT_TERA, ATT_SPECIAL_ENERGY, ATT_ENERGY_AT_MOST, ATT_TYPE, \
+    ATT_TOOL = range(9)
+# ... what the defending Pokémon must be or have (param: a type bit mask) ...
+DEF_ANY, DEF_TYPE, DEF_ENERGY_TYPE, DEF_NO_RULE_BOX, DEF_STEVENS = range(5)
+# ... and what it does to the damage.
+NO_DAMAGE, NO_DAMAGE_AT_LEAST, LESS_AFTER_WR, LESS_BEFORE_WR = 1, 2, 3, 4
+META_FLAGS, META_RULE = 4, 5  # card_meta columns: flags, then the 7 rule fields
+_RULE_FIELDS = 7  # where, attacker condition, its param, defender condition, its param, effect, amount
+
+_TYPE_SYMBOLS = {"C": 0, "G": 1, "R": 2, "W": 3, "L": 4, "P": 5, "F": 6, "D": 7, "M": 8, "N": 9}
+_TYPES = r"((?:\{\w\}(?:, | or |, or )?)+)"  # "{G}, {R}, {W}, or {L}"
+
+
+def _type_mask(symbols: str) -> int:
+    return sum(1 << _TYPE_SYMBOLS[s.upper()] for s in re.findall(r"\{(\w)\}", symbols))
+
+
+# Ability, Pokémon Tool and Stadium texts that stop or reduce the damage an attack does to the
+# Active Pokémon, as (pattern, where, attacker condition, defender condition, effect). A
+# callable condition or effect takes the match and returns (kind, param) / (effect, amount).
+# Effects for Benched Pokémon only (Tera, Shaymin, Battle Cage), effects of attacks and
+# Supporters for the next turn (not visible in the state) and Bouffalant's Curly Wall (two
+# copies needed) are left out.
+_DAMAGE_RULES = [
+    (r"prevent all damage done to this pokémon by attacks from your opponent's basic pokémon \{ex\}",
+     ON_SELF, (ATT_BASIC_EX, 0), (DEF_ANY, 0), (NO_DAMAGE, 0)),
+    (r"prevent all damage done to this pokémon by attacks from your opponent's pokémon \{ex\}",
+     ON_SELF, (ATT_EX, 0), (DEF_ANY, 0), (NO_DAMAGE, 0)),
+    (r"prevent all damage from attacks done to this pokémon by your opponent's pokémon that have an ability",
+     ON_SELF, (ATT_ABILITY, 0), (DEF_ANY, 0), (NO_DAMAGE, 0)),
+    (r"prevent all damage from and effects of attacks from your opponent's tera pokémon done to this pokémon",
+     ON_SELF, (ATT_TERA, 0), (DEF_ANY, 0), (NO_DAMAGE, 0)),
+    (r"done to this pokémon by your opponent's pokémon that have any special energy attached",
+     ON_SELF, (ATT_SPECIAL_ENERGY, 0), (DEF_ANY, 0), (NO_DAMAGE, 0)),
+    (r"prevent all damage done to this pokémon by attacks from your opponent's pokémon if that damage is (\d+) or more",
+     ON_SELF, (ATT_ANY, 0), (DEF_ANY, 0), lambda m: (NO_DAMAGE_AT_LEAST, int(m[1]))),
+    (r"^this pokémon takes (\d+) less damage from attacks \(after",
+     ON_SELF, (ATT_ANY, 0), (DEF_ANY, 0), lambda m: (LESS_AFTER_WR, int(m[1]))),
+    (rf"^this pokémon takes (\d+) less damage from attacks from your opponent's {_TYPES} pokémon",
+     ON_SELF, lambda m: (ATT_TYPE, _type_mask(m[2])), (DEF_ANY, 0), lambda m: (LESS_AFTER_WR, int(m[1]))),
+    (r"as long as this pokémon is in the active spot, attacks used by your opponent's active pokémon do (\d+) less damage",
+     ON_SELF, (ATT_ANY, 0), (DEF_ANY, 0), lambda m: (LESS_BEFORE_WR, int(m[1]))),
+    (r"as long as this pokémon is in the active spot, all of your pokémon take (\d+) less damage",
+     ON_SELF, (ATT_ANY, 0), (DEF_ANY, 0), lambda m: (LESS_AFTER_WR, int(m[1]))),
+    (r"^attacks used by your opponent's active pokémon that has a pokémon tool attached do (\d+) less damage",
+     ON_IN_PLAY, (ATT_TOOL, 0), (DEF_ANY, 0), lambda m: (LESS_BEFORE_WR, int(m[1]))),
+    (r"^all of your pokémon that have any (\{\w\}) energy attached take (\d+) less damage",
+     ON_IN_PLAY, (ATT_ANY, 0), lambda m: (DEF_ENERGY_TYPE, _type_mask(m[1])), lambda m: (LESS_AFTER_WR, int(m[2]))),
+    (r"on your bench, prevent all damage done to each of your pokémon by attacks from your opponent's pokémon that have (\d+) or less energy",
+     ON_BENCH, lambda m: (ATT_ENERGY_AT_MOST, int(m[1])), (DEF_ANY, 0), (NO_DAMAGE, 0)),
+    (r"on your bench, all of your steven's pokémon take (\d+) less damage",
+     ON_BENCH, (ATT_ANY, 0), (DEF_STEVENS, 0), lambda m: (LESS_AFTER_WR, int(m[1]))),
+    (r"^if the pokémon this card is attached to is damaged by an attack from your opponent's (\{\w\}) pokémon, it takes (\d+) less",
+     ON_TOOL, lambda m: (ATT_TYPE, _type_mask(m[1])), (DEF_ANY, 0), lambda m: (LESS_AFTER_WR, int(m[2]))),
+    (r"^the pokémon this card is attached to takes (\d+) less damage from attacks from your opponent's pokémon that have an ability",
+     ON_TOOL, (ATT_ABILITY, 0), (DEF_ANY, 0), lambda m: (LESS_AFTER_WR, int(m[1]))),
+    (rf"^the (\{{\w\}}) pokémon this card is attached to takes (\d+) less damage from attacks from your opponent's {_TYPES} pokémon",
+     ON_TOOL, lambda m: (ATT_TYPE, _type_mask(m[3])), lambda m: (DEF_TYPE, _type_mask(m[1])),
+     lambda m: (LESS_AFTER_WR, int(m[2]))),
+    (r"^(\{\w\}) pokémon \(both yours and your opponent's\) take (\d+) less damage",
+     ON_STADIUM, (ATT_ANY, 0), lambda m: (DEF_TYPE, _type_mask(m[1])), lambda m: (LESS_AFTER_WR, int(m[2]))),
+    (r"^steven's pokémon \(both yours and your opponent's\) take (\d+) less damage",
+     ON_STADIUM, (ATT_ANY, 0), (DEF_STEVENS, 0), lambda m: (LESS_AFTER_WR, int(m[1]))),
+    (r"^prevent all damage done to pokémon that don't have a rule box \(both yours and your opponent's\) by attacks from the opponent's pokémon \{ex\}",
+     ON_STADIUM, (ATT_EX, 0), (DEF_NO_RULE_BOX, 0), (NO_DAMAGE, 0)),
+]
+
+
+def _damage_rule(card: dict) -> tuple[int, ...] | None:
+    """The first ``_DAMAGE_RULES`` entry one of the card's texts matches, as the 7 rule fields."""
+    for skill in card["skills"]:
+        text = re.sub(r"\s+", " ", skill["text"].replace("’", "'")).lower()
+        for pattern, where, att, dfn, effect in _DAMAGE_RULES:
+            m = re.search(pattern, text)
+            if m:
+                att, dfn, effect = (f(m) if callable(f) else f for f in (att, dfn, effect))
+                return (where, *att, *dfn, *effect)
+    return None
+
+
 @lru_cache(maxsize=1)
 def card_meta_table() -> np.ndarray:
-    """Per card id: [type, Weakness type, Resistance type, Prize cards if Knocked Out].
+    """Per card id: [type, Weakness type, Resistance type, Prize cards if Knocked Out, flags,
+    damage rule (7 fields)].
 
     Types are ``EnergyType`` values, -1 for no Weakness / Resistance; Prize cards
-    are 1, 2 for Pokémon ex, 3 for Mega Evolution Pokémon ex. Used for the
-    attack features in ``encoding._tactical``.
+    are 1, 2 for Pokémon ex, 3 for Mega Evolution Pokémon ex. Flags are ``FLAG_*`` bits. The
+    damage rule (``_DAMAGE_RULES``; zeros for none) is an Ability, Pokémon Tool or Stadium
+    that prevents or reduces attack damage. Used for the attack features in
+    ``encoding._tactical``.
     """
     cards = all_cards()
-    table = np.full((max(cards) + 1, 4), -1, dtype=np.int16)
+    table = np.full((max(cards) + 1, META_RULE + _RULE_FIELDS), -1, dtype=np.int16)
+    table[:, META_FLAGS:] = 0
     for cid, c in cards.items():
         prizes = 3 if c["megaEx"] else 2 if c["ex"] else 1
-        table[cid] = (c["energyType"], -1 if c["weakness"] is None else c["weakness"],
-                      -1 if c["resistance"] is None else c["resistance"], prizes)
+        table[cid, :META_FLAGS] = (c["energyType"], -1 if c["weakness"] is None else c["weakness"],
+                                   -1 if c["resistance"] is None else c["resistance"], prizes)
+        ex = c["ex"] or c["megaEx"]  # a Mega Evolution Pokémon ex is a Pokémon ex
+        table[cid, META_FLAGS] = (
+            FLAG_EX * ex | FLAG_BASIC * c["basic"] | FLAG_TERA * c["tera"]
+            | FLAG_ABILITY * (c["cardType"] == 0 and len(c["skills"]) > 0)
+            | FLAG_STEVENS * c["name"].replace("’", "'").startswith("Steven's") | FLAG_RULE_BOX * ex
+            | FLAG_SPECIAL_ENERGY * (c["cardType"] == 6))
+        rule = _damage_rule(c)
+        if rule:
+            table[cid, META_RULE:] = rule
     return table
+
+
+def _expected_damage(attack: dict) -> float:
+    """The attack's printed damage, or for "Flip 2 coins. This attack does 40 damage for each
+    heads." (printed as 0) the expected damage: half a hit per coin, one hit for "until you get
+    tails". Coins counted from the board (one per Energy attached, ...) stay 0."""
+    if attack["damage"]:
+        return float(attack["damage"])
+    text = re.sub(r"\s+", " ", attack.get("text") or "").lower()
+    m = re.match(r"flip (\d+) coins\. this attack does (\d+) damage for each heads", text)
+    if m:
+        return int(m[1]) * int(m[2]) / 2
+    m = re.match(r"flip a coin until you get tails\. this attack does (\d+) damage for each heads", text)
+    return float(m[1]) if m else 0.0
 
 
 @lru_cache(maxsize=1)
 def attack_table() -> np.ndarray:
-    """(damage, energy cost) per attack id, scaled."""
+    """(damage, energy cost) per attack id, scaled; damage is the expected damage for coin flips."""
     attacks = all_attacks()
     table = np.zeros((max(attacks) + 1, 2), dtype=np.float32)
     for aid, a in attacks.items():
-        table[aid] = (a["damage"] / 300.0, len(a["energies"]) / 5.0)
+        table[aid] = (_expected_damage(a) / 300.0, len(a["energies"]) / 5.0)
     return table
 
 

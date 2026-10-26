@@ -16,7 +16,12 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from .engine import N_ENERGY_TYPES
+from .engine import (
+    ATT_ABILITY, ATT_BASIC_EX, ATT_ENERGY_AT_MOST, ATT_EX, ATT_SPECIAL_ENERGY, ATT_TERA, ATT_TOOL, ATT_TYPE,
+    DEF_ENERGY_TYPE, DEF_NO_RULE_BOX, DEF_STEVENS, DEF_TYPE, FLAG_ABILITY, FLAG_BASIC, FLAG_EX, FLAG_RULE_BOX,
+    FLAG_SPECIAL_ENERGY, FLAG_STEVENS, FLAG_TERA, LESS_AFTER_WR, LESS_BEFORE_WR, META_FLAGS, META_RULE,
+    N_ENERGY_TYPES, NO_DAMAGE, NO_DAMAGE_AT_LEAST, ON_BENCH, ON_IN_PLAY, ON_SELF, ON_STADIUM, ON_TOOL,
+)
 
 if TYPE_CHECKING:  # gymnasium is imported where needed, so the submission bundle runs without it
     from gymnasium import spaces
@@ -365,10 +370,11 @@ def _option_slots(opt: dict, me: int) -> tuple[int, int]:
 
 def _tactical(f: np.ndarray, opt: dict, state: dict, me: int, attack_table: np.ndarray,
               card_meta: np.ndarray) -> None:
-    """What an attack would do to the opponent's Active Pokémon, before effects.
+    """What an attack would do to the opponent's Active Pokémon, before the attack's own text.
 
-    [base damage, damage after Weakness (x2) and Resistance (-30), defender HP,
-    knocks out, Prize cards for that knockout, Weakness applies, Resistance applies]
+    [base damage, damage after Weakness (x2), Resistance (-30) and the Abilities, Pokémon
+    Tools and Stadium that prevent or reduce it (``_damage_rules``), defender HP, knocks out,
+    Prize cards for that knockout, Weakness applies, Resistance applies]
     """
     aid = opt.get("attackId")
     attacker = _at(state["players"][me]["active"], 0)
@@ -379,11 +385,56 @@ def _tactical(f: np.ndarray, opt: dict, state: dict, me: int, attack_table: np.n
     a_type = card_meta[attacker["id"], 0]
     weak = card_meta[defender["id"], 1] == a_type and a_type > 0
     resist = card_meta[defender["id"], 2] == a_type and a_type > 0
-    damage = base * (2.0 if weak else 1.0)
+    rules = _damage_rules(state, me, attacker, defender, card_meta) if card_meta.shape[1] > META_RULE else []
+    before = sum(amount for effect, amount in rules if effect == LESS_BEFORE_WR)
+    damage = max(0.0, base - before) * (2.0 if weak else 1.0) if base > 0 else 0.0
     damage = max(0.0, damage - 30.0) if resist else damage
+    damage = max(0.0, damage - sum(amount for effect, amount in rules if effect == LESS_AFTER_WR))
+    if any(effect == NO_DAMAGE or (effect == NO_DAMAGE_AT_LEAST and damage >= amount) for effect, amount in rules):
+        damage = 0.0
     hp = float(defender["hp"])
     f[:] = [base / 300.0, damage / 300.0, hp / 300.0, float(damage >= hp > 0),
             card_meta[defender["id"], 3] / 3.0, float(weak), float(resist)]
+
+
+def _damage_rules(state: dict, me: int, attacker: dict, defender: dict,
+                  card_meta: np.ndarray) -> list[tuple[int, int]]:
+    """(effect, amount) of each damage rule (``engine._DAMAGE_RULES``) that protects the
+    opponent's Active ``defender`` from an attack by our Active ``attacker``."""
+    side = state["players"][1 - me]
+    sources = [(defender["id"], ON_SELF)] + [(_cid(t), ON_TOOL) for t in defender["tools"]]
+    sources += [(m["id"], ON_IN_PLAY) for m in side["active"] + side["bench"] if m]
+    sources += [(m["id"], ON_BENCH) for m in side["bench"] if m]
+    sources += [(_cid(s), ON_STADIUM) for s in state["stadium"] or [] if s]
+
+    a_flags, d_flags = int(card_meta[attacker["id"], META_FLAGS]), int(card_meta[defender["id"], META_FLAGS])
+    a_type, d_type = int(card_meta[attacker["id"], 0]), int(card_meta[defender["id"], 0])
+    a_energy = [_cid(e) for e in attacker["energyCards"] if e]
+    attacker_ok = {
+        ATT_EX: lambda _: a_flags & FLAG_EX,
+        ATT_BASIC_EX: lambda _: a_flags & FLAG_EX and a_flags & FLAG_BASIC,
+        ATT_ABILITY: lambda _: a_flags & FLAG_ABILITY,
+        ATT_TERA: lambda _: a_flags & FLAG_TERA,
+        ATT_SPECIAL_ENERGY: lambda _: any(card_meta[e, META_FLAGS] & FLAG_SPECIAL_ENERGY for e in a_energy),
+        ATT_ENERGY_AT_MOST: lambda n: len(a_energy) <= n,
+        ATT_TYPE: lambda mask: mask >> a_type & 1,
+        ATT_TOOL: lambda _: any(attacker["tools"]),
+    }
+    defender_ok = {
+        DEF_TYPE: lambda mask: mask >> d_type & 1,
+        DEF_ENERGY_TYPE: lambda mask: any(mask >> int(e) & 1 for e in defender["energies"]),
+        DEF_NO_RULE_BOX: lambda _: not d_flags & FLAG_RULE_BOX,
+        DEF_STEVENS: lambda _: d_flags & FLAG_STEVENS,
+    }
+    out = []
+    for cid, where in sources:
+        if not 0 < cid < len(card_meta):
+            continue
+        rule_where, att, att_param, dfn, dfn_param, effect, amount = (int(x) for x in card_meta[cid, META_RULE:])
+        if (rule_where == where and attacker_ok.get(att, lambda _: True)(att_param)
+                and defender_ok.get(dfn, lambda _: True)(dfn_param)):
+            out.append((effect, amount))
+    return out
 
 
 def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | None = None,

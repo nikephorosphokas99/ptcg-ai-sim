@@ -205,6 +205,15 @@ class SelfPlayCollector:
             del self.pool[snapshots[0]]
         self.rotate_opponents()
 
+    def set_opponent_weights(self, weights: dict[str, float]) -> None:
+        """Draw opponent decks in proportion to ``weights`` (deck file stem) from the next game on.
+        Only between ``collect`` calls, when no worker owes a reply."""
+        assert not any(self._pending), "set_opponent_weights while games are in flight"
+        for conn in self._conns:
+            conn.send(("weights", weights))
+        for conn in self._conns:
+            conn.recv()
+
     def rotate_opponents(self) -> None:
         """Re-draw which snapshots new games may face: the newest plus random older ones."""
         snapshots = [k for k in self.pool if k not in (RANDOM, BASELINE)]

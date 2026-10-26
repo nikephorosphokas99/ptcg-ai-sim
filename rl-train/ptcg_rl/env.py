@@ -137,10 +137,7 @@ class Match:
         if not self.opponent_decks:
             self.opponent_decks = {"mirror": self.agent_deck}
         self._deck_names = list(self.opponent_decks)
-        weights = np.array([(opponent_weights or {}).get(n, 1.0) for n in self._deck_names], dtype=float)
-        if (weights < 0).any() or weights.sum() <= 0:
-            raise ValueError("opponent_weights must be non-negative and not all zero")
-        self._deck_p = weights / weights.sum()
+        self.set_opponent_weights(opponent_weights)
         self.prize_reward = prize_reward
         self.energy_penalty = energy_penalty
         if energy_penalty:
@@ -173,6 +170,13 @@ class Match:
         self._sacrifice_turn: int | None = None
         self._game: Game | None = None
         self._decision: Decision | None = None
+
+    def set_opponent_weights(self, opponent_weights: dict[str, float] | None) -> None:
+        """Relative draw weight per opponent deck (file stem) from the next game on; 1 if not named."""
+        weights = np.array([(opponent_weights or {}).get(n, 1.0) for n in self._deck_names], dtype=float)
+        if (weights < 0).any() or weights.sum() <= 0:
+            raise ValueError("opponent_weights must be non-negative and not all zero")
+        self._deck_p = weights / weights.sum()
 
     def reset(self) -> Turn:
         self.close()

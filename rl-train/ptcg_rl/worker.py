@@ -30,6 +30,7 @@ def run(conn: Connection, match_kwargs: dict, n_matches: int, seed: int,
     ``("step", [action, ...])`` (one per match) ->
     ``[(reward, done, learner_to_move, info), ...]``; after a finished game the
     row already holds the next game's first decision.
+    ``("weights", {deck: weight})`` -> ``None``, after ``Match.set_opponent_weights``.
     """
     shared = SharedObs(observation_space(len(card_table()) - 1), total_rows, shm_name)
     matches = [Match(**match_kwargs, seed=seed + i) for i in range(n_matches)]
@@ -50,6 +51,10 @@ def run(conn: Connection, match_kwargs: dict, n_matches: int, seed: int,
                     turn = m.reset() if result.done else result.turn
                     out.append((result.reward, result.done, publish(j, turn), result.info))
                 conn.send(out)
+            elif cmd == "weights":
+                for m in matches:
+                    m.set_opponent_weights(data)
+                conn.send(None)
             elif cmd == "close":
                 break
     except (EOFError, KeyboardInterrupt):

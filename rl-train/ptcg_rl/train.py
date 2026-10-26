@@ -36,10 +36,12 @@ import json
 import os
 import re
 import time
+from collections import deque
 from pathlib import Path
 
 import gymnasium as gym
 import numpy as np
+import torch
 from stable_baselines3.common.utils import LinearSchedule, get_device
 from stable_baselines3.common.vec_env import DummyVecEnv
 
@@ -95,6 +97,13 @@ def main() -> None:
     p.add_argument("--opponent-weights", type=Path,
                    help="JSON {deck file stem: relative weight} for drawing opponent decks "
                         "(e.g. decks/training_pool/weights.json); default: every deck equally")
+    p.add_argument("--adaptive-opponents", action="store_true",
+                   help="after each update, scale every deck's --opponent-weights by max(1 - win rate, "
+                        "--adaptive-floor) over its last --adaptive-window games, so lost matchups are "
+                        "played more (logged as opp_weight/<deck>)")
+    p.add_argument("--adaptive-window", type=int, default=300, help="recent games per deck for its win rate")
+    p.add_argument("--adaptive-floor", type=float, default=0.2,
+                   help="smallest factor a deck's weight is scaled by, however often it is won")
     p.add_argument("--sacrifice-refund", action="store_true",
                    help="don't count the Prize card given up for the learner's own self-Knock-Out Abilities "
                         "(Cursed Blast) against it in --prize-reward (see env.Match)")
@@ -280,6 +289,9 @@ def main() -> None:
     )
     if args.baseline:
         collector.add_opponent(BASELINE, load_model(args.baseline, collect_device).policy)
+    # --adaptive-opponents: the latest outcomes per deck, which scale its --opponent-weights.
+    prior_weights = {Path(d).stem: (opponent_weights or {}).get(Path(d).stem, 1.0) for d in args.opponent_decks}
+    recent_by_deck = {deck: deque(maxlen=args.adaptive_window) for deck in prior_weights}
     print(f"policy {type(model.policy).__name__} ({sum(p.numel() for p in model.policy.parameters()):,} parameters)")
     print(f"{collector.n} games across {args.workers} workers; games on {collect_device}, update on {learner_device}"
           f"{' (fp16)' if args.amp else ''}{' in its own process, in parallel' if args.pipeline else ''}; "
@@ -302,7 +314,15 @@ def main() -> None:
 
     def timed_train() -> float:
         start = time.time()
+        # Collection and the update share the GPU here: hand the cached blocks of one back
+        # before the other, so an 8 GB card does not spill into (WSL's much slower) shared memory.
+        if device.type == "cuda":
+            torch.cuda.empty_cache()
+            torch.cuda.reset_peak_memory_stats(device)
         model.train()
+        if device.type == "cuda":
+            model.logger.record("time/gpu_peak_gb", torch.cuda.max_memory_allocated(device) / 2**30)
+            torch.cuda.empty_cache()
         return time.time() - start
 
     samples = None  # with --pipeline, the rollout collected during the previous update
@@ -379,6 +399,16 @@ def main() -> None:
                 log.record(f"vs_baseline_by_deck/{deck}", float(np.mean(outcomes)))
             for deck, outcomes in stats.by_deck.items():
                 log.record(f"vs_deck/{deck}", float(np.mean(outcomes)))
+                if deck in recent_by_deck:
+                    recent_by_deck[deck].extend(outcomes)
+            if args.adaptive_opponents and prior_weights:
+                # Win rate with one win and one loss added, so a deck not met yet counts as 50%.
+                weights = {deck: w * max(1.0 - (sum(recent_by_deck[deck]) + 1) / (len(recent_by_deck[deck]) + 2),
+                                         args.adaptive_floor)
+                           for deck, w in prior_weights.items()}
+                collector.set_opponent_weights(weights)
+                for deck, w in weights.items():
+                    log.record(f"opp_weight/{deck}", 100 * w / sum(weights.values()))
             # Per finished game, what the learner seat did: usage/play Dusknoir, usage/ability Dusknoir, ...
             for key, count in stats.usage.items():
                 log.record(f"usage/{key}", count / max(stats.usage_games, 1))

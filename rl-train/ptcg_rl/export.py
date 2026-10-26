@@ -32,6 +32,7 @@ import argparse
 import importlib.util
 import json
 from collections import deque
+import re
 import shutil
 import subprocess
 import sys
@@ -175,11 +176,14 @@ def _write_bundle(model: MaskablePPO, deck: list[int], out: Path, value: bool = 
     package = out / "ptcg_policy"
     (package / "__init__.py").write_text("")
     source = (TRAIN_ROOT / "ptcg_rl" / "encoding.py").read_text()
-    engine_import = "from .engine import N_ENERGY_TYPES\n"
-    if source.count(engine_import) != 1:
+    # The bundle has no engine module: its constants are written in as literals.
+    engine_import = re.search(r"^from \.engine import \(([^)]*)\)\n", source, re.MULTILINE)
+    if engine_import is None or "from .engine" in source[engine_import.end():]:
         raise ValueError("encoding.py's engine import changed; update export._write_bundle")
-    from .engine import N_ENERGY_TYPES
-    (package / "encoding.py").write_text(source.replace(engine_import, f"N_ENERGY_TYPES = {N_ENERGY_TYPES}\n"))
+    from . import engine
+    names = re.findall(r"\w+", engine_import[1])
+    constants = "".join(f"{name} = {getattr(engine, name)!r}\n" for name in names)
+    (package / "encoding.py").write_text(source.replace(engine_import[0], constants))
 
     policy = model.policy
     keep = ("features_extractor.", "mlp_extractor.policy_net.", "action_net.",
