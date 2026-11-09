@@ -1,0 +1,1755 @@
+card_id,attack_id,name,damage,cost_total,cost_colorless,cost_grass,cost_fire,cost_water,cost_lightning,cost_psychic,cost_fighting,cost_darkness,cost_metal,cost_dragon,cost_rainbow,cost_team_rocket,has_effect,text
+21,1,Nab ’n’ Dash,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a number of cards up to the number of your Benched Pokémon and put them into your hand. Then, shuffle your deck."
+21,2,High Jump Kick,100,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+22,3,Push Down,10,1,0,0,0,0,0,0,1,0,0,0,0,0,1,Switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+23,4,Ram,60,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+23,5,Super Sandstorm,150,3,1,0,0,0,0,0,2,0,0,0,0,0,1,This attack also does 40 damage to each Benched Pokémon that has any damage counters on it (both yours and your opponent’s). (Don’t apply Weakness and Resistance for Benched Pokémon.)
+24,6,Comet Punch,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Flip 4 coins. This attack does 30 damage for each heads.
+24,7,Wicked Impact,120,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"If you played a Supporter card that has “Team Rocket” in its name from your hand during this turn, this attack does 100 more damage."
+25,8,Slow Crunch,0,2,1,1,0,0,0,0,0,0,0,0,0,0,1,"Discard all Energy from this Pokémon. At the end of your opponent’s next turn, the Defending Pokémon will be Knocked Out."
+25,9,Superpowered Horns,100,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+26,10,Leaflet Blessings,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Attach a Basic {G} Energy card from your hand to 1 of your Benched Pokémon. If you do, heal all damage from that Pokémon."
+26,11,Solar Beam,70,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+27,12,Recovery Net,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Put up to 2 Pokémon from your discard pile into your hand.
+27,13,Avenging Edge,100,3,2,1,0,0,0,0,0,0,0,0,0,0,1,"If any of your Pokémon were Knocked Out by damage from an attack during your opponent’s last turn, this attack does 60 more damage."
+28,14,Hook,10,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+29,15,Re-Brew,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Put 2 damage counters on 1 of your opponent’s Pokémon for each Basic {G} Energy card in your discard pile. Then, shuffle those Energy cards into your deck."
+29,16,Matcha Splash,120,2,1,1,0,0,0,0,0,0,0,0,0,0,1,Heal 30 damage from each of your Pokémon.
+30,17,Hot Magma,70,2,1,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+30,18,Ground Burn,140,3,1,0,2,0,0,0,0,0,0,0,0,0,1,Discard the top card of each player’s deck. This attack does 140 more damage for each Energy card discarded in this way.
+31,19,Allure,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 2 cards.
+31,20,Ground Melter,60,2,1,0,1,0,0,0,0,0,0,0,0,0,1,"If a Stadium is in play, this attack does 60 more damage. Then, discard that Stadium."
+32,21,Permeating Chill,30,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"At the end of your opponent’s next turn, put 9 damage counters on the Defending Pokémon."
+32,22,Icicle Missile,70,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+33,23,Flock,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Froakie and put them onto your Bench. Then, shuffle your deck."
+33,24,Flop,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+34,25,Numbing Water,20,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+35,26,Aurora Gain,20,1,0,0,0,1,0,0,0,0,0,0,0,0,1,Heal 20 damage from this Pokémon.
+35,27,Undulating Slice,0,3,1,0,0,2,0,0,0,0,0,0,0,0,1,Put up to 9 damage counters on this Pokémon. This attack does 20 damage for each damage counter you placed in this way.
+36,28,Pick and Stick,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,Attach up to 2 Basic Energy cards from your discard pile to your Pokémon in any way you like.
+37,29,Volt Cyclone,140,3,2,0,0,0,1,0,0,0,0,0,0,0,1,Move an Energy from this Pokémon to 1 of your Benched Pokémon.
+38,30,Dual Headbutt,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack also does 10 damage to 1 of your Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+39,31,Heart Sign,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+39,32,Love Resonance,80,3,2,0,0,0,0,1,0,0,0,0,0,0,1,"If any of your Pokémon in play are the same type as any of your opponent’s Pokémon in play, this attack does 120 more damage."
+40,33,Shinobi Blade,170,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"You may search your deck for a card and put it into your hand. Then, shuffle your deck."
+40,34,Mirage Barrage,0,3,2,0,0,1,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon. This attack does 120 damage to 2 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+41,35,Ground Crasher,30,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If a Stadium is in play, this attack also does 30 damage to each of your opponent’s Benched Pokémon, and discard that Stadium. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+41,36,Hammer In,110,3,1,0,0,0,0,0,2,0,0,0,0,0,0,
+42,37,Find a Friend,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck."
+42,38,Rolling Tackle,30,2,0,1,1,0,0,0,0,0,0,0,0,0,0,
+43,39,Ascension,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a card that evolves from this Pokémon and put it onto this Pokémon to evolve it. Then, shuffle your deck."
+43,40,Quick Attack,20,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+44,41,Blood Moon,240,5,5,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+45,42,Pinpoint Dive,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 60 damage to 1 of your opponent’s Benched Pokémon {ex} or Benched Pokémon {V}. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+45,43,Rear Kick,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+46,44,Heat Blast,60,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+46,45,Blaze Blitz,260,3,1,0,2,0,0,0,0,0,0,0,0,0,1,This Pokémon can’t use Blaze Blitz again until it leaves the Active Spot.
+47,46,Big Bite,10,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+48,47,Reverse Thrust,30,1,0,0,0,1,0,0,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+49,48,Giant Wave,160,2,0,0,0,2,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Giant Wave."
+50,49,Lucky Find,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Search your deck for an Item card, reveal it, and put it into your hand. Then, shuffle your deck."
+50,50,Aqua Bomb,40,2,0,0,0,2,0,0,0,0,0,0,0,0,1,This Pokémon also does 20 damage to itself.
+51,51,Vanguard Punch,130,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself for each damage counter on it.
+51,52,Double Hit,0,3,2,0,0,1,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 90 damage for each heads.
+52,53,Tricolor Pump,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,Discard up to 3 Energy cards from your hand. This attack does 60 damage to 1 of your opponent’s Pokémon for each Energy card you discarded in this way. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+52,54,Numbing Hold,120,2,0,0,0,2,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+53,55,Ball Roll,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 10 damage for each heads.
+53,56,Magical Shot,40,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+54,57,Mirror Attack,10,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a {P} Pokémon, this attack does 30 more damage."
+55,58,Evolution Jammer,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"During your opponent’s next turn, they can’t play any Pokémon from their hand to evolve their Pokémon."
+55,59,Super Psy Bolt,100,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+56,60,Hex Hurl,90,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Put 2 damage counters on your opponent’s Benched Pokémon in any way you like.
+57,61,Razor Fin,30,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+58,62,Land Collapse,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Discard the top card of your opponent’s deck. If you played an Ancient Supporter card from your hand during this turn, discard 3 more cards in this way."
+58,63,Giant Tusk,160,4,2,0,0,0,0,0,2,0,0,0,0,0,0,
+59,64,Mysterious Beam,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Flip a coin. If heads, discard an Energy from your opponent’s Active Pokémon."
+59,65,Suffocating Gas,30,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+60,66,Super Poison Breath,30,2,0,0,0,0,0,0,0,2,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+61,67,Vengeance Fletching,70,2,0,0,0,0,0,0,0,2,0,0,0,0,1,This attack does 10 more damage for each Ancient card in your discard pile.
+61,68,Speed Wing,120,4,3,0,0,0,0,0,0,1,0,0,0,0,0,
+62,69,Primordial Beatdown,0,2,1,0,0,0,0,0,1,0,0,0,0,0,1,This attack does 30 damage for each of your Ancient Pokémon in play.
+62,70,Shred,130,3,1,0,1,0,0,0,1,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+63,71,Burst Roar,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Discard your hand and draw 6 cards.
+63,72,Bellowing Thunder,0,2,0,0,0,0,1,0,1,0,0,0,0,0,1,You may discard any amount of Basic Energy from your Pokémon. This attack does 70 damage for each card you discarded in this way.
+64,73,Silent Wing,20,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent reveals their hand.
+65,74,Gnaw,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+65,75,Dig,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+66,76,Land Crush,90,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+67,77,Ram,50,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+68,78,Rigidify,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance)."
+68,79,Hang Down,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+69,80,Corkscrew Punch,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+69,81,Comet Slap,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Flip 3 coins. This attack does 30 damage for each heads.
+70,82,Expelling Tornado,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Choose 3 of your opponent’s Benched Pokémon. If you do, shuffle all of your opponent’s Benched Pokémon that you didn’t choose, and all cards attached to those Pokémon, into their deck."
+70,83,Energy Loop,140,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Put an Energy attached to this Pokémon into your hand.
+71,84,Flop,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+71,85,Leaf Litter Tackle,40,3,2,1,0,0,0,0,0,0,0,0,0,0,1,Discard a {G} Energy from this Pokémon.
+72,86,Superpowered Horns,110,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+73,87,Slight Intrusion,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+74,88,Psychic,10,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 more damage for each Energy attached to your opponent’s Active Pokémon.
+75,89,Prism Edge,180,3,1,2,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+76,90,Roasting Heat,10,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is Burned, this attack does 40 more damage."
+77,91,Fake Out,10,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+78,92,Bite,30,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+78,93,Flare Strike,80,3,2,0,1,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Flare Strike."
+79,94,Blaze Blast,240,5,4,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+80,95,Twin Shotels,0,3,2,0,0,0,0,1,0,0,0,0,0,0,1,"This attack does 50 damage to 2 of your opponent’s Pokémon. This attack’s damage isn’t affected by Weakness or Resistance, or by any effects on those Pokémon."
+81,96,Sand Spray,20,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+82,97,Mud Shot,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+82,98,Wild Tackle,180,3,1,0,0,0,0,0,2,0,0,0,0,0,1,This Pokémon also does 50 damage to itself.
+83,99,Dirty Beam,160,3,2,0,0,0,0,1,0,0,0,0,0,0,1,This attack also does 30 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+84,100,Steel Wing,70,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 50 less damage from attacks (after applying Weakness and Resistance)."
+84,101,Cross Breaker,0,2,0,0,0,0,0,0,0,0,2,0,0,0,1,Discard up to 2 {M} Energy from this Pokémon. This attack does 120 damage for each card you discarded in this way.
+85,102,Dig Claws,10,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+85,103,Iron Tackle,50,3,2,0,0,0,0,0,0,0,1,0,0,0,1,This Pokémon also does 10 damage to itself.
+86,104,Beam,60,3,2,0,0,0,0,0,0,0,1,0,0,0,0,
+87,105,Peak Acceleration,40,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards and attach them to your Future Pokémon in any way you like. Then, shuffle your deck."
+87,106,Sparking Strike,160,3,0,0,0,0,2,1,0,0,0,0,0,0,0,
+88,107,Quick Sign,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If you go first, you can use this attack during your first turn. Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+88,108,Coordinated Strike,20,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If Illumise is on your Bench, this attack does 60 more damage."
+89,109,Smash Kick,10,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+89,110,Branch Poke,30,2,0,2,0,0,0,0,0,0,0,0,0,0,0,
+90,111,Beat,50,2,0,2,0,0,0,0,0,0,0,0,0,0,0,
+91,112,Drum Beating,60,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, attacks used by the Defending Pokémon cost {C} more, and its Retreat Cost is {C} more."
+91,113,Wood Hammer,180,2,0,2,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 50 damage to itself.
+92,114,Tumbling Attack,10,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+93,115,Do the Wave,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 damage for each of your Benched Pokémon.
+94,116,Cursed Drop,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Put 4 damage counters on your opponent’s Pokémon in any way you like.
+94,117,Spill the Tea,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Discard up to 3 {G} Energy cards from your Pokémon. This attack does 70 damage for each card you discarded in this way.
+95,118,Mountain Stroll,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards, reveal them, and put them into your hand. Then, shuffle your deck."
+95,119,Ogre Comeback,20,2,1,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 more damage for each of your opponent’s Benched Pokémon.
+96,120,Myriad Leaf Shower,30,3,0,3,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 more damage for each Energy attached to both Active Pokémon.
+97,121,Call for Family,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic Pokémon and put it onto your Bench. Then, shuffle your deck."
+97,122,Live Coal,20,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+98,123,Mind Ruler,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each card in your opponent’s hand.
+99,124,Wrathful Hearth,0,3,2,0,1,0,0,0,0,0,0,0,0,0,1,This attack does 20 damage for each damage counter on this Pokémon.
+99,125,Dynamic Blaze,140,3,0,0,3,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is an Evolution Pokémon, this attack does 140 more damage, and discard all Energy from this Pokémon."
+100,126,Whirlpool,10,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, discard an Energy from your opponent’s Active Pokémon."
+101,127,Inviting Kiss,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic Pokémon and put it onto your Bench. Then, shuffle your deck. If you put any Pokémon onto your Bench in this way, move an Energy from this Pokémon to the new Benched Pokémon."
+101,128,Icy Snow,30,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+102,129,Hydro Splash,100,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+103,130,Astonish,20,2,1,0,0,1,0,0,0,0,0,0,0,0,1,Choose a random card from your opponent’s hand. Your opponent reveals that card and shuffles it into their deck.
+104,131,Frost Smash,60,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+105,132,Aqua Slash,30,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+106,133,Wave Splash,30,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+107,134,Giga Impact,250,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+108,135,Sob,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+108,136,Torrential Pump,100,3,2,0,0,1,0,0,0,0,0,0,0,0,1,"You may shuffle 3 Energy attached to this Pokémon into your deck. If you do, this attack also does 120 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+109,137,Beam,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+110,138,Slurp Slurp,0,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"Flip 2 coins. This attack does 90 damage for each heads. If both of them are tails, your opponent’s Active Pokémon is now Confused."
+111,139,Sand Attack,10,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"During your opponent’s next turn, if the Defending Pokémon tries to use an attack, your opponent flips a coin. If tails, that attack doesn’t happen."
+111,140,Spooky Shot,30,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+112,141,Mind Bend,60,2,1,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+113,142,Best Punch,40,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+114,143,Knuckle Punch,20,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+114,144,Superpower,50,3,2,0,0,0,0,0,1,0,0,0,0,0,1,"You may do 30 more damage. If you do, this Pokémon also does 30 damage to itself."
+115,145,Tantrum,80,1,0,0,0,0,0,0,1,0,0,0,0,0,1,This Pokémon is now Confused.
+115,146,Gutsy Swing,250,4,3,0,0,0,0,0,1,0,0,0,0,0,1,"If this Pokémon is affected by a Special Condition, ignore all Energy in this attack’s cost."
+116,147,Good Punch,70,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+117,148,Demolish,140,3,2,0,0,0,0,0,1,0,0,0,0,0,1,"This attack’s damage isn’t affected by Weakness or Resistance, or by any effects on your opponent’s Active Pokémon."
+118,149,Steel Burst,0,3,2,0,0,0,0,0,0,0,1,0,0,0,1,Discard all {M} Energy from this Pokémon. This attack does 50 damage for each card you discarded in this way.
+119,150,Petty Grudge,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+119,151,Bite,40,2,0,0,1,0,0,1,0,0,0,0,0,0,0,
+120,152,Dragon Headbutt,70,2,0,0,1,0,0,1,0,0,0,0,0,0,0,
+121,153,Jet Headbutt,70,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+121,154,Phantom Dive,200,2,0,0,1,0,0,1,0,0,0,0,0,0,1,Put 6 damage counters on your opponent’s Benched Pokémon in any way you like.
+122,155,Surf,50,2,0,0,1,1,0,0,0,0,0,0,0,0,0,
+123,156,Mach Cut,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Discard a Special Energy from your opponent’s Active Pokémon.
+124,157,Lucky Attachment,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Attach a Basic Energy card from your hand to 1 of your Pokémon.
+124,158,Boundless Power,80,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+125,159,Return,180,3,3,0,0,0,0,0,0,0,0,0,0,0,1,You may draw cards until you have 6 cards in your hand.
+126,160,Shocking Web,50,2,1,1,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon has any {L} Energy attached, this attack does 80 more damage."
+127,161,Add On,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+127,162,Leafage,10,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+128,163,United Wings,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 damage for each Pokémon in your discard pile that has the United Wings attack.
+128,164,Cutting Wind,30,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+129,165,Stock Up on Feathers,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw cards until you have 7 cards in your hand.
+129,166,Power Shot,170,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Discard a Basic {G} Energy card from your hand. If you can’t, this attack does nothing."
+130,167,Accelerator Flash,20,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"If this Pokémon moved from your Bench to the Active Spot this turn, this attack does 120 more damage."
+130,168,Shattering Speed,250,3,0,0,0,0,0,0,0,0,3,0,0,0,1,Discard this Pokémon and all attached cards.
+131,169,Come and Get You,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Put up to 3 Duskull from your discard pile onto your Bench.
+131,170,Mumble,30,2,0,0,0,0,0,2,0,0,0,0,0,0,0,
+132,171,Will-O-Wisp,50,2,0,0,0,0,0,2,0,0,0,0,0,0,0,
+133,172,Shadow Bind,150,3,1,0,0,0,0,2,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+134,173,Mystical Return,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Flip a coin. If heads, choose 1 of your opponent’s Benched Pokémon. Shuffle that Pokémon and all attached cards into their deck."
+134,174,Disarming Voice,90,3,2,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+135,175,Mad Bite,100,3,1,0,0,0,0,0,2,0,0,0,0,0,1,This attack does 30 more damage for each damage counter on your opponent’s Active Pokémon.
+136,176,Stampede,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+136,177,Double Scratch,0,2,1,0,0,0,0,0,0,1,0,0,0,0,1,Flip 2 coins. This attack does 20 damage for each heads.
+137,178,Illusory Hijacking,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 60 damage for each of your opponent’s Pokémon {ex} and Pokémon {V} in play.
+137,179,Claw Slash,110,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+138,180,Poisonous Musculature,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic {D} Energy cards and attach them to this Pokémon. Then, shuffle your deck. If you attached Energy to a Pokémon in this way, this Pokémon is now Poisoned."
+138,181,Chain-Crazed,130,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"If this Pokémon is Poisoned, this attack does 130 more damage."
+139,182,Dirty Headbutt,190,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"During your next turn, this Pokémon can’t use Dirty Headbutt."
+140,183,Cruel Arrow,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 100 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+141,184,Irritated Outburst,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,This attack does 60 damage for each Prize card your opponent has taken.
+142,185,Magnetic Blast,100,3,2,0,0,0,0,0,0,0,1,0,0,0,0,
+143,186,Rigidify,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance)."
+143,187,Headbutt Bounce,20,2,0,0,0,0,0,0,0,0,2,0,0,0,0,
+144,188,Trifrost,0,5,1,0,0,2,0,0,0,0,2,0,0,0,1,Discard all Energy from this Pokémon. This attack does 110 damage to 3 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+145,189,Colorful Catch,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 3 Basic Energy cards of different types, reveal them, and put them into your hand. Then, shuffle your deck."
+145,190,Headbutt,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+146,191,Bind Down,50,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+147,192,Miasma Wind,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 100 damage for each Special Condition affecting your opponent’s Active Pokémon.
+148,193,Reaping Dash,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Before doing damage, discard all Pokémon Tools and Special Energy from your opponent’s Active Pokémon."
+149,194,Spray Fluid,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+150,195,Syrup Storm,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 more damage for each {G} Energy attached to all of your Pokémon.
+151,196,Quick Attack,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 10 more damage."
+152,197,Low Sweep,30,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+152,198,Combustion,60,3,2,0,1,0,0,0,0,0,0,0,0,0,0,
+153,199,Flare Strike,280,3,2,0,1,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Flare Strike."
+153,200,Garnet Volley,0,3,0,0,1,0,0,0,1,1,0,0,0,0,1,This attack does 180 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+154,201,Power Splash,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 40 damage for each Energy attached to this Pokémon.
+154,202,Larimar Rain,0,3,0,0,0,1,0,1,0,0,1,0,0,0,1,Look at the top 20 cards of your deck and attach any number of Energy cards you find there to your Pokémon in any way you like. Shuffle the other cards back into your deck.
+155,203,Tidal Wave,150,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+156,204,Haymaker,250,5,4,0,0,1,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Haymaker."
+157,205,Headbutt,60,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+158,206,Hard Crunch,80,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon already has any damage counters on it, this attack does 80 more damage."
+159,207,Sonic Edge,110,4,4,0,0,0,0,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+160,208,Jolting Charge,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic {G} Energy cards and up to 2 Basic {L} Energy cards and attach them to your Pokémon in any way you like. Then, shuffle your deck."
+161,209,Charged Web,110,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex} or Pokémon {V}, this attack does 110 more damage."
+161,210,Fulgurite,180,3,0,1,0,0,1,0,1,0,0,0,0,0,1,"Discard all Energy from this Pokémon. During your opponent’s next turn, they can’t play any Item cards from their hand."
+162,211,Dangle Tail,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Put a Pokémon from your discard pile into your hand.
+162,212,Tackle,30,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+163,213,Seek Inspiration,0,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"Discard the top card of your deck, and if that card is a Pokémon that doesn’t have a Rule Box, choose 1 of its attacks and use it as this attack. (Pokémon {ex}, Pokémon {V}, etc. have Rule Boxes.)"
+163,214,Super Psy Bolt,120,3,1,0,0,0,0,2,0,0,0,0,0,0,0,
+164,215,Flower Shower,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Each player draws 3 cards.
+164,216,Play Rough,20,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+165,217,Allure,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+165,218,Beam,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+166,219,Iron Tackle,60,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 20 damage to itself.
+167,220,Hyper Ray,130,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+168,221,Knickknack Carrying,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"Search your deck for a Pokémon Tool card, reveal it, and put it into your hand. Then, shuffle your deck."
+168,222,Ram,30,2,1,0,0,0,0,0,0,0,1,0,0,0,0,
+169,223,Hammer In,30,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+169,224,Raging Hammer,80,3,1,0,0,0,0,0,0,0,2,0,0,0,1,This attack does 10 more damage for each damage counter on this Pokémon.
+170,225,Iron Blaster,160,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+171,226,Thunderburst Storm,0,2,0,0,0,0,1,0,1,0,0,0,0,0,1,This attack does 30 damage to 1 of your opponent’s Pokémon for each Energy attached to this Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+171,227,Dragon Headbutt,130,3,1,0,0,0,1,0,1,0,0,0,0,0,0,
+172,228,Triple Stab,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 3 coins. This attack does 10 damage for each heads.
+173,229,Speed Wing,60,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+174,230,Assault Landing,70,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If there is no Stadium in play, this attack does nothing."
+175,231,Boundless Power,130,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+176,232,Unified Beatdown,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If you go second, you can’t use this attack during your first turn. This attack does 30 damage for each of your Benched Pokémon."
+176,233,Crown Opal,180,3,0,1,0,1,1,0,0,0,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks from Basic non-{C} Pokémon."
+177,234,Precocious Evolution,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If you go first, you can use this attack during your first turn. Search your deck for a card that evolves from this Pokémon and put it onto this Pokémon to evolve it. Then, shuffle your deck."
+178,235,Leaf Drain,20,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Heal 20 damage from this Pokémon.
+178,236,Jungle Whip,80,3,1,2,0,0,0,0,0,0,0,0,0,0,1,You may put all Energy attached to this Pokémon into your hand to have this attack do 80 more damage.
+179,237,Ice Age,90,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a {N} Pokémon, it is now Paralyzed."
+179,238,Black Frost,250,4,2,0,0,2,0,0,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+180,239,Big Bite,50,2,1,0,0,1,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+181,240,Aqua Edge,40,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+182,241,Hydro Splash,120,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+183,242,Delightful Kiss,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic {P} Energy cards and attach them to 1 of your Benched Pokémon. Then, shuffle your deck."
+184,243,Eon Blade,200,3,1,0,0,0,0,2,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+185,244,Splashing Dodge,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+186,245,Minor Errand-Running,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards, reveal them, and put them into your hand. Then, shuffle your deck."
+186,246,Tackle,50,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+187,247,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+187,248,Bite,20,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+188,249,Screech,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, the Defending Pokémon takes 50 more damage from attacks (after applying Weakness and Resistance)."
+188,250,Cutting Wind,50,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+189,251,Reversing Storm,130,1,0,0,0,0,0,0,1,0,0,0,0,0,1,You may switch this Pokémon with 1 of your Benched Pokémon.
+189,252,Sonic Peridot,0,3,0,0,0,1,0,0,1,0,1,0,0,0,1,This attack does 100 damage to each of your opponent’s Pokémon {ex} and Pokémon {V}. This attack’s damage isn’t affected by Weakness or Resistance.
+190,253,Metal Defender,220,3,0,0,0,0,0,0,0,0,3,0,0,0,1,"During your opponent’s next turn, this Pokémon has no Weakness."
+191,254,Strike It Rich,30,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"If this Pokémon evolved from Gimmighoul during this turn, this attack does 90 more damage."
+191,255,Surf Back,100,3,3,0,0,0,0,0,0,0,0,0,0,0,1,You may shuffle this Pokémon and all attached cards into your deck.
+192,256,Deleting Slash,40,2,1,0,0,0,0,0,0,0,1,0,0,0,1,"If your opponent has 3 or more Benched Pokémon, this attack does 80 more damage."
+192,257,Slicing Blade,100,3,2,0,0,0,0,0,0,0,1,0,0,0,0,
+193,258,Tropical Frenzy,150,2,0,1,0,1,0,0,0,0,0,0,0,0,1,You may attach any number of Basic Energy cards from your hand to your Pokémon in any way you like.
+193,259,Swinging Sphene,0,3,0,1,0,1,0,0,1,0,0,0,0,0,1,"Flip a coin. If heads, Knock Out your opponent’s Active Basic Pokémon. If tails, Knock Out 1 of your opponent’s Benched Basic Pokémon."
+194,260,Humming Charge,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards and attach them to your Pokémon in any way you like. Then, shuffle your deck."
+194,261,Cotton Wings,100,2,0,0,0,1,0,0,0,0,1,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage done to this Pokémon by attacks."
+195,262,Time Manipulation,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for 2 cards, shuffle your deck, then put those cards on top of it in any order."
+195,263,Buster Tail,160,3,1,0,0,0,0,1,0,0,1,0,0,0,0,
+196,264,Fully Singe,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Discard an Energy from your opponent’s Active Pokémon {ex}.
+196,265,Steaming Stomp,100,3,2,0,0,0,0,0,1,0,0,0,0,0,0,
+197,266,Disarming Voice,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+198,267,Vengeful Crush,120,3,2,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 more damage for each Prize card your opponent has taken.
+199,268,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic Pokémon and put it onto your Bench. Then, shuffle your deck."
+200,269,Wander About,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+200,270,Tackle,30,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+201,271,Hazardous Greed,20,2,1,1,0,0,0,0,0,0,0,0,0,0,1,"If there are 3 or fewer cards in your deck, this attack also does 120 damage to 2 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+201,272,Entangling Whip,130,3,1,2,0,0,0,0,0,0,0,0,0,0,1,Discard the top 3 cards of your deck.
+202,273,Flare,30,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+203,274,Torcherto,60,2,1,0,1,0,0,0,0,0,0,0,0,0,1,This attack does 20 more damage for each Benched Pokémon (both yours and your opponent’s).
+204,275,Light Punch,10,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+204,276,Flamethrower,70,3,1,0,2,0,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+205,277,Spicy Rage,10,2,0,0,2,0,0,0,0,0,0,0,0,0,1,This attack does 70 more damage for each damage counter on this Pokémon.
+206,278,Leap Out,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+207,279,Hypno Splash,160,3,2,0,0,1,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep.
+208,280,Sprinkle Water,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+209,281,Icicle Loop,120,3,1,0,0,2,0,0,0,0,0,0,0,0,1,Put an Energy attached to this Pokémon into your hand.
+210,282,Topaz Bolt,300,3,0,1,0,0,1,0,0,0,1,0,0,0,1,Discard 3 Energy from this Pokémon.
+211,283,Electric Ball,40,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+212,284,Crushing Pulse,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,Your opponent reveals their hand. Discard all Item cards and Pokémon Tool cards you find there.
+212,285,Energy Short,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,This attack does 20 damage for each Energy attached to your opponent’s Active Pokémon.
+213,286,Summon Lightning,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 {L} Pokémon, reveal them, and put them into your hand. Then, shuffle your deck."
+213,287,Prize Count,90,3,1,0,0,0,2,0,0,0,0,0,0,0,1,"If you have more Prize cards remaining than your opponent, this attack does 90 more damage."
+214,288,Speed Wing,140,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+215,289,Painful Memories,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Put 2 damage counters on each of your opponent’s Pokémon.
+216,290,Full Heart,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Attach up to 2 Basic {P} Energy cards from your hand to your Pokémon in any way you like.
+216,291,Guardian Burst,160,2,0,0,0,0,0,2,0,0,0,0,0,0,1,"If you don’t have Uxie and Azelf on your Bench, this attack does nothing."
+217,292,Neurokinesis,10,2,1,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 10 more damage for each damage counter on all of your opponent’s Pokémon.
+218,293,Mumble,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+218,294,Petty Grudge,20,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+219,295,Law of the Underworld,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Put 6 damage counters on each Pokémon that has an Ability (both yours and your opponent’s).
+219,296,Spooky Shot,100,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+220,297,See Through,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent reveals their hand.
+220,298,Psyshot,20,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+221,299,Psyshot,80,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+222,300,Electromagnetic Sonar,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Put a Trainer card from your discard pile into your hand.
+222,301,Gnaw,30,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+223,302,Sand Tomb,160,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+223,303,Barite Jail,0,3,0,0,0,1,0,1,1,0,0,0,0,0,1,Put damage counters on each of your opponent’s Benched Pokémon until its remaining HP is 100.
+224,304,Tantrum,130,1,0,0,0,0,0,0,1,0,0,0,0,0,1,This Pokémon is now Confused.
+224,305,Destined Fight,0,2,1,0,0,0,0,0,1,0,0,0,0,0,1,Both Active Pokémon are Knocked Out.
+225,306,Mud Shot,80,3,2,0,0,0,0,0,1,0,0,0,0,0,0,
+226,307,Unrelenting Onslaught,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If 1 of your other Ancient Pokémon used an attack during your last turn, this attack does 150 more damage."
+226,308,Hammer In,110,3,1,0,0,0,0,0,2,0,0,0,0,0,0,
+227,309,Stomp Off,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Discard the top card of your opponent’s deck.
+227,310,Bite,20,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+228,311,Stomp Off,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Discard the top 2 cards of your opponent’s deck.
+228,312,Darkness Fang,60,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+229,313,Crashing Headbutt,200,2,1,0,0,0,0,0,0,1,0,0,0,0,1,Discard the top 3 cards of your opponent’s deck.
+229,314,Obsidian,130,4,1,0,0,0,0,1,0,1,1,0,0,0,1,This attack also does 130 damage to 2 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+230,315,Poison Chain,10,2,1,0,0,0,0,0,0,1,0,0,0,0,1,"Your opponent’s Active Pokémon is now Poisoned. During your opponent’s next turn, that Pokémon can’t retreat."
+231,316,Surprise Pump,100,2,0,0,1,1,0,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+231,317,Cinnabar Lure,0,3,0,0,1,1,0,0,0,1,0,0,0,0,1,Look at the top 10 cards of your deck. You may put any number of Pokémon you find there onto your Bench. Shuffle the other cards back into your deck.
+232,318,Great Swing,280,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+233,319,Ready to Ram,40,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, if this Pokémon is damaged by an attack (even if this Pokémon is Knocked Out), put 6 damage counters on the Attacking Pokémon."
+233,320,Smashing Headbutt,150,4,4,0,0,0,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+234,321,Prism Charge,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 3 Basic Energy cards of different types and attach them to your Tera Pokémon in any way you like. Then, shuffle your deck."
+234,322,Hard Tackle,100,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+235,323,Itchy Pollen,10,0,0,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, they can’t play any Item cards from their hand."
+236,324,Verdant Storm,0,2,1,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 60 damage for each Energy attached to all of your opponent’s Pokémon.
+236,325,Moss Agate,230,3,0,1,1,1,0,0,0,0,0,0,0,0,1,Heal 100 damage from each of your Benched Pokémon.
+237,326,Triple Spin,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Flip 3 coins. This attack does 10 damage for each heads.
+238,327,Seed Bomb,40,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+239,328,Burning Charge,130,2,1,0,1,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards and attach them to 1 of your Pokémon. Then, shuffle your deck."
+239,329,Carnelian,280,3,0,0,1,1,1,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+240,330,Rapid Draw,60,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 2 cards.
+241,331,Severe Squall,0,2,1,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 60 damage to each of your opponent’s Pokémon {ex}. This attack’s damage isn’t affected by Weakness or Resistance.
+241,332,Aquamarine,280,3,0,0,1,1,1,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+242,333,Flail,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 10 damage for each damage counter on this Pokémon.
+243,334,Frost Bullet,110,2,1,0,0,1,0,0,0,0,0,0,0,0,1,This attack also does 30 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+243,335,Euclase,0,3,0,1,0,1,0,0,0,1,0,0,0,0,1,Knock Out 1 of your opponent’s Pokémon that has exactly 6 damage counters on it.
+244,336,Flashing Spear,60,2,1,0,0,0,1,0,0,0,0,0,0,0,1,You may discard up to 2 Basic Energy from your Benched Pokémon. This attack does 90 more damage for each card you discarded in this way.
+244,337,Dravite,280,3,0,0,1,1,1,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+245,338,Strange Hacking,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused. You may move any number of damage counters on your opponent’s Pokémon to their other Pokémon in any way you like.
+245,339,Psychic,10,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 50 more damage for each Energy attached to your opponent’s Active Pokémon.
+246,340,Psych Out,160,3,2,0,0,0,0,1,0,0,0,0,0,0,1,Discard a random card from your opponent’s hand.
+246,341,Amazez,0,3,0,1,0,0,0,1,0,1,0,0,0,0,1,Devolve each of your opponent’s evolved Pokémon by shuffling the highest Stage Evolution card on it into your opponent’s deck.
+247,342,Sneaky Placement,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Put 2 damage counters on 1 of your opponent’s Pokémon.
+248,343,Moon Mirage,160,3,2,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+248,344,Onyx,0,3,0,0,0,0,1,1,0,1,0,0,0,0,1,"Discard all Energy from this Pokémon, and take a Prize card."
+249,345,Coruscating Quartz,200,3,0,0,1,1,1,0,0,0,0,0,0,0,0,
+250,346,Tackle,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+251,347,Jewel Breaker,100,4,4,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a Tera Pokémon, this attack does 230 more damage."
+252,348,Bug Bite,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+253,349,Harden,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks if that damage is 60 or less."
+254,350,Scale Hurricane,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip 4 coins. This attack does 60 damage for each heads. If at least 2 of them are heads, your opponent’s Active Pokémon is now Paralyzed."
+255,351,Corner,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+256,352,Searing Flame,90,3,1,0,2,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Burned."
+257,353,Rolling Tackle,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+257,354,Flare,50,3,1,0,2,0,0,0,0,0,0,0,0,0,0,
+258,355,Back Draft,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Basic Energy card in your opponent’s discard pile.
+258,356,Flamebody Cannon,90,3,1,0,2,0,0,0,0,0,0,0,0,0,1,"Discard all Energy from this Pokémon, and this attack also does 90 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+259,357,Scorching Cyclone,160,3,1,0,2,0,0,0,0,0,0,0,0,0,1,Move an Energy from this Pokémon to 1 of your Benched Pokémon.
+260,358,Water Gun,20,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+261,359,Aqua Slash,70,2,0,0,0,2,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+262,360,Hydro Splash,130,3,1,0,0,2,0,0,0,0,0,0,0,0,0,
+263,361,Surf,60,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+264,362,Hydro Pump,10,4,4,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 50 more damage for each {W} Energy attached to this Pokémon.
+265,363,Voltaic Chain,20,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 more damage for each {L} Energy attached to all of your Iono’s Pokémon.
+266,364,Thump-Thump Boom,0,2,0,0,0,0,2,0,0,0,0,0,0,0,1,"This Pokémon does 100 damage to itself. Flip a coin. If heads, your opponent’s Active Pokémon is Knocked Out."
+266,365,Electric Ball,100,3,1,0,0,0,2,0,0,0,0,0,0,0,0,
+267,366,Zapping Short,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Before doing damage, discard all Pokémon Tools from your opponent’s Active Pokémon. If you discarded a Pokémon Tool in this way, your opponent’s Active Pokémon is now Paralyzed."
+268,367,Tiny Charge,30,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+269,368,Thunderous Bolt,230,4,1,0,0,0,3,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+270,369,Quick Attack,10,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+271,370,Mach Bolt,70,3,2,0,0,0,1,0,0,0,0,0,0,0,0,
+272,371,Full Moon Rondo,20,2,1,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 20 more damage for each Benched Pokémon (both yours and your opponent’s).
+273,372,Cursed Words,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent chooses 3 cards from their hand and shuffles those cards into their deck.
+273,373,Spooky Shot,70,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+274,374,Spinning Attack,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+274,375,Beam,30,2,0,0,0,0,0,2,0,0,0,0,0,0,0,
+275,376,Psypunch,30,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+275,377,Zen Headbutt,50,2,0,0,0,0,0,2,0,0,0,0,0,0,0,
+276,378,Wrack Down,60,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+276,379,Conjoined Beams,130,2,0,0,0,0,0,2,0,0,0,0,0,0,1,"If Beldum and Metang are on your Bench, this attack does 150 more damage."
+277,380,Psychic Sphere,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+277,381,Victory Symbol,0,3,2,0,0,0,0,1,0,0,0,0,0,0,1,"If you use this attack when you have exactly 1 Prize card remaining, you win this game."
+278,382,Hold Still,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Heal 10 damage from this Pokémon.
+279,383,Magical Shot,50,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+280,384,Inviting Flowers,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"You may search your deck for any number of Basic Lillie’s Pokémon and put them onto your Bench. Then, shuffle your deck."
+280,385,Fade Out,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Put this Pokémon and all attached cards into your hand.
+281,386,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+281,387,Lunge Out,10,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+282,388,Strength,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+282,389,Impaling Tusk,50,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+283,390,Rumbling March,180,2,0,0,0,0,0,0,2,0,0,0,0,0,1,This attack does 40 more damage for each Stage 2 Pokémon on your Bench.
+284,391,Crunch,20,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, discard an Energy from your opponent’s Active Pokémon."
+285,392,Take Down,60,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 20 damage to itself.
+286,393,Dig It Up,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Look at the top card of your deck. You may discard that card.
+286,394,Stampede,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+287,395,Clamping Fangs,40,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 more damage for each damage counter on your opponent’s Active Pokémon.
+288,396,Turf Maker,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Stadium card, reveal it, and put it into your hand. Then, shuffle your deck."
+288,397,Gnaw,20,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+289,398,Rumble,30,2,1,0,0,0,0,0,1,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+289,399,Break Ground,140,3,2,0,0,0,0,0,1,0,0,0,0,0,1,This attack also does 20 damage to each of your Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+290,400,Cracking Stomp,150,2,1,0,0,0,0,0,0,1,0,0,0,0,1,Discard the top 2 cards of your opponent’s deck.
+291,401,Thieving Swipe,30,2,1,0,0,0,0,0,0,1,0,0,0,0,1,"Your opponent reveals their hand, and you choose a card you find there and put it on the bottom of their deck."
+292,402,Scratch,20,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+293,403,Night Joker,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,Choose 1 of your Benched N’s Pokémon’s attacks and use it as this attack.
+294,404,Double Spin,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 10 damage for each heads.
+295,405,Spinning Gears,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+295,406,Confront,40,2,1,0,0,0,0,0,0,0,1,0,0,0,0,
+296,407,Magnetic Blast,50,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+296,408,Triple Smash,0,3,1,0,0,0,0,0,0,0,2,0,0,0,1,Flip 3 coins. This attack does 120 damage for each heads.
+297,409,Spike Draw,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 2 cards.
+298,410,Shoot Through,50,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack also does 50 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+298,411,Steel Wing,150,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 60 less damage from attacks (after applying Weakness and Resistance)."
+299,412,Insta-Strike,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack also does 30 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+299,413,Brave Slash,240,4,1,0,0,0,0,0,0,0,3,0,0,0,1,"During your next turn, this Pokémon can’t use Brave Slash."
+300,414,Bite,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+300,415,Reckless Charge,50,2,0,0,1,1,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+301,416,Guard Press,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance)."
+301,417,Heavy Impact,80,3,1,0,1,1,0,0,0,0,0,0,0,0,0,
+302,418,Wide Blast,0,3,2,0,1,0,0,0,0,0,0,0,0,0,1,This attack does 50 damage to each of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+302,419,Dragon Impact,300,4,2,0,1,1,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+303,420,Powerful Rage,0,2,0,0,1,0,1,0,0,0,0,0,0,0,1,This attack does 20 damage for each damage counter on this Pokémon.
+303,421,Virtuous Flame,170,4,1,0,2,0,1,0,0,0,0,0,0,0,0,
+304,422,Dynamic Press,140,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 80 damage to itself.
+305,423,Trading Places,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+305,424,Ram,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+306,425,Tenacious Tail,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 60 damage for each of your opponent’s Pokémon {ex} in play.
+306,426,Destructive Drill,150,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+307,427,Intimidating Stare,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, attacks used by the Defending Pokémon do 20 less damage (before applying Weakness and Resistance)."
+307,428,Peck,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+308,429,Speed Dive,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+308,430,Razor Wing,80,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+309,431,Smash Kick,50,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+310,432,Headbutt,80,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+311,433,Fickle Spitting,120,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent doesn’t have exactly 3 or 4 Prize cards remaining, this attack does nothing."
+312,434,Magnetic Burst,20,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If you have 3 or more Energy in play, this attack does 70 more damage. This attack’s damage isn’t affected by Weakness."
+312,435,Power Gem,60,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+313,436,Repulsion Bolt,60,2,0,0,0,0,1,1,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon already has any damage counters on it, this attack does 100 more damage."
+313,437,Cyber Drive,220,3,1,0,0,0,1,1,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Cyber Drive."
+314,438,Rollout,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+315,439,Double-Edge,230,4,0,0,0,0,0,4,0,0,0,0,0,0,1,This Pokémon also does 50 damage to itself.
+316,440,Magical Charm,160,3,2,0,0,0,0,1,0,0,0,0,0,0,1,"During your opponent’s next turn, attacks used by the Defending Pokémon do 100 less damage (before applying Weakness and Resistance)."
+316,441,Angelite,0,3,0,0,0,1,1,1,0,0,0,0,0,0,1,"Choose 2 of your opponent’s Benched Pokémon. Shuffle those Pokémon and all attached cards into your opponent’s deck. If 1 of your Pokémon used Angelite during your last turn, this attack can’t be used."
+317,442,Reckless Charge,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+318,443,Flap,50,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+318,444,Shining Blaze,100,3,1,0,2,0,0,0,0,0,0,0,0,0,1,"If you have any Tera Pokémon on your Bench, this attack does 100 more damage."
+319,445,Will-O-Wisp,20,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+320,446,Abyssal Flames,30,1,0,0,1,0,0,0,0,0,0,0,0,0,1,This attack does 20 more damage for each Energy card in your discard pile.
+320,447,Raging Amethyst,280,3,0,0,1,0,0,1,0,0,1,0,0,0,1,Discard all Energy from this Pokémon.
+321,448,Leaf Step,30,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+322,449,Spinning Attack,60,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+323,450,Rear Kick,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+324,451,Scratch,30,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+325,452,Slash,50,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+326,453,Smolder-sault,200,2,1,0,1,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+327,454,Water Gun,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+327,455,Tail Whap,30,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+328,456,Tail Whap,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+328,457,Thunder,220,3,1,0,0,0,2,0,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+329,458,Linked Lightning,60,2,1,0,0,0,1,0,0,0,0,0,0,0,1,This attack does 20 more damage for each of your Benched Pokémon.
+330,459,Magical Shot,100,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+331,460,Aurora Beam,50,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+331,461,Rising Horns,120,3,1,0,0,0,0,2,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex}, this attack does 100 more damage."
+332,462,Bind Down,60,3,2,0,0,0,0,1,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+332,463,Anchor Smash,130,4,2,0,0,0,0,2,0,0,0,0,0,0,0,
+333,464,Quick Attack,10,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+334,465,Claw Slash,20,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+335,466,Hammer In,20,2,1,0,0,0,0,0,0,0,1,0,0,0,0,
+336,467,Steel Armament,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic {M} Energy card and attach it to this Pokémon. Then, shuffle your deck."
+336,468,Slashing Strike,210,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your next turn, this Pokémon can’t use Slashing Strike."
+337,469,Hyper Whirlpool,140,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin until you get tails. For each heads, discard an Energy from your opponent’s Active Pokémon."
+338,470,Vise Grip,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+338,471,Rallying Horn,70,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"If any of your Ethan’s Pokémon were Knocked Out by damage from an attack during your opponent’s last turn, this attack does 100 more damage."
+339,472,Whirlwind,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+339,473,Razor Wing,30,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+340,474,Jet Cyclone,210,4,1,3,0,0,0,0,0,0,0,0,0,0,1,Move 3 Energy from this Pokémon to 1 of your Benched Pokémon.
+341,475,Spike Sting,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+342,476,Leaf Step,80,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+343,477,Smash Kick,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+344,478,Ascension,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a card that evolves from this Pokémon and put it onto this Pokémon to evolve it. Then, shuffle your deck."
+345,479,Superb Scissors,120,3,2,1,0,0,0,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+346,480,Mini Drain,10,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Heal 10 damage from this Pokémon.
+347,481,Energy Loop,50,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Put an Energy attached to this Pokémon into your hand.
+348,482,Hydra Breath,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Discard 6 Basic {G} Energy cards from your hand, and Knock Out your opponent’s Active Pokémon. If you can’t discard 6 cards in this way, this attack does nothing."
+348,483,Whip Smash,140,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+349,484,Grass Kagura,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic {G} Energy card and attach it to 1 of your Pokémon. Then, shuffle your deck."
+349,485,Ogre’s Hammer,120,3,1,2,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Ogre’s Hammer."
+350,486,Double Headbutt,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 10 damage for each heads.
+351,487,Fire Mane,60,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+352,488,Ember,30,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+353,489,Combustion,40,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+354,490,Buddy Blast,40,1,0,0,1,0,0,0,0,0,0,0,0,0,1,This attack does 60 more damage for each Ethan’s Adventure card in your discard pile.
+354,491,Steam Artillery,160,3,1,0,2,0,0,0,0,0,0,0,0,0,0,
+355,492,Steady Firebreathing,20,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+356,493,Lava Burst,0,3,0,0,3,0,0,0,0,0,0,0,0,0,1,Discard up to 5 {R} Energy from this Pokémon. This attack does 70 damage for each card you discarded in this way.
+357,494,Shining Feathers,160,4,0,0,4,0,0,0,0,0,0,0,0,0,1,Heal 50 damage from each of your Pokémon.
+358,495,Fire Kagura,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic {R} Energy card and attach it to 1 of your Pokémon. Then, shuffle your deck."
+358,496,Searing Flame,80,3,1,0,2,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+359,497,Sprinkle Water,30,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+360,498,Bubble Beam,20,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+361,499,Abrupt Flash,60,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"If this Pokémon evolved from Misty’s Staryu during this turn, this attack does 80 more damage."
+362,500,Splash,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+363,501,Splashing Panic,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Discard the top 7 cards of your deck, and this attack does 70 damage for each Misty’s Pokémon that you discarded in this way."
+363,502,Waterfall,120,3,1,0,0,2,0,0,0,0,0,0,0,0,0,
+364,503,Swim Together,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Search your deck for up to 3 Misty’s Pokémon, reveal them, and put them into your hand. Then, shuffle your deck."
+364,504,Surf,60,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+365,505,Undulate,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+366,506,Aqua Split,60,2,1,0,0,1,0,0,0,0,0,0,0,0,1,This attack also does 30 damage to 2 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+367,507,Tail Whap,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+367,508,Wave Splash,30,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+368,509,Whirlpool,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Discard an Energy from your opponent’s Active Pokémon.
+368,510,Aqua Slash,140,3,2,0,0,1,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t attack."
+369,511,Avenging Billow,30,2,1,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 10 more damage for each damage counter on this Pokémon.
+369,512,Dynamic Dive,120,4,2,0,0,2,0,0,0,0,0,0,0,0,1,"You may do 120 more damage. If you do, this Pokémon also does 50 damage to itself."
+370,513,Water Kagura,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic {W} Energy card and attach it to 1 of your Pokémon. Then, shuffle your deck."
+370,514,Bubble Drain,100,3,1,0,0,2,0,0,0,0,0,0,0,0,1,Heal 30 damage from this Pokémon.
+371,515,Electroslug,50,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+372,516,Dual Bolt,0,2,1,0,0,0,1,0,0,0,0,0,0,0,1,This attack does 50 damage to 2 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+372,517,High-Voltage Press,180,3,1,0,0,0,2,0,0,0,0,0,0,0,1,"If this Pokémon has at least 2 extra Energy attached (in addition to this attack’s cost), this attack does 100 more damage."
+373,518,Zapping Draw,30,0,0,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+374,519,Rear Kick,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+374,520,Tiny Bolt,30,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+375,521,Zap Kick,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+375,522,Flash Impact,120,2,1,0,0,0,1,0,0,0,0,0,0,0,1,This attack also does 40 damage to 1 of your Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+376,523,Astonish,20,1,0,0,0,0,1,0,0,0,0,0,0,0,1,Choose a random card from your opponent’s hand. Your opponent reveals that card and shuffles it into their deck.
+376,524,Gadget Show,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Pokémon Tool attached to all of your Pokémon.
+377,525,Scratch,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+377,526,Thunder Raid,0,3,0,0,0,0,3,0,0,0,0,0,0,0,1,"Discard all Energy from this Pokémon, and this attack does 210 damage to 1 of your opponent’s Benched Pokémon {ex}. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+378,527,Impound,20,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+378,528,Try to Imitate,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, choose 1 of your opponent’s Active Pokémon’s attacks and use it as this attack."
+379,529,Rock Hurl,20,1,0,0,0,0,0,0,1,0,0,0,0,0,1,This attack’s damage isn’t affected by Resistance.
+380,530,Dragonslice,40,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+381,531,Corkscrew Dive,100,1,0,0,0,0,0,0,1,0,0,0,0,0,1,You may draw cards until you have 6 cards in your hand.
+381,532,Draconic Buster,260,2,0,0,0,0,0,0,2,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+382,533,Running Charge,0,2,1,0,0,0,0,0,1,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 40 damage for each heads.
+383,534,Heavy Impact,130,3,1,0,0,0,0,0,2,0,0,0,0,0,0,
+384,535,Slight Intrusion,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+385,536,Pull,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Switch in 1 of your opponent’s Benched Pokémon to the Active Spot.
+385,537,Reckless Charge,120,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+386,538,Rock Kagura,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic {F} Energy card and attach it to 1 of your Pokémon. Then, shuffle your deck."
+386,539,Mountain Ramming,100,3,1,0,0,0,0,0,2,0,0,0,0,0,1,Discard the top card of your opponent’s deck.
+387,540,Raging Curse,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 10 damage for each damage counter on all of your Benched Cynthia’s Pokémon. This attack’s damage isn’t affected by Weakness.
+388,541,Stampede,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+388,542,Confront,50,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+389,543,Vigorous Tackle,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon has no damage counters on it, this attack does 120 more damage."
+389,544,Boss Headbutt,210,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Boss Headbutt."
+390,545,Horn Attack,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+390,546,Clean Hit,50,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is an Evolution Pokémon, this attack does 50 more damage."
+391,547,Gnaw Through,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Before doing damage, discard all Pokémon Tools from your opponent’s Active Pokémon."
+392,548,Rolling Tackle,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+393,549,Hang Down,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+394,550,Rolling Tackle,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+395,551,Damage Rush,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 50 more damage for each heads.
+395,552,Mega Drain,90,3,2,1,0,0,0,0,0,0,0,0,0,0,1,Heal 30 damage from this Pokémon.
+396,553,Trimming Mower,20,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Discard a Stadium in play.
+396,554,Gadget Show,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Pokémon Tool attached to all of your Pokémon.
+397,555,Cut Up,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+398,556,Razor Leaf,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+398,557,Petal Blade Dance,130,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Discard 2 Basic {G} Energy cards from your hand. If you can’t discard 2 cards in this way, this attack does nothing."
+399,558,Searching Eyes,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Look at 1 of your opponent’s face-down Prize cards.
+400,559,Take Down,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+401,560,Rocket Rush,0,2,1,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each of your Team Rocket’s Pokémon in play.
+402,561,Ram,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+403,562,Nutrients,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Heal 40 damage from 1 of your Pokémon.
+403,563,Tackle,40,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+404,564,Oil Salvo,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Choose 1 of your opponent’s Pokémon 6 times. (You can choose the same Pokémon more than once.) For each time you chose a Pokémon, do 20 damage to it. This damage isn’t affected by Weakness or Resistance."
+404,565,Aroma Shot,160,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon recovers from all Special Conditions.
+405,566,Live Coal,10,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+405,567,Dig Claws,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+406,568,Flare,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+406,569,Punishing Fang,100,3,2,0,1,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a {D} Pokémon, this attack does 100 more damage."
+407,570,Flame Screen,110,3,2,0,1,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 50 less damage from attacks (after applying Weakness and Resistance)."
+407,571,Evil Incineration,0,4,3,0,1,0,0,0,0,0,0,0,0,0,1,"Discard a Team Rocket’s Energy from this Pokémon. If you do, discard your opponent’s Active Pokémon and all attached cards."
+408,572,Steady Firebreathing,20,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+409,573,Cruel Coal,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned and Confused.
+409,574,Scorching Fire,120,2,1,0,1,0,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+410,575,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+410,576,Combustion,10,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+411,577,Combustion,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+411,578,Double Kick,0,2,1,0,1,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 40 damage for each heads.
+412,579,Heat Blast,70,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+412,580,Inferno Kick Flurry,120,3,1,0,2,0,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon. This attack also does 120 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+413,581,Singe,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+413,582,Gadget Show,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Pokémon Tool attached to all of your Pokémon.
+414,583,Dark Frost,60,3,2,0,0,1,0,0,0,0,0,0,0,0,1,"If this Pokémon has any Team Rocket’s Energy attached, this attack does 60 more damage."
+415,584,Shell Press,10,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 10 less damage from attacks (after applying Weakness and Resistance)."
+416,585,Wave Splash,80,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+417,586,Crescendo Wave,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"This attack does 30 damage for each {W} Energy attached to this Pokémon. Before doing damage, you may attach any number of Basic {W} Energy cards from your hand to this Pokémon."
+418,587,Light Punch,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+418,588,Icicle,50,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+419,589,Lunge Out,90,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+419,590,Frozen Wood,120,4,1,0,0,3,0,0,0,0,0,0,0,0,1,"If this Pokémon has 2 or more {G} Energy attached, this attack does 120 more damage."
+420,591,Manual Wash,20,1,0,0,0,1,0,0,0,0,0,0,0,0,1,Heal 10 damage from each of your Pokémon.
+420,592,Gadget Show,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Pokémon Tool attached to all of your Pokémon.
+421,593,Reckless Charge,30,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+422,594,Sharp Fin,40,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+422,595,Dive,60,2,0,0,0,2,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+423,596,Gentle Slap,30,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+423,597,Frost Smash,80,4,1,0,0,3,0,0,0,0,0,0,0,0,0,
+424,598,Crushing Press,140,4,1,0,0,3,0,0,0,0,0,0,0,0,1,"You may discard a Stadium in play. If you do, this attack does 140 more damage."
+425,599,Jamming Wing,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,You may move an Energy from your opponent’s Active Pokémon to 1 of their Benched Pokémon.
+425,600,Wicked Thunder,60,3,2,0,0,0,1,0,0,0,0,0,0,0,1,"If this Pokémon has any Team Rocket’s Energy attached, this attack does 60 more damage."
+426,601,Procurement,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for an Item card, reveal it, and put it into your hand. Then, shuffle your deck."
+426,602,Tiny Bolt,10,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+427,603,Thunder Shock,50,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+428,604,Head Bolt,140,3,2,0,0,0,1,0,0,0,0,0,0,0,0,
+429,605,Hypnotic Ray,10,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep.
+430,606,Psyshot,40,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+430,607,Bench Manipulation,0,3,0,0,0,0,0,3,0,0,0,0,0,0,1,Your opponent flips a coin for each of their Benched Pokémon. This attack does 80 damage to your opponent’s Active Pokémon for each tails. This attack’s damage isn’t affected by Weakness or Resistance.
+431,608,Erasure Ball,160,3,1,0,0,0,0,2,0,0,0,0,0,0,1,You may discard up to 2 Energy from your Benched Pokémon. This attack does 60 more damage for each card you discarded in this way.
+432,609,Rocket Mirror,0,2,1,0,0,0,0,1,0,0,0,0,0,0,1,Move all damage counters from 1 of your Benched Team Rocket’s Pokémon to your opponent’s Active Pokémon.
+432,610,Headbutt Bounce,70,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+433,611,Chiming Commotion,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,Discard a random card from your opponent’s hand.
+434,612,Gemstone Mimicry,0,2,1,0,0,0,0,1,0,0,0,0,0,0,1,Choose 1 of your opponent’s Active Tera Pokémon’s attacks and use it as this attack.
+435,613,Disruptive Radar,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Look at the top 5 cards of your opponent’s deck and put them back in any order.
+435,614,Super Psy Bolt,30,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+436,615,Psychic,40,3,2,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 40 more damage for each Energy attached to your opponent’s Active Pokémon.
+437,616,Wild Kick,30,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+438,617,Drag Off,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,Switch in 1 of your opponent’s Benched Pokémon to the Active Spot. This attack does 30 damage to the new Active Pokémon.
+439,618,Impact Blow,160,2,0,0,0,0,0,0,2,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Impact Blow."
+440,619,Mountain Munch,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Discard the top card of your opponent’s deck.
+441,620,Explosive Ascension,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a card that evolves from this Pokémon and put it onto this Pokémon to evolve it. Then, shuffle your deck."
+442,621,Demolition Tackle,180,4,3,0,0,0,0,0,1,0,0,0,0,0,1,Discard an Energy from your opponent’s Active Pokémon.
+443,622,Headbutt,20,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+443,623,Rock Throw,40,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+444,624,Power Gem,40,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+444,625,Mountain Drop,70,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"If a Stadium is in play, this attack does 70 more damage."
+445,626,Steady Punch,10,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+446,627,Harmonious Spirit Palm,50,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If this Pokémon and your opponent’s Active Pokémon have the same amount of Energy attached, this attack does 120 more damage."
+447,628,Regi Charge,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Attach up to 2 Basic {F} Energy cards from your discard pile to this Pokémon.
+447,629,Giant Rock,140,4,3,0,0,0,0,0,1,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a Stage 2 Pokémon, this attack does 140 more damage."
+448,630,Drag Down,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+448,631,Gnaw,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+449,632,Spinning Tail,0,3,0,0,0,0,0,0,0,3,0,0,0,0,1,This attack does 30 damage to each of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+450,633,Surprise Attack,30,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+451,634,Dark Awakening,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Choose up to 2 of your {D} Pokémon. For each of those Pokémon, search your deck for a card that evolves from that Pokémon and put it onto that Pokémon to evolve it. Then, shuffle your deck."
+451,635,Scratch,50,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+452,636,Love Impact,60,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"If a Pokémon that has ""Nidoking"" in its name is on your Bench, this attack does 120 more damage."
+452,637,Mega Kick,130,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+453,638,Pierce,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+453,639,Hammer In,30,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+454,640,Hammer In,30,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+454,641,Horn Rend,60,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"If your opponent’s Active Pokémon already has any damage counters on it, this attack does 60 more damage."
+455,642,Tainted Horn,100,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"Your opponent’s Active Pokémon is now Poisoned. During Pokémon Checkup, put 8 damage counters on that Pokémon instead of 1."
+455,643,Kingly Impact,240,4,1,0,0,0,0,0,0,3,0,0,0,0,0,
+456,644,Poison Spray,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+457,645,Confuse Ray,30,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+458,646,Assassin’s Return,120,2,0,0,0,0,0,0,0,2,0,0,0,0,1,You may put this Pokémon into your hand. (Discard all cards attached to this Pokémon.)
+459,647,Corrosive Sludge,0,2,1,0,0,0,0,0,0,1,0,0,0,0,1,"At the end of your opponent’s next turn, discard the Defending Pokémon and all attached cards."
+460,648,Gooped Up,40,2,1,0,0,0,0,0,0,1,0,0,0,0,1,"Your opponent’s Active Pokémon is now Confused. During your opponent’s next turn, that Pokémon can’t retreat."
+460,649,Hazardous Venom,0,3,1,0,0,0,0,0,0,2,0,0,0,0,1,This attack does 100 damage for each Special Condition affecting your opponent’s Active Pokémon.
+461,650,Leaking Gas,30,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+462,651,Explode Together Now,0,2,1,0,0,0,0,0,0,1,0,0,0,0,1,This attack does 40 damage for each Pokémon in play that has “Koffing” or “Weezing” in its name (both yours and your opponent’s).
+463,652,Deceit,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Supporter card, reveal it, and put it into your hand. Then, shuffle your deck."
+463,653,Torment,30,2,1,0,0,0,0,0,0,1,0,0,0,0,1,"Choose 1 of your opponent’s Active Pokémon’s attacks. During your opponent’s next turn, that Pokémon can’t use that attack."
+464,654,Scratch,20,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+464,655,Strike the Sleeper,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,This attack does 20 damage to 1 of your opponent’s Benched Pokémon for each damage counter on that Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+465,656,Iron Shake-Up,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,You may move any amount of {M} Energy from your Pokémon to your other Pokémon in any way you like.
+465,657,Hurricane of Needles,0,4,3,0,0,0,0,0,0,0,1,0,0,0,1,Flip 4 coins. This attack does 80 damage for each heads.
+466,658,Roost,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Heal 50 damage from this Pokémon. During your next turn, this Pokémon can’t retreat."
+466,659,Metal Claw,60,2,1,0,0,0,0,0,0,0,1,0,0,0,0,
+467,660,Strong Bash,70,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your opponent’s next turn, if this Pokémon is damaged by an attack (even if this Pokémon is Knocked Out), put damage counters on the Attacking Pokémon equal to the damage done to this Pokémon."
+468,661,Dangerous Incisors,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+469,662,Reckless Abandon,90,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip 2 coins. If both of them are tails, this Pokémon also does 90 damage to itself."
+470,663,Paw-cket Pilfer,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Choose a random card from your opponent’s hand. Your opponent reveals that card and shuffles it into their deck.
+470,664,Fury Swipes,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Flip 3 coins. This attack does 20 damage for each heads.
+471,665,Haughty Order,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Reveal the top 10 cards of your opponent’s deck. You may choose an attack from a Pokémon you find there and use it as this attack. Shuffle the revealed cards into your opponent’s deck.
+471,666,Cruel Slash,140,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+472,667,Gentle Slap,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+472,668,Dizzy Punch,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 90 damage for each heads.
+473,669,Hacking,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Discard a card from your hand. If you do, your opponent discards a card from their hand."
+474,670,R Command,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 damage for each Supporter card that has “Team Rocket” in its name in your discard pile.
+475,671,R Command,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 damage for each Supporter card that has “Team Rocket” in its name in your discard pile.
+476,672,Wing Attack,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+477,673,Add On,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 3 cards.
+477,674,Speed Wing,70,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+478,675,Push Down,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,You may switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+479,676,Tackle,10,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+479,677,Vine Whip,30,2,0,2,0,0,0,0,0,0,0,0,0,0,0,
+480,678,Wrap,20,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+480,679,Vine Whip,60,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+481,680,Command the Grass,150,4,3,1,0,0,0,0,0,0,0,0,0,0,1,"You may search your deck for up to 3 cards and put them into your hand. Then, shuffle your deck."
+482,681,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+482,682,Scratch,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+483,683,Gentle Slap,70,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+484,684,Hide,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+484,685,Leafage,10,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+485,686,Bemusing Aroma,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed and Poisoned. If tails, your opponent’s Active Pokémon is now Confused."
+485,687,Cut,70,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+486,688,Lively Needles,20,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon was healed during this turn, this attack does 100 more damage."
+486,689,Pierce,50,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+487,690,Horn Attack,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+488,691,Toxic Spore,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+489,692,Dangerous Reaction,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is affected by a Special Condition, this attack does 120 more damage."
+489,693,Seed Bomb,60,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+490,694,V-Force,120,2,0,0,2,0,0,0,0,0,0,0,0,0,1,"If you have 4 or fewer Benched Pokémon, this attack does nothing."
+491,695,Will-O-Wisp,30,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+492,696,Searing Flame,50,2,1,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+492,697,Smashing Headbutt,180,4,3,0,1,0,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+493,698,Brighten and Burn,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Look at the top card of your deck. You may discard that card.
+494,699,Fire Blast,50,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+495,700,Incendiary Pillar,50,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"If you have 10 or more Basic {R} Energy cards in your discard pile, this attack does 100 more damage."
+495,701,Burn It All Up,180,2,0,0,2,0,0,0,0,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+496,702,Peck Off,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Before doing damage, discard all Pokémon Tools from your opponent’s Active Pokémon."
+497,703,Fire Wing,70,3,2,0,1,0,0,0,0,0,0,0,0,0,0,
+498,704,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+498,705,Scratch,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+499,706,Gentle Slap,70,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+500,707,Round,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 damage for each of your Pokémon in play that has the Round attack.
+501,708,Round,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 damage for each of your Pokémon in play that has the Round attack.
+501,709,Wave Splash,60,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+502,710,Round,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 70 damage for each of your Pokémon in play that has the Round attack.
+502,711,Hyper Voice,160,4,3,0,0,1,0,0,0,0,0,0,0,0,0,
+503,712,Ancient Seaweed,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Item card in your opponent’s discard pile.
+503,713,Surf,80,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+504,714,Big Bite,150,3,2,0,0,1,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+505,715,Waterfall,70,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+506,716,Snotted Up,10,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t use attacks."
+507,717,Continuous Headbutt,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 50 damage for each heads.
+507,718,Sheer Cold,150,4,1,0,0,3,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t use attacks."
+508,719,Drag Off,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,Switch in 1 of your opponent’s Benched Pokémon to the Active Spot. This attack does 20 damage to the new Active Pokémon.
+508,720,Icicle,30,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+509,721,Slash,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+509,722,Blizzard Burst,130,3,1,0,0,2,0,0,0,0,0,0,0,0,1,This attack also does 10 damage to each of your opponent’s Benched Pokémon for each Prize card your opponent has taken. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+510,723,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+510,724,Static Shock,20,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+511,725,Hold Still,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Heal 10 damage from this Pokémon.
+512,726,Electric Ball,50,3,1,0,0,0,2,0,0,0,0,0,0,0,0,
+513,727,Thunder Fang,60,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+513,728,Buzz Flip,0,4,1,0,0,0,3,0,0,0,0,0,0,0,1,Flip 4 coins. This attack does 100 damage for each heads.
+514,729,Charge,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic {L} Energy card and attach it to this Pokémon. Then, shuffle your deck."
+514,730,Disaster Volt,110,3,2,0,0,0,1,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+515,731,Slash,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+515,732,Voltage Burst,130,3,1,0,0,0,2,0,0,0,0,0,0,0,1,This attack does 50 more damage for each Prize card your opponent has taken. This Pokémon also does 30 damage to itself.
+516,733,Rest,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon is now Asleep. Heal 30 damage from it.
+516,734,Mumble,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+517,735,Dream Calling,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"You may search your deck for any number of Fennel cards, reveal them, and put them into your hand. Then, shuffle your deck."
+517,736,Sleep Pulse,50,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep.
+518,737,Rollout,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+519,738,Cellular Evolution,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a card that evolves from 1 of your Pokémon and put it onto that Pokémon to evolve it. Then, shuffle your deck."
+519,739,Spray Fluid,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+520,740,Cellular Ascension,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"For each of your Benched Pokémon, search your deck for a card that evolves from that Pokémon and put it onto that Pokémon to evolve it. Then, shuffle your deck."
+520,741,Evo-Lariat,40,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 more damage for each of your Evolution Pokémon in play.
+521,742,Slight Shift,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Move an Energy from 1 of your opponent’s Pokémon to another of their Pokémon.
+521,743,Beam,40,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+522,744,Calm Mind,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Heal 40 damage from this Pokémon.
+522,745,Psychic,80,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 more damage for each Energy attached to your opponent’s Active Pokémon.
+523,746,Best Punch,60,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+524,747,Double Smash,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 80 damage for each heads.
+524,748,Golurk Hammer,200,5,3,0,0,0,0,2,0,0,0,0,0,0,0,
+525,749,Echoed Voice,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"During your next turn, this Pokémon’s Echoed Voice attack does 80 more damage (before applying Weakness and Resistance)."
+526,750,Mud-Slap,10,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+526,751,Corkscrew Punch,30,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+527,752,Piercing Drill,60,2,0,0,0,0,0,0,2,0,0,0,0,0,1,This attack also does 60 damage to 1 of your opponent’s Benched Pokémon that has any damage counters on it. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+527,753,Rock Tumble,200,3,0,0,0,0,0,0,3,0,0,0,0,0,1,This attack’s damage isn’t affected by Resistance.
+528,754,Low Kick,10,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+528,755,Strength,50,3,2,0,0,0,0,0,1,0,0,0,0,0,0,
+529,756,Low Kick,30,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+529,757,Hammer Arm,60,3,2,0,0,0,0,0,1,0,0,0,0,0,1,Discard the top card of your opponent’s deck.
+530,758,Swing Around,100,4,3,0,0,0,0,0,1,0,0,0,0,0,1,Flip 2 coins. This attack does 50 more damage for each heads.
+531,759,Shoulder Throw,120,2,1,0,0,0,0,0,1,0,0,0,0,0,1,This attack does 30 less damage for each {C} in your opponent’s Active Pokémon’s Retreat Cost.
+532,760,Flail,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 10 damage for each damage counter on this Pokémon.
+532,761,Dig Claws,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+533,762,Stone Edge,80,3,2,0,0,0,0,0,1,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 60 more damage."
+534,763,Abundant Harvest,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Attach a Basic {F} Energy card from your discard pile to this Pokémon.
+534,764,Earthquake,110,3,2,0,0,0,0,0,1,0,0,0,0,0,1,This attack also does 10 damage to each of your Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+535,765,Poison Spray,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+536,766,Venoshock,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is Poisoned, this attack does 60 more damage."
+537,767,Venoshock,90,2,1,0,0,0,0,0,0,1,0,0,0,0,1,"If your opponent’s Active Pokémon is Poisoned, this attack does 90 more damage."
+538,768,Tighten Up,10,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent discards a card from their hand.
+539,769,Tighten Up,40,2,1,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent discards 2 cards from their hand.
+540,770,Tighten Up,60,2,1,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent discards 2 cards from their hand.
+540,771,Cursed Slug,120,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"If your opponent has 3 or fewer cards in their hand, this attack does 120 more damage."
+541,772,Playful Kick,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+542,773,Cutting Wind,90,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+543,774,Wild Lances,90,1,0,0,0,0,0,0,0,0,1,0,0,0,1,This Pokémon also does 30 damage to itself.
+544,775,Corner,10,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+545,776,Cut Up,40,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+545,777,Finishing Blow,60,2,1,0,0,0,0,0,0,0,1,0,0,0,1,"If your opponent’s Active Pokémon already has any damage counters on it, this attack does 60 more damage."
+546,778,Righteous Edge,20,1,0,0,0,0,0,0,0,0,1,0,0,0,1,Discard a Special Energy from your opponent’s Active Pokémon.
+546,779,Metal Arms,80,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"If this Pokémon has a Pokémon Tool attached, this attack does 40 more damage."
+547,780,Protect Charge,150,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance)."
+548,781,Gather Strength,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards, reveal them, and put them into your hand. Then, shuffle your deck."
+549,782,Bite,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+549,783,Boundless Power,90,2,0,0,0,0,0,0,1,0,1,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+550,784,Cross-Cut,80,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is an Evolution Pokémon, this attack does 80 more damage."
+550,785,Axe Blast,0,3,1,0,0,0,0,0,1,0,1,0,0,0,1,"If your opponent’s Active Pokémon is a Basic Pokémon, it is Knocked Out."
+551,786,Scout,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent reveals their hand.
+551,787,Stampede,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+552,788,Fly,40,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+553,789,Add On,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 4 cards.
+553,790,Swift Flight,120,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+554,791,Return,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,You may draw cards until you have 6 cards in your hand.
+555,792,Tail Slap,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 20 damage for each heads.
+556,793,Do the Wave,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 more damage for each of your Benched Pokémon.
+557,794,Bug Bite,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+558,795,Bug Buzz,40,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+559,796,Healing Wrapping,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Heal 100 damage from each of your Basic Pokémon.
+559,797,X-Scissor,90,2,1,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 40 more damage."
+560,798,Absorb,10,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Heal 10 damage from this Pokémon.
+561,799,Energy Gift,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 3 Basic Energy cards and attach them to your Pokémon in any way you like. Then, shuffle your deck."
+561,800,Wondrous Cotton,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Your opponent reveals their hand. This attack does 50 damage for each Trainer card you find there.
+562,801,Rear Kick,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+563,802,Push Down,50,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+563,803,Solar Beam,100,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+564,804,Headbutt Bounce,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+565,805,Acid Spray,50,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, discard an Energy from your opponent’s Active Pokémon."
+566,806,Giga Drain,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Heal from this Pokémon the same amount of damage you did to your opponent’s Active Pokémon.
+566,807,Emerald Blade,130,3,1,2,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+567,808,Tackle,10,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+567,809,Rollout,30,2,0,0,2,0,0,0,0,0,0,0,0,0,0,
+568,810,Combustion,30,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+568,811,Heat Crash,80,3,1,0,2,0,0,0,0,0,0,0,0,0,0,
+569,812,Heat Crash,120,4,1,0,3,0,0,0,0,0,0,0,0,0,0,
+570,813,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+570,814,Scratch,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+571,815,Gentle Slap,70,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+572,816,Licking Catch,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 3 in any combination of {R} Pokémon and Basic {R} Energy cards, reveal them, and put them into your hand. Then, shuffle your deck."
+572,817,Fire Claws,60,2,0,0,2,0,0,0,0,0,0,0,0,0,0,
+573,818,Slash,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+573,819,Blazing Burst,130,3,1,0,2,0,0,0,0,0,0,0,0,0,1,This attack does 50 more damage for each Prize card your opponent has taken. Discard an Energy from this Pokémon.
+574,820,Tackle,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+574,821,Water Gun,30,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+575,822,Energized Shell,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Energy attached to this Pokémon.
+576,823,Energized Slash,30,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 50 more damage for each Energy attached to this Pokémon.
+577,824,Bite,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+577,825,Bared Fangs,50,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon has no damage counters on it before this attack does damage, this attack does nothing."
+578,826,Firefighting,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Discard a {R} Energy from your opponent’s Active Pokémon.
+578,827,Wing Attack,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+579,828,Flap,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+579,829,Air Slash,120,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+580,830,Beat,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+580,831,Ice Edge,20,2,1,0,0,1,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+581,832,Ram,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+581,833,Ice Beam,50,3,2,0,0,1,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+582,834,Ram,60,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+582,835,Double Freeze,0,3,2,0,0,1,0,0,0,0,0,0,0,0,1,"Flip 2 coins. This attack does 90 damage for each heads. If either of them is heads, your opponent’s Active Pokémon is now Paralyzed."
+583,836,Gale Thrust,30,2,1,0,0,1,0,0,0,0,0,0,0,0,1,"If this Pokémon moved from your Bench to the Active Spot this turn, this attack does 90 more damage."
+583,837,Sonic Edge,120,3,2,0,0,1,0,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+584,838,Smash Kick,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+584,839,Zap Kick,30,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+585,840,Smash Kick,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+585,841,Electrobullet,100,3,1,0,0,0,2,0,0,0,0,0,0,0,1,This attack also does 30 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+586,842,Surprise Attack,30,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+587,843,Discharge,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,Discard all {L} Energy from this Pokémon. This attack does 50 damage for each card you discarded in this way.
+588,844,Muddy Bolt,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon has any {F} Energy attached, this attack does 20 more damage."
+588,845,Flop,50,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+589,846,Heart Stamp,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+590,847,Happy Return,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Put 1 of your Benched Pokémon and all attached cards into your hand.
+590,848,Gust,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+591,849,Reflect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 40 less damage from attacks (after applying Weakness and Resistance)."
+591,850,Telekinesis,0,3,2,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 70 damage to 1 of your opponent’s Pokémon. This attack’s damage isn’t affected by Weakness or Resistance.
+592,851,Focused Wish,20,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+593,852,Extended Damagriiigus,0,2,1,0,0,0,0,1,0,0,0,0,0,0,1,Move all damage counters from 1 of your Benched Pokémon to 1 of your opponent’s Pokémon.
+593,853,Perplex,60,3,2,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+594,854,Super Psy Bolt,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+595,855,Fortunate Eye,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Look at the top 5 cards of your opponent’s deck and put them back in any order.
+595,856,Psyshot,40,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+596,857,Synchro Shot,90,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"If you have the same number of cards in your hand as your opponent, this attack does 90 more damage."
+597,858,Oceanic Gloom,20,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"During your opponent’s next turn, they can’t play any Item cards from their hand."
+598,859,Power Press,80,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"If this Pokémon has at least 2 extra Energy attached (in addition to this attack’s cost), this attack does 80 more damage."
+599,860,Harden,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks if that damage is 40 or less."
+599,861,Rolling Rocks,30,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+600,862,Smack Down,30,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If your opponent’s Active Pokémon has {F} Resistance, this attack does 50 more damage."
+600,863,Power Gem,90,3,0,0,0,0,0,0,3,0,0,0,0,0,0,
+601,864,Vengeful Cannon,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,This attack does 20 damage for each damage counter on all of your Benched {F} Pokémon.
+601,865,Heavy Impact,160,3,0,0,0,0,0,0,3,0,0,0,0,0,0,
+602,866,Elbow Strike,30,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+602,867,Rising Chop,90,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If your opponent’s Active Pokémon isn’t a Pokémon {ex}, this attack does nothing. This attack’s damage isn’t affected by Weakness or Resistance."
+603,868,Acrobatics,30,2,1,0,0,0,0,0,1,0,0,0,0,0,1,Flip 2 coins. This attack does 30 more damage for each heads.
+604,869,Rock Throw,100,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+605,870,Kick,20,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+606,871,Low Sweep,40,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+606,872,Smash Uppercut,80,2,0,0,0,0,0,0,2,0,0,0,0,0,1,This attack’s damage isn’t affected by Resistance.
+607,873,Retaliate,50,2,1,0,0,0,0,0,1,0,0,0,0,0,1,"If any of your Pokémon were Knocked Out by damage from an attack during your opponent’s last turn, this attack does 80 more damage."
+607,874,Land Crush,100,3,1,0,0,0,0,0,2,0,0,0,0,0,0,
+608,875,Invite Evil,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Search your deck for up to 3 {D} Pokémon, reveal them, and put them into your hand. Then, shuffle your deck."
+609,876,Knock Off,50,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Discard a random card from your opponent’s hand.
+610,877,Headbutt,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+610,878,Invade,30,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+611,879,Ruffians Attack,0,2,0,0,0,0,0,0,0,2,0,0,0,0,1,Flip a coin for each {D} Pokémon you have in play. This attack does 60 damage for each heads.
+612,880,Drool,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+612,881,Sludge Bomb,20,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+613,882,Suffocating Gas,40,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+613,883,Gunk Shot,120,3,1,0,0,0,0,0,0,2,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+614,884,Take Down,30,1,0,0,0,0,0,0,0,1,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+615,885,Mind Jack,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,This attack does 30 damage for each of your opponent’s Benched Pokémon.
+615,886,Foul Play,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Choose 1 of your opponent’s Active Pokémon’s attacks and use it as this attack.
+616,887,Body Slam,20,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+616,888,Darkness Fang,50,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+617,889,Double Hit,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 40 damage for each heads.
+617,890,Pitch-Black Fangs,100,4,2,0,0,0,0,0,0,2,0,0,0,0,0,
+618,891,Dark Bite,200,5,2,0,0,0,0,0,0,3,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+619,892,Zzzt,10,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+619,893,Metal Claw,40,3,2,0,0,0,0,0,0,0,1,0,0,0,0,
+620,894,Power Whip,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,This attack does 20 damage to 1 of your opponent’s Pokémon for each Energy attached to this Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+620,895,Metal Claw,130,4,3,0,0,0,0,0,0,0,1,0,0,0,0,
+621,896,Hard Gears,10,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 10 less damage from attacks (after applying Weakness and Resistance)."
+622,897,Hard Gears,50,2,1,0,0,0,0,0,0,0,1,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 20 less damage from attacks (after applying Weakness and Resistance)."
+623,898,Hammer In,120,3,2,0,0,0,0,0,0,0,1,0,0,0,0,
+624,899,Bite Together,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If Durant is on your Bench, this attack does 20 more damage."
+624,900,Vise Grip,50,2,1,0,0,0,0,0,0,0,1,0,0,0,0,
+625,901,Shred,40,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+625,902,Ambush,90,3,1,0,1,1,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 60 more damage."
+626,903,Procurement,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for an Item card, reveal it, and put it into your hand. Then, shuffle your deck."
+626,904,Gnaw,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+627,905,Focus Energy,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon’s Hyper Fang attack’s base damage is 240."
+627,906,Hyper Fang,80,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+628,907,Play Rough,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+629,908,Roar,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+629,909,Lunge Out,70,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+630,910,Odor Sleuth,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Flip 3 coins. Put a number of cards up to the number of heads from your discard pile into your hand.
+630,911,Special Fang,100,4,4,0,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon has any Special Energy attached, this attack does 100 more damage."
+631,912,Gold Breaker,100,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex}, this attack does 100 more damage."
+632,913,Peck,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+632,914,Glide,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+633,915,Aerial Ace,40,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 40 more damage."
+633,916,Speed Wing,130,4,4,0,0,0,0,0,0,0,0,0,0,0,0,
+634,917,Wrapped in Wind,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Attach a Basic Energy card from your hand to this Pokémon.
+634,918,Hurricane,100,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Move a Basic Energy from this Pokémon to 1 of your Benched Pokémon.
+635,919,Summoning Sign,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Steven’s Pokémon and put them onto your Bench. Then, shuffle your deck."
+635,920,Psychic Sphere,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+636,921,Eerie Light,20,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+636,922,Clay Blast,220,3,1,0,0,0,0,2,0,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+637,923,Magical Shot,80,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+638,924,Razor Wing,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+638,925,Sonic Double,0,3,1,0,0,0,0,0,0,0,2,0,0,0,1,This attack does 50 damage to 2 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+639,926,Ram,30,2,1,0,0,0,0,0,0,0,1,0,0,0,0,
+640,927,Metal Slash,70,2,1,0,0,0,0,0,0,0,1,0,0,0,1,"During your next turn, this Pokémon can’t attack."
+641,928,Metal Stomp,200,3,2,0,0,0,0,0,0,0,1,0,0,0,0,
+642,929,Pointy Nails,20,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex}, this attack does 40 more damage."
+643,930,Pointy Claws,70,2,0,0,0,0,0,0,0,2,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex}, this attack does 70 more damage."
+644,931,Crunch,50,3,1,0,0,0,0,0,0,2,0,0,0,0,1,Discard an Energy from your opponent’s Active Pokémon.
+645,932,Rear Kick,40,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+645,933,Wild Tackle,160,3,1,0,0,0,0,0,0,2,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+646,934,Filch,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+646,935,Corkscrew Punch,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+647,936,Corkscrew Punch,60,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+648,937,Shadow Bullet,180,2,0,0,0,0,0,0,0,2,0,0,0,0,1,This attack also does 30 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+649,938,Spiky Wheel,20,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 more damage for each {D} Energy attached to this Pokémon.
+650,939,Bind Down,10,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+651,940,Razor Leaf,60,2,0,2,0,0,0,0,0,0,0,0,0,0,0,
+652,941,Jungle Dump,240,4,0,4,0,0,0,0,0,0,0,0,0,0,1,Heal 30 damage from this Pokémon.
+653,942,Jam-Packed,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic {G} Energy card and attach it to this Pokémon. Then, shuffle your deck."
+654,943,Guard Press,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance)."
+654,944,Stomping Wood,60,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 more damage for each {G} Energy attached to this Pokémon.
+655,945,Traverse Time,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 3 in any combination of {G} Pokémon and Stadium cards, reveal them, and put them into your hand. Then, shuffle your deck."
+655,946,Solar Cutter,30,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+656,947,Nap,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Heal 20 damage from this Pokémon.
+656,948,Seed Bomb,20,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+657,949,Pound,30,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+657,950,Low Kick,50,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+658,951,Reversing Gust,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, choose 1 of your opponent’s Pokémon. Shuffle that Pokémon and all attached cards into their deck."
+658,952,Perplex,100,2,1,1,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+659,953,Stampede,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+659,954,Combustion,20,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+660,955,Supernatural Shapeshifter,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Discard the top card of your deck, and if that card is a Supporter card, use the effect of that card as the effect of this attack."
+660,956,Combustion,60,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+661,957,Call for Family,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+661,958,Flare,30,3,2,0,1,0,0,0,0,0,0,0,0,0,0,
+662,959,Roasting Heat,80,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is Burned, this attack does 160 more damage."
+662,960,Volcanic Meteor,280,4,3,0,1,0,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+663,961,Singe,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+663,962,Backfire,130,3,1,0,2,0,0,0,0,0,0,0,0,0,1,Put 2 {R} Energy attached to this Pokémon into your hand.
+664,963,Wild Kick,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+665,964,Jumping Kick,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+666,965,Turbo Flare,50,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 3 Basic Energy cards and attach them to your Benched Pokémon in any way you like. Then, shuffle your deck."
+667,966,Vise Grip,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+667,967,Take Down,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+668,968,Slap,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+669,969,Dig Claws,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+669,970,Mud-Slap,20,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+670,971,Sand Attack,50,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, if the Defending Pokémon tries to use an attack, your opponent flips a coin. If tails, that attack doesn’t happen."
+670,972,Mud Shot,100,3,2,0,0,0,0,0,1,0,0,0,0,0,0,
+671,973,Bind,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+671,974,Strength,100,4,4,0,0,0,0,0,0,0,0,0,0,0,0,
+672,975,Pow-Pow Punching,10,0,0,0,0,0,0,0,0,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 30 more damage for each heads.
+673,976,Corkscrew Punch,10,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+673,977,Confront,30,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+674,978,Wild Press,210,3,0,0,0,0,0,0,3,0,0,0,0,0,1,This Pokémon also does 70 damage to itself.
+675,979,Power Gem,50,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+676,980,Cosmic Beam,70,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If you don’t have Lunatone on your Bench, this attack does nothing. This attack’s damage isn’t affected by Weakness or Resistance."
+677,981,Accelerating Stab,30,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Accelerating Stab."
+678,982,Aura Jab,130,1,0,0,0,0,0,0,1,0,0,0,0,0,1,Attach up to 3 Basic {F} Energy cards from your discard pile to your Benched Pokémon in any way you like.
+678,983,Mega Brave,270,2,0,0,0,0,0,0,2,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Mega Brave."
+679,984,Smack,20,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+680,985,Reckless Charge,70,1,0,0,0,0,0,0,1,0,0,0,0,0,1,This Pokémon also does 20 damage to itself.
+681,986,Shadowy Side Kick,60,2,0,0,0,0,0,0,2,0,0,0,0,0,1,"If your opponent’s Pokémon is Knocked Out by damage from this attack, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+682,987,Stony Kick,20,1,0,0,0,0,0,0,1,0,0,0,0,0,1,This attack also does 20 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+682,988,Boundless Power,140,3,1,0,0,0,0,0,2,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+683,989,Ram,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+684,990,Rock Hurl,50,2,1,0,0,0,0,0,1,0,0,0,0,0,1,This attack’s damage isn’t affected by Resistance.
+685,991,Hammer In,130,3,1,0,0,0,0,0,2,0,0,0,0,0,0,
+686,992,Vise Grip,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+686,993,Cutting Riposte,130,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"If this Pokémon has any damage counters on it, this attack can be used for {D}."
+687,994,Terminal Period,0,2,1,0,0,0,0,0,0,1,0,0,0,0,1,"If your opponent’s Active Pokémon has exactly 6 damage counters on it, that Pokémon is Knocked Out."
+687,995,Claw of Darkness,200,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"Your opponent reveals their hand, and you discard a card you find there."
+688,996,Mountain Breaker,10,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Discard the top card of your opponent’s deck.
+689,997,Clutch,20,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+689,998,Dark Feather,110,3,1,0,0,0,0,0,0,2,0,0,0,0,0,
+690,999,Darkness Fang,20,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+691,1000,Greedy Hunt,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,You may draw cards until you have 6 cards in your hand.
+691,1001,Pitch-Black Fangs,60,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+692,1002,Poison Jab,20,2,1,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+693,1003,Miraculous Paint,90,2,1,0,0,0,0,0,0,1,0,0,0,0,1,"Flip a coin. If heads, choose a Special Condition. Your opponent’s Active Pokémon is now affected by that Special Condition."
+694,1004,Welcoming Tail,40,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If you have exactly 6 Prize cards remaining, this attack does 200 more damage."
+694,1005,Skull Bash,140,4,2,0,0,0,0,0,0,0,2,0,0,0,0,
+695,1006,Gobble Down,0,2,0,0,0,0,0,0,0,0,2,0,0,0,1,This attack does 80 damage for each Prize card you have taken.
+695,1007,Huge Bite,260,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"If your opponent’s Active Pokémon already has any damage counters on it, this attack’s base damage is 30."
+696,1008,Beam,30,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+696,1009,Chrono Burst,80,3,1,0,0,0,0,0,0,0,2,0,0,0,1,You may shuffle all Energy attached to this Pokémon into your deck and have this attack do 80 more damage.
+697,1010,Beat,20,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+698,1011,Light Punch,30,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+699,1012,Windup Swing,240,1,0,0,0,0,0,0,0,0,1,0,0,0,1,This attack does 60 less damage for each Energy attached to your opponent’s Active Pokémon.
+700,1013,All-You-Can-Grab,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin until you get tails. Search your deck for a number of cards up to the number of heads and put them into your hand. Then, shuffle your deck."
+700,1014,Speed Attack,100,3,2,0,0,0,0,0,0,0,1,0,0,0,0,
+701,1015,Pluck,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Before doing damage, discard all Pokémon Tools from your opponent’s Active Pokémon."
+702,1016,Repeating Drill,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 5 coins. This attack does 30 damage for each heads.
+703,1017,Bellyful of Milk,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip 2 coins. If both of them are heads, heal all damage from 1 of your Pokémon."
+703,1018,Tackle,60,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+704,1019,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+704,1020,Gnaw,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+705,1021,Bite,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+706,1022,Poison Powder,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+706,1023,Hook,30,3,2,1,0,0,0,0,0,0,0,0,0,0,0,
+707,1024,Absorb,30,2,1,1,0,0,0,0,0,0,0,0,0,0,1,Heal 30 damage from this Pokémon.
+707,1025,Pumped-Up Whip,120,4,2,2,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon has at least 2 extra Energy attached (in addition to this attack’s cost), this attack does 140 more damage."
+708,1026,Razor Leaf,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+709,1027,Push Down,50,2,1,1,0,0,0,0,0,0,0,0,0,0,1,Switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+710,1028,Solar Beam,140,4,2,2,0,0,0,0,0,0,0,0,0,0,0,
+711,1029,Rollout,30,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+712,1030,Scratch,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+713,1031,U-turn,90,2,1,1,0,0,0,0,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+714,1032,Earthen Power,30,2,1,1,0,0,0,0,0,0,0,0,0,0,1,"If you have a Stadium in play, this attack does 50 more damage."
+715,1033,Flare,30,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+716,1034,Searing Flame,70,3,2,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+717,1035,Ram,10,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+717,1036,Combustion,50,3,1,0,2,0,0,0,0,0,0,0,0,0,0,
+718,1037,Coiling Crush,50,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip 2 coins. For each heads, discard an Energy from your opponent’s Active Pokémon."
+718,1038,Heat Crawler,140,4,2,0,2,0,0,0,0,0,0,0,0,0,0,
+719,1039,Scorching Earth,40,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"If your opponent has a Stadium in play, discard it. If you do, your opponent can’t play any Stadium cards from their hand during their next turn."
+720,1040,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+720,1041,Waterfall,50,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+721,1042,Riptide,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"This attack does 20 damage for each Basic {W} Energy card in your discard pile. Then, shuffle those cards into your deck."
+721,1043,Swirling Waves,130,3,1,0,0,2,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+722,1044,Beat,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+722,1045,Icy Snow,30,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+723,1046,Hammer-lanche,0,2,0,0,0,2,0,0,0,0,0,0,0,0,1,"Discard the top 6 cards of your deck, and this attack does 100 damage for each Basic {W} Energy card that you discarded in this way."
+723,1047,Frost Barrier,200,3,0,0,0,3,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance)."
+724,1048,Wave Splash,50,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+725,1049,Aqua Launcher,210,3,0,0,0,3,0,0,0,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+726,1050,Surprise Attack,30,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+727,1051,Double Stab,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 30 damage for each heads.
+728,1052,Bring Down,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Choose a Pokémon in play (yours or your opponent’s) that has the least HP remaining, except for this Pokémon, and it is Knocked Out."
+728,1053,Water Shot,110,1,0,0,0,1,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+729,1054,Hide,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+730,1055,Chilling Wings,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 20 damage to each of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.) Your opponent’s Active Pokémon is now Asleep.
+731,1056,Freezing Headbutt,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+731,1057,Tackle,90,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+732,1058,Beam,10,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+733,1059,Thunder Shock,30,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+734,1060,Upper Spark,50,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"If this Pokémon evolved from Magneton during this turn, this attack does 120 more damage."
+734,1061,Flashing Bolt,160,2,0,0,0,0,2,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Flashing Bolt."
+735,1062,Electro Fall,30,2,0,0,0,0,2,0,0,0,0,0,0,0,1,"If you have at least 4 {L} Energy in play, this attack does 90 more damage."
+736,1063,Thunder Jolt,30,1,0,0,0,0,1,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+737,1064,Flash Ray,120,2,0,0,0,0,2,0,0,0,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks from Basic Pokémon."
+737,1065,Riotous Blasting,200,3,0,0,0,0,3,0,0,0,0,0,0,0,1,You may discard all Energy from this Pokémon and have this attack do 130 more damage.
+738,1066,Electrified Incisors,10,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"During your opponent’s next turn, whenever they attach an Energy card from their hand to the Defending Pokémon, place 8 damage counters on that Pokémon."
+739,1067,Double Scratch,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 10 damage for each heads.
+740,1068,Dazzle Blast,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+740,1069,Head Bolt,70,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+741,1070,Teleportation Attack,10,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+742,1071,Super Psy Bolt,30,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+743,1072,Powerful Hand,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Place 2 damage counters on your opponent’s Active Pokémon for each card in your hand.
+744,1073,Psychic,30,2,0,0,0,0,0,2,0,0,0,0,0,0,1,This attack does 30 more damage for each Energy attached to your opponent’s Active Pokémon.
+745,1074,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+745,1075,Headbutt,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+746,1076,Call Sign,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Search your deck for up to 3 Pokémon, reveal them, and put them into your hand. Then, shuffle your deck."
+746,1077,Psyshot,30,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+747,1078,Overflowing Wishes,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"For each of your Benched Pokémon, search your deck for a Basic {P} Energy card and attach it to that Pokémon. Then, shuffle your deck."
+747,1079,Mega Symphonia,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 50 damage for each {P} Energy attached to all of your Pokémon.
+748,1080,Damage Beat,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 20 damage for each damage counter on your opponent’s Active Pokémon.
+749,1081,Triple Spin,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Flip 3 coins. This attack does 10 damage for each heads.
+750,1082,Psychic Sphere,60,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+751,1083,Geo Gate,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Search your deck for up to 3 Basic {P} Pokémon and put them onto your Bench. Then, shuffle your deck."
+751,1084,Bright Horns,120,3,1,0,0,0,0,2,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Bright Horns."
+752,1085,Stampede,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+752,1086,Take Down,40,2,1,0,0,0,0,1,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+753,1087,Horrifying Bite,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Flip a coin until you get tails. For each heads, choose a random card from your opponent’s hand. Your opponent reveals those cards and shuffles them into their deck."
+753,1088,Hammer In,130,3,1,0,0,0,0,2,0,0,0,0,0,0,0,
+754,1089,Strafe,40,1,1,0,0,0,0,0,0,0,0,0,0,0,1,You may switch this Pokémon with 1 of your Benched Pokémon.
+754,1090,Illusory Impulse,300,3,1,0,1,0,0,1,0,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+755,1091,Dragon Claw,130,3,1,0,0,1,0,1,0,0,0,0,0,0,0,
+756,1092,Rapid-Fire Combo,200,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 50 more damage for each heads.
+757,1093,Quick Gift,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If you go first, you can use this attack during your first turn. Search your deck for a card and put it into your hand. Then, shuffle your deck."
+757,1094,Gentle Slap,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+758,1095,Charm,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, attacks used by the Defending Pokémon do 20 less damage (before applying Weakness and Resistance)."
+758,1096,Skip,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+759,1097,Dashing Kick,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 50 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+759,1098,Spiral Kick,60,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+760,1099,Light Punch,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+760,1100,Flop,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+761,1101,Knuckle Punch,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+761,1102,Hyper Lariat,100,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"Flip 2 coins. If both of them are heads, this attack does 100 more damage."
+762,1103,Tackle,20,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+763,1104,Bite,50,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+763,1105,Finishing Blow,90,3,1,0,0,0,0,2,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon already has any damage counters on it, this attack does 90 more damage."
+764,1106,Swelling Light,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic {P} Energy cards and attach them to this Pokémon. Then, shuffle your deck."
+764,1107,Aurora Beam,90,3,1,0,0,0,0,2,0,0,0,0,0,0,0,
+765,1108,Soothing Melody,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Heal 120 damage from 1 of your Benched {P} Pokémon.
+765,1109,Magical Shot,50,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+766,1110,Garland Ray,0,2,0,0,0,0,0,2,0,0,0,0,0,0,1,"Discard up to 2 Energy cards from this Pokémon, and this attack does 120 damage for each card you discarded in this way."
+767,1111,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic Pokémon and put it onto your Bench. Then, shuffle your deck."
+767,1112,Scratch,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+768,1113,Draining Kiss,10,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Heal 10 damage from this Pokémon.
+769,1114,Sweet Circle,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 20 damage for each of your Pokémon in play.
+770,1115,Petty Grudge,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+771,1116,Spooky Shot,40,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+772,1117,Void Gale,230,2,0,0,0,0,0,0,0,2,0,0,0,0,1,Move an Energy from this Pokémon to 1 of your Benched Pokémon.
+773,1118,Ambush,10,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+774,1119,Wind of Darkness,30,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+774,1120,Sniping Feathers,0,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"Discard 2 Energy from this Pokémon, and this attack does 120 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+775,1121,Cocky Claw,20,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"If you have any Stage 2 {D} Pokémon on your Bench, this attack does 70 more damage."
+776,1122,Allure,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 2 cards.
+776,1123,Dark Cutter,60,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+777,1124,Shatter,50,2,0,0,0,0,0,0,0,2,0,0,0,0,1,Discard a Stadium in play.
+777,1125,Power Rush,130,3,0,0,0,0,0,0,0,3,0,0,0,0,1,"Flip a coin. If tails, during your next turn, this Pokémon can’t use attacks."
+778,1126,Seed Bomb,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+779,1127,Disperse Drool,20,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This attack also does 20 damage to each Benched Pokémon (both yours and your opponent’s). (Don’t apply Weakness and Resistance for Benched Pokémon.)
+780,1128,Pollen Bomb,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep and Poisoned.
+780,1129,Lively Flower,60,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon was healed during this turn, this attack does 120 more damage."
+781,1130,Juggernaut Horn,100,2,0,2,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon was damaged by an attack during your opponent’s last turn, this attack does that much more damage."
+781,1131,Mountain Ramming,170,3,0,3,0,0,0,0,0,0,0,0,0,0,1,Discard the top 2 cards of your opponent’s deck.
+782,1132,Headbutt,30,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+783,1133,Mega Drain,30,2,1,1,0,0,0,0,0,0,0,0,0,0,1,Heal 30 damage from this Pokémon.
+784,1134,Lunge Out,120,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+785,1135,Bug’s Cannon,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 damage to 1 of your opponent’s Pokémon for each {G} Energy attached to this Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+785,1136,Speed Attack,110,3,1,2,0,0,0,0,0,0,0,0,0,0,0,
+786,1137,Flail Around,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Flip 3 coins. This attack does 10 damage for each heads.
+787,1138,Low Kick,30,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+787,1139,Jumping Shot,150,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Shuffle this Pokémon and all attached cards into your deck.
+788,1140,Live Coal,20,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+789,1141,Steady Firebreathing,40,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+790,1142,Inferno X,0,2,0,0,2,0,0,0,0,0,0,0,0,0,1,"Discard any amount of {R} Energy from among your Pokémon, and this attack does 90 damage for each card you discarded in this way."
+791,1143,Fighting Wings,20,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex}, this attack does 90 more damage."
+792,1144,Blaze Ball,10,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 more damage for each {R} Energy attached to this Pokémon.
+793,1145,Blaze Ball,40,4,4,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 more damage for each {R} Energy attached to this Pokémon.
+794,1146,Combustion,30,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+794,1147,Burning Flare,240,4,0,0,4,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 60 damage to itself.
+795,1148,Fire Wing,110,3,1,0,2,0,0,0,0,0,0,0,0,0,0,
+796,1149,Gather Strength,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards, reveal them, and put them into your hand. Then, shuffle your deck."
+796,1150,Chop,10,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+797,1151,Infernal Slash,220,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"Discard 4 Basic {R} Energy cards from your hand. If you can’t discard 4 cards in this way, this attack does nothing."
+798,1152,Bubble Drain,20,2,1,0,0,1,0,0,0,0,0,0,0,0,1,Heal 20 damage from this Pokémon.
+799,1153,Slam,0,2,1,0,0,1,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 70 damage for each heads.
+800,1154,Stampede,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+800,1155,Icy Snow,20,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+801,1156,Rising Lunge,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 30 more damage."
+801,1157,Frost Smash,70,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+802,1158,Wreck,120,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"If a Stadium is in play, this attack does 120 more damage. Then, discard that Stadium."
+802,1159,Blizzard Edge,200,4,3,0,0,1,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+803,1160,Crystal Fall,30,2,0,0,0,2,0,0,0,0,0,0,0,0,1,"If you have at least 4 {W} Energy in play, this attack does 90 more damage."
+804,1161,Call for Support,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Supporter card, reveal it, and put it into your hand. Then, shuffle your deck."
+804,1162,Tackle,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+805,1163,Peck,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+805,1164,Targeted Dive,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 70 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+806,1165,Thunderbolt,130,2,1,0,0,0,1,0,0,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+807,1166,Play Rough,20,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+808,1167,Electric Run,70,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 70 more damage."
+809,1168,Growl,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"During your opponent’s next turn, attacks used by the Defending Pokémon do 30 less damage (before applying Weakness and Resistance)."
+809,1169,Tiny Charge,10,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+810,1170,Electric Punch,60,2,0,0,0,0,2,0,0,0,0,0,0,0,0,
+811,1171,Voltaic Fist,130,2,0,0,0,0,2,0,0,0,0,0,0,0,1,You may have this Pokémon also do 60 damage to itself and make your opponent’s Active Pokémon Paralyzed.
+812,1172,Petty Grudge,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+813,1173,Hexa-Magic,150,2,0,0,0,0,0,2,0,0,0,0,0,0,1,You may draw cards until you have 6 cards in your hand.
+814,1174,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+815,1175,Healing Fluff,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Heal all damage from 1 of your Benched Pokémon.
+815,1176,U-turn,50,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+816,1177,Limit Break,50,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"If your opponent has 3 or fewer Prize cards remaining, this attack does 90 more damage."
+817,1178,Sneaky Placement,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Place 1 damage counter on 1 of your opponent’s Pokémon.
+818,1179,Psychic Sphere,80,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+819,1180,Raging Charge,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,This attack does 40 damage for each of your Pokémon that has “Tauros” in its name that has any damage counters on it.
+819,1181,Double-Edge,70,2,0,0,0,0,0,0,2,0,0,0,0,0,1,This Pokémon also does 20 damage to itself.
+820,1182,Poison Jab,10,1,0,0,0,0,0,0,1,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+821,1183,Poison Ring,50,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"Your opponent’s Active Pokémon is now Poisoned. During your opponent’s next turn, that Pokémon can’t retreat."
+822,1184,Double Headbutt,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,Flip 2 coins. This attack does 10 damage for each heads.
+823,1185,Super Vibration,60,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+824,1186,Cutting Wind,130,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+825,1187,Dig Claws,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+825,1188,Scratch,30,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+826,1189,Retaliatory Claw,20,2,0,0,0,0,0,0,0,2,0,0,0,0,1,"If this Pokémon’s remaining HP is 50 or less, this attack does 170 more damage."
+826,1190,Cut,60,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+827,1191,Reckless Charge,30,1,0,0,0,0,0,0,0,1,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+828,1192,Greedy Fang,70,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Draw 2 cards.
+828,1193,Hungry Jaws,120,2,0,0,0,0,0,0,0,2,0,0,0,0,1,"If this Pokémon has any damage counters on it, this attack does 150 more damage."
+829,1194,Pitch-Black Fangs,120,3,0,0,0,0,0,0,0,3,0,0,0,0,0,
+830,1195,Ram,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+830,1196,Rear Kick,20,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+831,1197,Bite,30,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+831,1198,Confront,60,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+832,1199,Vengeful Fang,60,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"If any of your Pokémon were Knocked Out by damage from an attack during your opponent’s last turn, this attack does 160 more damage."
+832,1200,Hammer In,160,4,3,0,0,0,0,0,0,1,0,0,0,0,0,
+833,1201,Call for Family,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+833,1202,Playful Kick,20,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+834,1203,Gentle Slap,100,3,1,0,0,0,0,0,0,2,0,0,0,0,0,
+835,1204,Iron Feathers,210,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 60 less damage from attacks (after applying Weakness and Resistance)."
+836,1205,Iron Defense,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage done to this Pokémon by attacks."
+836,1206,Rollout,30,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+837,1207,Triple Draw,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 3 cards.
+837,1208,Tool Drop,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 damage for each Pokémon Tool attached to all Pokémon.
+838,1209,Find a Friend,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck."
+838,1210,Gnaw,30,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+839,1211,Hyper Beam,70,3,0,0,0,0,0,0,0,0,3,0,0,0,1,Discard an Energy from your opponent’s Active Pokémon.
+840,1212,Coated Attack,120,3,0,0,0,0,0,0,0,0,3,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks from Basic Pokémon."
+841,1213,Ball Roll,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 20 damage for each heads.
+842,1214,Round,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 damage for each of your Pokémon in play that has the Round attack.
+842,1215,Seismic Toss,100,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+843,1216,Astonish,20,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Choose a random card from your opponent’s hand, and your opponent reveals that card and shuffles it into their deck."
+844,1217,Slap,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+844,1218,Dual Tail,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"Discard 2 Energy from this Pokémon, and this attack does 60 damage to each of 2 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+845,1219,Energizing Sketch,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 3 coins. Attach an amount of Basic Energy up to the number of heads from your discard pile to your Benched Pokémon in any way you like.
+845,1220,Hook,40,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+846,1221,Surprise Attack,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+847,1222,Slash,70,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+848,1223,Run Around,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+848,1224,Kick,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+849,1225,Gale Thrust,60,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon moved from your Bench to the Active Spot this turn, this attack does 170 more damage."
+849,1226,Spiky Hopper,160,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+850,1227,Bug Bite,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+851,1228,Tackle,30,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+852,1229,Stun Spore,40,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+852,1230,Energy Straw,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Your opponent reveals their hand, and this attack does 80 damage for each Energy card you find there."
+853,1231,Trading Places,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+854,1232,Twilight Poison,100,2,0,2,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep and Poisoned.
+855,1233,Flare Fall,30,2,0,0,2,0,0,0,0,0,0,0,0,0,1,"If you have at least 4 {R} Energy in play, this attack does 90 more damage."
+856,1234,Combustion,20,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+857,1235,Roasting Burn,110,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon isn’t Burned, this attack does nothing."
+857,1236,Power Stomp,170,4,3,0,1,0,0,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+858,1237,Ram,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+859,1238,Hydro Pump,60,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 more damage for each {W} Energy attached to this Pokémon.
+860,1239,Chilly,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+861,1240,Resentful Refrain,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 50 damage for each card in your opponent’s hand.
+861,1241,Absolute Snow,150,3,2,0,0,1,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep.
+862,1242,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+862,1243,Icy Snow,20,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+863,1244,Flop,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+863,1245,Sheer Cold,60,3,2,0,0,1,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t use attacks."
+864,1246,Snow Coating,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Double the number of damage counters on each of your opponent’s Pokémon.
+864,1247,Blizzard,120,3,2,0,0,1,0,0,0,0,0,0,0,0,1,This attack also does 10 damage to each of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+865,1248,Icicle,20,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+866,1249,Cold Cyclone,90,2,0,0,0,2,0,0,0,0,0,0,0,0,1,Move a {W} Energy from this Pokémon to 1 of your Benched Pokémon.
+867,1250,Ice Shot,20,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack also does 20 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+867,1251,Frosty Typhoon,130,3,0,0,0,3,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Frosty Typhoon."
+868,1252,Split Bomb,0,2,0,0,0,0,2,0,0,0,0,0,0,0,1,This attack does 60 damage to each of 2 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+868,1253,Disaster Shock,190,3,0,0,0,0,3,0,0,0,0,0,0,0,1,You may discard 2 {L} Energy from this Pokémon and make your opponent’s Active Pokémon Paralyzed.
+869,1254,Pouncing Trap,30,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat. During your next turn, the Defending Pokémon takes 100 more damage from attacks (after applying Weakness and Resistance)."
+870,1255,Zap Kick,30,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+871,1256,Powerful Bolt,0,3,2,0,0,0,1,0,0,0,0,0,0,0,1,Flip a coin for each Energy attached to this Pokémon. This attack does 70 damage for each heads.
+872,1257,Fast Flight,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"If you go first, you can use this attack during your first turn. Discard your hand and draw 5 cards."
+872,1258,Thunder Blast,130,3,1,0,0,0,2,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+873,1259,Focused Wish,10,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+874,1260,Tri Kinesis,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip 3 coins. If all of them are heads, Knock Out 1 of your opponent’s Pokémon."
+874,1261,Double-Edge,150,3,2,0,0,0,0,1,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+875,1262,Ascension,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Search your deck for a card that evolves from this Pokémon and put it onto this Pokémon to evolve it. Then, shuffle your deck."
+876,1263,Assassin’s Magic,60,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is affected by a Special Condition, place 6 damage counters on 1 of your opponent’s Benched Pokémon."
+877,1264,Roto Call,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"You may search your deck for any number of Pokémon that have “Rotom” in their name and put them onto your Bench. Then, shuffle your deck."
+877,1265,Gadget Show,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Pokémon Tool attached to all of your Pokémon.
+878,1266,Splashing Dodge,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+879,1267,Horrifying Revenge,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If any of your Hop’s Pokémon were Knocked Out by damage from an attack during your opponent’s last turn, this attack does 100 more damage."
+879,1268,Corner,90,3,2,0,0,0,0,1,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+880,1269,Spooky Shot,30,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+880,1270,Phantasmal Barrage,0,3,1,0,0,0,0,2,0,0,0,0,0,0,1,Discard all Energy from this Pokémon and place 12 damage counters on 1 of your opponent’s Pokémon.
+881,1271,Relentless Burrowing,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"Flip a coin until you get tails. For each heads, discard the top card of your opponent’s deck."
+882,1272,Mud Shot,50,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+883,1273,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+883,1274,Gentle Slap,10,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+884,1275,Seventh Kick,150,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If you don’t have exactly 7 cards in your hand, this attack does nothing."
+885,1276,Reckless Charge,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+886,1277,Somersault Dive,120,3,1,0,0,0,0,0,2,0,0,0,0,0,1,"If a Stadium is in play, this attack does 140 more damage. Then, discard that Stadium."
+887,1278,Mud-Slap,20,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+888,1279,Guard Press,20,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 20 less damage from attacks (after applying Weakness and Resistance)."
+888,1280,Power Gem,60,3,2,0,0,0,0,0,1,0,0,0,0,0,0,
+889,1281,Tar Cannon,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"This attack does 140 damage to 1 of your opponent’s Pokémon. If you don’t have 10 or more Basic {F} Energy cards in your discard pile, this attack does nothing. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+889,1282,Bulky Bump,220,4,3,0,0,0,0,0,1,0,0,0,0,0,1,Discard 3 Energy from this Pokémon.
+890,1283,Light Punch,20,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+890,1284,Settle the Score,80,3,1,0,0,0,0,0,2,0,0,0,0,0,1,This attack does 60 more damage for each Prize card your opponent took during their last turn.
+891,1285,Rocket Feathers,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"You may discard any number of Supporter cards that have “Team Rocket” in their name from your hand, and this attack does 60 damage for each card you discarded in this way."
+891,1286,Hammer In,100,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+892,1287,Gnaw,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+893,1288,Gnaw,20,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+893,1289,Claw Slash,50,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+894,1290,Scarring Shout,0,2,1,0,0,0,0,0,0,1,0,0,0,0,1,This attack does 70 damage for each damage counter on your opponent’s Active Pokémon.
+894,1291,Punk Smash,160,3,2,0,0,0,0,0,0,1,0,0,0,0,1,Discard an Energy from this Pokémon.
+895,1292,Knock Off,20,2,1,0,0,0,0,0,0,1,0,0,0,0,1,Discard a random card from your opponent’s hand.
+896,1293,Outlaw Leg,160,3,1,0,0,0,0,0,0,2,0,0,0,0,1,Discard a random card from your opponent’s hand. Discard the top card of your opponent’s deck.
+897,1294,Corkscrew Punch,40,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+897,1295,Master’s Punch,80,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"If any of your Benched Pancham have any damage counters on them, this attack does 120 more damage."
+898,1296,Mochi Rush,20,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"During your next turn, this Pokémon’s Mochi Rush attack does 50 more damage (before applying Weakness and Resistance)."
+899,1297,Push Down,10,1,0,0,0,0,0,0,0,0,1,0,0,0,1,Switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+900,1298,Rapid Draw,50,1,0,0,0,0,0,0,0,0,1,0,0,0,1,Draw 2 cards.
+901,1299,Double-Edged Slash,180,2,0,0,0,0,0,0,0,0,2,0,0,0,1,This Pokémon also does 50 damage to itself.
+902,1300,Headbutt,30,2,0,0,0,1,1,0,0,0,0,0,0,0,0,
+903,1301,Tail Snap,60,2,0,0,0,1,1,0,0,0,0,0,0,0,0,
+904,1302,Ryuno Glide,330,3,0,0,0,1,2,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+905,1303,Breakthrough Assault,20,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"If this Pokémon moved from your Bench to the Active Spot this turn, this attack does 90 more damage."
+905,1304,Dragon Claw,130,3,1,0,1,0,1,0,0,0,0,0,0,0,0,
+906,1305,Shred,70,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+906,1306,Rampaging Thunder,250,4,1,0,1,0,2,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+907,1307,Knickknack Carrying,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Pokémon Tool card, reveal it, and put it into your hand. Then, shuffle your deck."
+907,1308,Bite,30,2,0,0,0,0,0,1,0,1,0,0,0,0,0,
+908,1309,Agility,40,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+908,1310,Enhanced Blade,70,2,0,0,0,0,0,1,0,1,0,0,0,0,1,"If this Pokémon has a Pokémon Tool attached, this attack does 70 more damage."
+909,1311,Reckless Charge,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+910,1312,Poison Spray,50,2,1,1,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+911,1313,Bloom Powder,160,3,1,2,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep and Poisoned.
+912,1314,Vine Slap,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+913,1315,Melt,30,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+913,1316,Leafy Cyclone,70,2,1,1,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+914,1317,Flower Garden Rondo,0,2,1,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 damage for each of your Erika’s Pokémon in play.
+914,1318,Solar Beam,130,3,1,2,0,0,0,0,0,0,0,0,0,0,0,
+915,1319,Bind,50,2,1,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+916,1320,Cut Up,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+916,1321,Slashing Strike,60,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Slashing Strike."
+917,1322,Growl,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, attacks used by the Defending Pokémon do 20 less damage (before applying Weakness and Resistance)."
+917,1323,Seed Bomb,30,2,0,2,0,0,0,0,0,0,0,0,0,0,0,
+918,1324,Leaf Step,60,2,0,2,0,0,0,0,0,0,0,0,0,0,0,
+919,1325,Giant Bouquet,70,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 50 more damage for each {G} Energy attached to this Pokémon.
+920,1326,Wood Hammer,220,4,2,2,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+921,1327,Coated Attack,20,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks from Basic Pokémon."
+922,1328,Tons of Treading,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 3 coins. This attack does 10 damage for each heads.
+923,1329,Magical Leaf,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 30 more damage, and heal 30 damage from this Pokémon."
+924,1330,Rising Bloom,90,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex}, this attack does 90 more damage."
+925,1331,Headbutt Bounce,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+926,1332,Fire Claws,30,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+927,1333,Heat Blast,50,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+928,1334,Explosion Y,0,3,1,0,2,0,0,0,0,0,0,0,0,0,1,"Discard 3 Energy from this Pokémon, and this attack does 280 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+929,1335,Searing Flame,30,2,1,0,1,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Burned."
+930,1336,Steady Firebreathing,20,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+931,1337,Super Singe,70,3,1,0,2,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+932,1338,Crimson Blast,320,3,1,0,2,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 60 damage to itself.
+933,1339,Ram,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+933,1340,Steady Firebreathing,20,2,1,0,1,0,0,0,0,0,0,0,0,0,0,
+934,1341,Billowing Heat Wave,130,1,0,0,1,0,0,0,0,0,0,0,0,0,1,This attack also does 30 damage to each of your Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+934,1342,Heat Blast,80,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+935,1343,Heat Burn,20,2,1,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+936,1344,Heat Breath,30,2,1,0,1,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 50 more damage."
+937,1345,Slight Intrusion,40,2,0,0,0,2,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+938,1346,Crunch,50,2,0,0,0,2,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, discard an Energy from your opponent’s Active Pokémon."
+939,1347,Mortal Crunch,200,3,1,0,0,2,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon already has any damage counters on it, this attack does 200 more damage."
+940,1348,Damage Beat,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack does 20 damage for each damage counter on your opponent’s Active Pokémon.
+940,1349,Crazy Headbutt,140,3,2,0,0,1,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+941,1350,Powder Snow,10,1,0,0,0,1,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep.
+942,1351,Lunge Out,30,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+942,1352,Ice Ball,60,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+943,1353,Frigid Fangs,60,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, Pokémon that have 2 or less Energy attached can’t use attacks. (This includes new Pokémon that come into play.)"
+943,1354,Megaton Fall,170,2,0,0,0,2,0,0,0,0,0,0,0,0,1,This Pokémon also does 50 damage to itself.
+944,1355,Regi Charge,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Attach up to 2 Basic {W} Energy cards from your discard pile to this Pokémon.
+944,1356,Ice Prison,140,4,3,0,0,1,0,0,0,0,0,0,0,0,1,"Discard 2 Energy from this Pokémon, and your opponent’s Active Pokémon is now Paralyzed."
+945,1357,Rain Splash,20,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+946,1358,Water Gun,20,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+946,1359,Spit Shot,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"Discard all Energy from this Pokémon, and this attack does 120 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+947,1360,Aerial Ace,10,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+948,1361,Tail Smack,10,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+948,1362,Tiny Bolt,30,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+949,1363,Quick Blow,20,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 50 more damage."
+949,1364,Strong Volt,150,3,1,0,0,0,2,0,0,0,0,0,0,0,1,Discard a {L} Energy from this Pokémon.
+950,1365,Lightning Ball,20,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+951,1366,Hundred-Hitting Ball,100,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 100 more damage for each heads.
+952,1367,Follow-Up Bolt,20,2,1,0,0,0,1,0,0,0,0,0,0,0,1,This attack does 10 more damage for each damage counter on your opponent’s Active Pokémon.
+952,1368,Drill Peck,80,3,2,0,0,0,1,0,0,0,0,0,0,0,0,
+953,1369,Thunder Wave,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+953,1370,Thunderbolt,190,3,1,0,0,0,2,0,0,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+954,1371,Piercing Gaze,120,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Your opponent reveals their hand, and you discard a card you find there."
+954,1372,Volt Strike,250,2,0,0,0,0,2,0,0,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+955,1373,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+955,1374,Static Shock,10,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+956,1375,Combat Thunder,20,2,1,0,0,0,1,0,0,0,0,0,0,0,1,This attack does 20 more damage for each of your opponent’s Benched Pokémon.
+957,1376,Slashing Claw,40,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+957,1377,Hadron Spark,120,3,1,0,0,0,2,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex}, this attack does 120 more damage."
+958,1378,Metronome,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Choose 1 of your opponent’s Active Pokémon’s attacks and use it as this attack.
+958,1379,Magical Shot,100,3,2,0,0,0,0,1,0,0,0,0,0,0,0,
+959,1380,Pound,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+960,1381,Draining Kiss,30,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Heal 30 damage from this Pokémon.
+961,1382,Hide,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+961,1383,Flop,20,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+962,1384,Energized Balloon,60,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 more damage for each {P} Energy attached to this Pokémon.
+963,1385,Spooky Shot,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+964,1386,Cosmic Beatdown,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 20 damage for each of your Pokémon in play.
+965,1387,Ram,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+966,1388,Tackle,40,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+966,1389,Magical Shot,70,2,1,0,0,0,0,1,0,0,0,0,0,0,0,
+967,1390,Pleasant Aroma,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic Pokémon and put it onto your Bench. Then, shuffle your deck."
+967,1391,Stampede,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+968,1392,Wonder Shine,130,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+969,1393,Scream,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"You can use this attack only if you go second, and only during your first turn. Your opponent can’t play any Supporter cards from their hand during their next turn."
+969,1394,Crunch,120,3,2,0,0,0,0,1,0,0,0,0,0,0,1,Discard an Energy from your opponent’s Active Pokémon.
+970,1395,Energy Feather,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 30 damage for each Energy attached to this Pokémon.
+971,1396,Adjusted Horn,170,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"If you don’t have the same number of cards in your hand as your opponent, this attack does nothing."
+972,1397,Spin and Draw,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Shuffle your hand into your deck. Then, draw 6 cards."
+972,1398,Low Kick,50,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+973,1399,Hammer In,80,3,1,0,0,0,0,0,2,0,0,0,0,0,0,
+973,1400,Megaton Fall,150,4,2,0,0,0,0,0,2,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+974,1401,Punch,30,2,1,0,0,0,0,0,1,0,0,0,0,0,0,
+975,1402,Big Bite,30,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+975,1403,Flopping Trap,100,3,2,0,0,0,0,0,1,0,0,0,0,0,1,"If this Pokémon has any damage counters on it, this attack does 100 more damage."
+976,1404,Counter Jewel,70,3,1,0,0,0,0,0,2,0,0,0,0,0,1,"If your opponent has 2 or fewer Prize cards remaining, this attack does 100 more damage."
+977,1405,Vise Grip,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+977,1406,Crabhammer,50,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+978,1407,Coordinated Throwing,0,2,1,0,0,0,0,0,1,0,0,0,0,0,1,This attack does 20 damage for each of your Basic Pokémon in play.
+979,1408,Orichalcum Fang,50,2,1,0,0,0,0,0,1,0,0,0,0,0,1,"If any of your Pokémon were Knocked Out by damage from an attack during your opponent’s last turn, this attack does 120 more damage."
+979,1409,Impact Blow,200,3,1,0,0,0,0,0,2,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Impact Blow."
+980,1410,Spit Poison,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+980,1411,Spinning Attack,40,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+981,1412,Poison Ring,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Your opponent’s Active Pokémon is now Poisoned. During your opponent’s next turn, that Pokémon can’t retreat."
+981,1413,Spinning Attack,60,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+982,1414,Dastardly Jab,0,2,1,0,0,0,0,0,0,1,0,0,0,0,1,Place damage counters on your opponent’s Active Pokémon until its remaining HP is 10.
+982,1415,Sludge Bomb,160,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+983,1416,Flap,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+984,1417,Bone Shot,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 50 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+984,1418,Vulture Claw,160,3,2,0,0,0,0,0,0,1,0,0,0,0,1,Discard a random card from your opponent’s hand.
+985,1419,Filch,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 2 cards.
+985,1420,Knuckle Impact,130,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+986,1421,Poison Spray,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+986,1422,Relentless Punches,50,3,0,0,0,0,0,0,0,3,0,0,0,0,1,This attack does 50 more damage for each damage counter on your opponent’s Active Pokémon.
+987,1423,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+987,1424,Bite,90,3,2,0,0,0,0,0,0,0,1,0,0,0,0,
+988,1425,Regi Charge,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Attach up to 2 Basic {M} Energy cards from your discard pile to this Pokémon.
+988,1426,Protecting Steel,140,4,3,0,0,0,0,0,0,0,1,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 50 less damage from attacks (after applying Weakness and Resistance)."
+989,1427,Shield Attack,20,2,1,0,0,0,0,0,0,0,1,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+990,1428,Stun Needle,20,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+990,1429,Spiky Rolling,80,2,1,0,0,0,0,0,0,0,1,0,0,0,1,"If this Pokémon used Spiky Rolling during your last turn, this attack does 80 more damage."
+991,1430,Hammer In,120,3,1,0,0,0,0,0,0,0,2,0,0,0,0,
+991,1431,Iron Bash,230,5,1,0,0,0,0,0,0,0,4,0,0,0,0,
+992,1432,Confront,50,2,0,0,0,0,0,0,0,0,2,0,0,0,0,
+992,1433,Duralubeam,130,3,0,0,0,0,0,0,0,0,3,0,0,0,1,Discard 2 Energy from this Pokémon.
+993,1434,Rock Tomb,150,4,4,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+994,1435,Dragon Pulse,80,2,0,0,0,0,0,0,1,0,1,0,0,0,1,Discard the top card of your deck.
+995,1436,Bring Down the Axe,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If your opponent’s Active Pokémon has any Special Energy attached, it is Knocked Out."
+995,1437,Dragon Pulse,230,2,0,0,0,0,0,0,1,0,1,0,0,0,1,Discard the top 3 cards of your deck.
+996,1438,Rising Lunge,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 20 more damage."
+997,1439,Work Rush,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Flip a coin for each Energy attached to this Pokémon. This attack does 80 damage for each heads.
+998,1440,Take It Easy,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Heal 60 damage from this Pokémon. During your next turn, this Pokémon can’t retreat."
+999,1441,Slashing Claw,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1000,1442,Cat Kick,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1001,1443,Cat Kick,40,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1001,1444,Energy Crush,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 damage for each Energy attached to all of your opponent’s Pokémon.
+1002,1445,Spike Draw,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw 2 cards.
+1002,1446,Wild Scissors,180,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+1003,1447,Minor Errand-Running,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards, reveal them, and put them into your hand. Then, shuffle your deck."
+1003,1448,Glide,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1004,1449,Flap,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1004,1450,Razor Wing,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1005,1451,Facade,60,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon is Burned or Poisoned, this attack does 100 more damage."
+1005,1452,Feathery Strike,150,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"Discard 2 Energy from this Pokémon, and this attack also does 50 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+1006,1453,Kaleidowaltz,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip 3 coins. For each heads, search your deck for up to 2 Basic Energy cards and attach them to your Pokémon in any way you like. Then, shuffle your deck."
+1006,1454,Ear Force,20,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 80 more damage for each Energy attached to your opponent’s Active Pokémon.
+1007,1455,Peck the Wound,20,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon already has any damage counters on it, this attack does 80 more damage."
+1008,1456,Clutch,50,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+1008,1457,Brave Bird,120,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+1009,1458,Dozing Draw,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon is now Asleep. Draw 2 cards.
+1010,1459,Gentle Slap,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1010,1460,Dragon Strike,120,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Dragon Strike."
+1011,1461,Gooey Thread,10,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+1012,1462,Poison Ring,50,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Your opponent’s Active Pokémon is now Poisoned. During your opponent’s next turn, that Pokémon can’t retreat."
+1013,1463,Send Flowers,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for an Energy card and attach it to 1 of your Benched {G} Pokémon. Then, shuffle your deck."
+1013,1464,Leaf Step,30,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+1014,1465,Reckless Charge,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+1015,1466,Solar Cutter,40,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+1016,1467,Regal Command,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 damage for each of your Pokémon in play.
+1016,1468,Solar Coiling,100,3,0,3,0,0,0,0,0,0,0,0,0,0,1,"If Rosa’s Encouragement is in your discard pile, this attack does 150 more damage."
+1017,1469,Gnaw,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+1018,1470,Hide,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+1019,1471,Blow Through,60,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"If a Stadium is in play, this attack does 60 more damage."
+1020,1472,Find a Friend,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck."
+1020,1473,Tackle,30,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+1021,1474,Leafage,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+1021,1475,Feather Shot,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"Discard all Energy from this Pokémon, and this attack does 90 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+1022,1476,Crushing Arrow,240,4,3,1,0,0,0,0,0,0,0,0,0,0,1,Discard an Energy from your opponent’s Active Pokémon.
+1023,1477,Flare,60,2,0,0,2,0,0,0,0,0,0,0,0,0,0,
+1024,1478,Fire Wing,110,2,0,0,2,0,0,0,0,0,0,0,0,0,0,
+1025,1479,Fire Claws,20,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+1026,1480,Nasty Plot,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 cards and put them into your hand. Then, shuffle your deck."
+1026,1481,Dire Nails,100,2,0,0,2,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned and Poisoned. Switch this Pokémon with 1 of your Benched Pokémon.
+1027,1482,Heat Breath,80,3,1,0,2,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, this attack does 80 more damage."
+1028,1483,Rain Splash,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+1028,1484,Wave Splash,30,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+1029,1485,Wave Splash,60,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+1030,1486,Water Gun,20,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+1031,1487,Jetting Blow,120,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack also does 50 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+1031,1488,Nebula Beam,210,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"This attack’s damage isn’t affected by Weakness or Resistance, or by any effects on your opponent’s Active Pokémon."
+1032,1489,Icy Wind,50,2,1,0,0,1,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Asleep.
+1033,1490,Freezing Chill,150,3,1,0,0,2,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t use attacks."
+1034,1491,Strength,50,2,1,0,0,1,0,0,0,0,0,0,0,0,0,
+1034,1492,Powerful Steam,0,3,1,0,0,2,0,0,0,0,0,0,0,0,1,Flip a coin for each {W} Energy attached to this Pokémon. This attack does 90 damage for each heads.
+1035,1493,Double Scratch,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 10 damage for each heads.
+1036,1494,Static Shock,40,2,1,0,0,0,1,0,0,0,0,0,0,0,0,
+1037,1495,Incessant Onslaught,0,2,1,0,0,0,1,0,0,0,0,0,0,0,1,This attack does 70 damage for each Prize card you have taken.
+1037,1496,Strong Volt,200,3,2,0,0,0,1,0,0,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+1038,1497,Tail Generator,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,Choose Basic {L} Energy cards from your discard pile up to the amount of Energy attached to all of your opponent’s Pokémon and attach them to your {L} Pokémon in any way you like.
+1038,1498,Thunder Shock,30,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+1039,1499,Follow Me,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Switch in 1 of your opponent’s Benched Pokémon to the Active Spot.
+1039,1500,Flop,30,2,0,0,0,0,0,2,0,0,0,0,0,0,0,
+1040,1501,Shooting Moons,120,2,0,0,0,0,0,2,0,0,0,0,0,0,1,"You may discard up to 4 Energy cards from your hand, and this attack does 40 more damage for each card you discarded in this way."
+1041,1502,Double Eater,0,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"Discard up to 2 Energy cards from your hand, and this attack does 60 damage for each card you discarded in this way."
+1042,1503,Nap,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Heal 20 damage from this Pokémon.
+1042,1504,Stampede,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+1043,1505,Perplex,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+1043,1506,Psychic,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 30 more damage for each Energy attached to your opponent’s Active Pokémon.
+1044,1507,Sweet Scent,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Heal 30 damage from 1 of your Pokémon.
+1044,1508,Ram,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+1045,1509,Draining Kiss,50,2,1,0,0,0,0,1,0,0,0,0,0,0,1,Heal 30 damage from this Pokémon.
+1046,1510,Rolling Rocks,40,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+1047,1511,Rolling Rocks,60,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+1047,1512,Obliterating Nose,260,4,1,0,0,0,0,0,3,0,0,0,0,0,1,Discard 3 Energy from this Pokémon.
+1048,1513,Sand Attack,10,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"During your opponent’s next turn, if the Defending Pokémon tries to use an attack, your opponent flips a coin. If tails, that attack doesn’t happen."
+1048,1514,Bite,60,3,2,0,0,0,0,0,1,0,0,0,0,0,0,
+1049,1515,Twister Spewing,80,3,1,0,0,0,0,0,2,0,0,0,0,0,1,"If you played Tarragon from your hand during this turn, discard the top 3 cards of your opponent’s deck."
+1049,1516,Heavy Impact,130,4,2,0,0,0,0,0,2,0,0,0,0,0,0,
+1050,1517,Rock Tumble,50,2,0,0,0,0,0,0,2,0,0,0,0,0,1,This attack’s damage isn’t affected by Resistance.
+1050,1518,Screw Knuckle,120,3,1,0,0,0,0,0,2,0,0,0,0,0,1,Put an Energy attached to this Pokémon into your hand.
+1051,1519,Double Draw,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,Draw 2 cards.
+1051,1520,Scratch,30,2,0,0,0,0,0,0,2,0,0,0,0,0,0,
+1052,1521,Hammer In,80,3,1,0,0,0,0,0,2,0,0,0,0,0,0,
+1053,1522,Get Angry,0,2,1,0,0,0,0,0,1,0,0,0,0,0,1,This attack does 20 damage for each damage counter on this Pokémon.
+1054,1523,Wreak Havoc,160,2,1,0,0,0,0,0,1,0,0,0,0,0,1,"Flip a coin until you get tails. For each heads, discard the top card of your opponent’s deck."
+1055,1524,Vengeful Kick,30,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If your Benched Pokémon have any damage counters on them, this attack does 60 more damage."
+1056,1525,Gaia Wave,200,3,0,0,0,0,0,0,3,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance)."
+1056,1526,Nullifying Zero,0,5,0,0,0,0,0,0,5,0,0,0,0,0,1,"For each of your opponent’s Pokémon, flip a coin. If heads, this attack does 150 damage to that Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+1057,1527,Surprise Attack,30,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+1058,1528,Haunt,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Place 3 damage counters on your opponent’s Active Pokémon.
+1059,1529,Mind Jack,10,1,0,0,0,0,0,0,0,1,0,0,0,0,1,This attack does 30 more damage for each of your opponent’s Benched Pokémon.
+1060,1530,Poison Jab,20,2,0,0,0,0,0,0,0,2,0,0,0,0,1,Your opponent’s Active Pokémon is now Poisoned.
+1061,1531,Wrack Down,60,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+1061,1532,Hazardous Tail,100,3,0,0,0,0,0,0,0,3,0,0,0,0,1,This Pokémon also does 70 damage to itself. Your opponent’s Active Pokémon is now Paralyzed and Poisoned.
+1062,1533,Soul Destroyer,0,3,1,0,0,0,0,0,0,2,0,0,0,0,1,Knock Out each of your opponent’s Pokémon that has 50 HP or less remaining.
+1062,1534,Dark Strike,210,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"During your next turn, this Pokémon can’t use Dark Strike."
+1063,1535,Strafe,20,1,0,0,0,0,0,0,0,1,0,0,0,0,1,You may switch this Pokémon with 1 of your Benched Pokémon.
+1063,1536,Rising Blade,80,3,1,0,0,0,0,0,0,2,0,0,0,0,1,"If your opponent’s Active Pokémon is a Pokémon {ex}, this attack does 80 more damage."
+1064,1537,Sonic Ripper,0,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"Shuffle all Energy attached to this Pokémon into your deck, and this attack does 220 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+1065,1538,Cut,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1066,1539,Weaponized Swords,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Reveal any number of Honedge, Doublade, and Aegislash from your hand, and this attack does 60 damage for each card you revealed in this way."
+1067,1540,Slash,80,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+1067,1541,Metal Slash,230,4,3,0,0,0,0,0,0,0,1,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+1068,1542,Memory Lock,30,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"Choose 1 of your opponent’s Active Pokémon’s attacks. During your opponent’s next turn, that Pokémon can’t use that attack."
+1069,1543,Take Down,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+1070,1544,Scrape Off,20,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Before doing damage, discard all Pokémon Tools from your opponent’s Active Pokémon."
+1070,1545,Retaliatory Incisors,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 damage for each damage counter on all of your Benched Rattata.
+1071,1546,Tuck Tail,60,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Put this Pokémon and all attached cards into your hand.
+1072,1547,Gormandizer,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin until you get tails. Search your deck for an amount of Basic Energy up to the number of heads and attach it to this Pokémon. Then, shuffle your deck."
+1072,1548,Collapse,160,4,4,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon is now Asleep.
+1073,1549,Smash Kick,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1074,1550,Earthquake,140,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack also does 30 damage to each of your Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+1074,1551,Whap Down,100,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+1075,1552,Chirp,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Pokémon with {F} Resistance, reveal them, and put them into your hand. Then, shuffle your deck."
+1075,1553,Peck,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1076,1554,Hand Trim,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Discard random cards from your opponent’s hand until they have 5 cards in their hand.
+1076,1555,Headbutt,30,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1273,1557,Surprise Attack,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+1274,1558,Hang Down,20,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+1275,1559,Rumbling Bees,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This attack does 110 damage for each of your Beedrill and Beedrill {ex} in play.
+1276,1560,Chomp Whole,80,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"If your opponent’s Active Pokémon has no Retreat Cost, this attack does 80 more damage."
+1277,1561,Beat,10,1,0,1,0,0,0,0,0,0,0,0,0,0,0,
+1277,1562,Spike Sting,30,2,0,2,0,0,0,0,0,0,0,0,0,0,0,
+1278,1563,Leafy Charge,20,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for a Basic {G} Energy card and attach it to this Pokémon. Then, shuffle your deck."
+1278,1564,Vine Whip,80,3,1,2,0,0,0,0,0,0,0,0,0,0,0,
+1279,1565,Impound,160,3,1,2,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, the Defending Pokémon can’t retreat."
+1280,1566,Singe,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+1281,1567,Nine-Tailed Transfer,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Move all damage counters from 1 of your Benched Pokémon to your opponent’s Active Pokémon.
+1281,1568,Will-O-Wisp,70,2,0,0,2,0,0,0,0,0,0,0,0,0,0,
+1282,1569,Flames of Revival,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Put up to 3 Basic Pokémon from your discard pile onto your Bench.
+1282,1570,Bright Wing,130,3,0,0,3,0,0,0,0,0,0,0,0,0,1,Discard a {R} Energy from this Pokémon.
+1283,1571,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+1283,1572,Steady Firebreathing,10,1,0,0,1,0,0,0,0,0,0,0,0,0,0,
+1284,1573,Flamethrower,80,2,0,0,2,0,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+1285,1574,Energized Storm,0,2,0,0,2,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage for each Energy attached to all Pokémon.
+1286,1575,Tackle,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1287,1576,Ferocious Bellow,80,2,1,0,1,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, attacks used by the Defending Pokémon do 50 less damage (before applying Weakness and Resistance)."
+1287,1577,Fiery Big Bang,290,3,1,0,2,0,0,0,0,0,0,0,0,0,1,This attack does 10 less damage for each damage counter on this Pokémon.
+1288,1578,Sharp Fin,20,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+1289,1579,Jet of Ink,30,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, if the Defending Pokémon tries to use an attack, your opponent flips 2 coins. If either of them is tails, that attack doesn’t happen."
+1289,1580,Tantrum,120,2,1,0,0,1,0,0,0,0,0,0,0,0,1,This Pokémon is now Confused.
+1290,1581,Pleasing Present,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Each player may attach up to 3 Basic Energy cards from their hand to their Pokémon in any way they like. Your opponent does this first.
+1290,1582,Flap,40,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1291,1583,Shoot Through,20,1,0,0,0,1,0,0,0,0,0,0,0,0,1,This attack also does 20 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+1291,1584,Reflect Energy,70,2,0,0,0,2,0,0,0,0,0,0,0,0,1,Move an Energy from this Pokémon to 1 of your Benched Pokémon.
+1292,1585,Collect,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Draw a card.
+1292,1586,Water Gun,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+1293,1587,Summoning Jutsu,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Search your deck for up to 3 Pokémon, reveal them, and put them into your hand. Then, shuffle your deck."
+1293,1588,Aqua Edge,50,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+1294,1589,Ninja Spinner,120,2,0,0,0,2,0,0,0,0,0,0,0,0,1,You may put a {W} Energy attached to this Pokémon into your hand and have this attack do 80 more damage.
+1295,1590,Chilly,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+1295,1591,Frost Breath,50,3,2,0,0,1,0,0,0,0,0,0,0,0,0,
+1296,1592,Iceberg Breaker,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"Discard the top 6 cards of your deck, and this attack does 60 damage for each Basic {W} Energy card you discarded in this way."
+1296,1593,Frost Stamp,160,4,2,0,0,2,0,0,0,0,0,0,0,0,0,
+1297,1594,Gnaw,10,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+1297,1595,Corkscrew Punch,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1298,1596,Critical Slash,30,1,0,0,0,1,0,0,0,0,0,0,0,0,1,"If your opponent’s Pokémon is Knocked Out by damage from this attack, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+1298,1597,Boundless Power,150,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+1299,1598,Thunder Wave,20,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+1300,1599,Disconnect,40,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"During your opponent’s next turn, they can’t play any Item cards from their hand."
+1301,1600,Flashing Bolt,140,2,1,0,0,0,1,0,0,0,0,0,0,0,1,"During your next turn, this Pokémon can’t use Flashing Bolt."
+1302,1601,Minor Errand-Running,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Energy cards, reveal them, and put them into your hand. Then, shuffle your deck."
+1302,1602,Sky Return,30,1,0,0,0,0,1,0,0,0,0,0,0,0,1,Put this Pokémon and all attached cards into your hand.
+1303,1603,Genome Charge,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic {P} Energy cards and attach them to this Pokémon. Then, shuffle your deck."
+1303,1604,Psychic,80,3,1,0,0,0,0,2,0,0,0,0,0,0,1,This attack does 20 more damage for each Energy attached to your opponent’s Active Pokémon.
+1304,1605,Psyspear,120,3,0,0,0,0,0,3,0,0,0,0,0,0,1,"If this Pokémon has at least 2 extra Energy attached (in addition to this attack’s cost), this attack also does 120 damage to 1 of your opponent’s Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)"
+1305,1606,Psy Protection,80,3,1,0,0,0,0,2,0,0,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks from Pokémon that have an Ability."
+1306,1607,Psyspeed,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,You may draw cards until you have 5 cards in your hand.
+1307,1608,Gentle Light,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,Heal 30 damage from each Pokémon (both yours and your opponent’s).
+1307,1609,Eternity Bloom,200,3,0,0,0,0,0,3,0,0,0,0,0,0,1,"Search your deck for up to 4 Basic {P} Energy cards and attach them to your Benched Pokémon in any way you like. Then, shuffle your deck."
+1308,1610,Buddy Attack,10,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"If you played Emma from your hand during this turn, this attack does 60 more damage."
+1309,1611,Tricky Steps,80,2,1,0,0,0,0,1,0,0,0,0,0,0,1,You may move an Energy from your opponent’s Active Pokémon to 1 of their Benched Pokémon.
+1310,1612,Mumble,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+1311,1613,Cursed Roots,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"During your opponent’s next turn, Energy can’t be attached from your opponent’s hand to the Defending Pokémon."
+1311,1614,Overwhelming Pain,60,2,0,0,0,0,0,2,0,0,0,0,0,0,1,This attack does 10 more damage for each damage counter on all of your opponent’s Pokémon.
+1312,1615,Stampede,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+1313,1616,Horrifying Rondo,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 50 more damage for each of your Benched Pokémon that has any damage counters on it.
+1313,1617,Ghostly Touch,140,2,0,0,0,0,0,2,0,0,0,0,0,0,1,Discard a random card from your opponent’s hand.
+1314,1618,Geo Storm,0,3,0,0,0,0,0,3,0,0,0,0,0,0,1,This attack does 30 damage for each {P} Energy attached to all of your Pokémon.
+1315,1619,Trials and Trip-ulations,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Transformation Tome cards, reveal them, and put them into your hand. Then, shuffle your deck."
+1315,1620,Rock Hurl,30,1,0,0,0,0,0,0,1,0,0,0,0,0,1,This attack’s damage isn’t affected by Resistance.
+1316,1621,Mud-Slap,10,1,0,0,0,0,0,0,1,0,0,0,0,0,0,
+1316,1622,Rollout,40,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+1317,1623,No Reprieve,20,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"During your next turn, attacks used by this Pokémon do 120 more damage to your opponent’s Active Pokémon (before applying Weakness and Resistance)."
+1317,1624,Smashing Headbutt,180,4,3,0,0,0,0,0,1,0,0,0,0,0,1,Discard 2 Energy from this Pokémon.
+1318,1625,Continuous Spin,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,Flip a coin until you get tails. This attack does 30 damage for each heads.
+1319,1626,Devolution Ray,50,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If your opponent’s Active Pokémon is an evolved Pokémon, devolve it by putting the highest Stage Evolution card on it into your opponent’s hand."
+1320,1627,Supersonic,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+1321,1628,Covert Flight,30,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks from Basic Pokémon."
+1322,1629,Poison Sound Wave,80,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused and Poisoned.
+1323,1630,Venoshock,30,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"If your opponent’s Active Pokémon is Poisoned, this attack does 50 more damage."
+1324,1631,Scratch,20,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+1325,1632,Rear Kick,40,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+1325,1633,Smash Turn,100,3,1,0,0,0,0,0,0,2,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+1326,1634,Acid Spray,10,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Flip a coin. If heads, discard an Energy from your opponent’s Active Pokémon."
+1327,1635,Sludge Bomb,100,3,1,0,0,0,0,0,0,2,0,0,0,0,0,
+1328,1636,Hook,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1329,1637,Headbutt,10,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+1329,1638,Beam,20,2,1,0,0,0,0,0,0,0,1,0,0,0,0,
+1330,1639,Metal Claw,30,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+1330,1640,Guard Press,70,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 30 less damage from attacks (after applying Weakness and Resistance)."
+1331,1641,Bounce Back,60,1,0,0,0,0,0,0,0,0,1,0,0,0,1,Switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+1331,1642,Metallic Hammer,150,4,1,0,0,0,0,0,0,0,3,0,0,0,1,You may discard 3 {M} Energy from this Pokémon and have this attack do 150 more damage.
+1332,1643,Rolling Tackle,40,2,0,0,0,0,0,0,0,0,2,0,0,0,0,
+1333,1644,Special Whip,70,2,0,0,0,0,0,0,0,0,2,0,0,0,1,"If this Pokémon has any Special Energy attached, this attack does 70 more damage."
+1334,1645,Power Tackle,200,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your next turn, this Pokémon can’t use attacks."
+1335,1646,Corrosive Liquid,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Discard all Pokémon Tools and Special Energy from all of your opponent’s Pokémon.
+1335,1647,Pernicious Poison,0,2,0,0,0,1,0,0,0,1,0,0,0,0,1,"Your opponent’s Active Pokémon is now Poisoned. During Pokémon Checkup, place 16 damage counters on that Pokémon instead of 1."
+1336,1648,Absorb,30,2,0,0,0,1,0,1,0,0,0,0,0,0,1,Heal 30 damage from this Pokémon.
+1337,1649,Gentle Slap,70,2,0,0,0,1,0,1,0,0,0,0,0,0,0,
+1338,1650,Dragon Pulse,160,2,0,0,0,1,0,1,0,0,0,0,0,0,1,Discard the top card of your deck.
+1339,1651,Target Together,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,Choose 1 of your opponent’s Pokémon and flip a coin for each of your Pokémon in play that has “Tauros” in its name. This attack does 50 damage to the chosen Pokémon for each heads. (Don’t apply Weakness and Resistance for Benched Pokémon.)​​​​​​​​​​​​​​
+1340,1652,Bite,10,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1341,1653,Snap Inspection,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip 3 coins. If any of them are heads, your opponent reveals their hand. For each heads, choose a card you find there and shuffle it into your opponent’s deck."
+1341,1654,Low Kick,50,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1342,1655,Take Down,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+1343,1656,Energized Slap,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 40 damage for each Energy attached to this Pokémon.
+1344,1657,Fruity Aroma,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Look at the top 6 cards of your deck, and you may reveal any number of Pokémon you find there and put them into your hand. Shuffle the other cards back into your deck."
+1344,1658,Solar Beam,60,2,1,1,0,0,0,0,0,0,0,0,0,0,0,
+1345,1659,String Shot,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+1346,1660,Reckless Charge,30,1,0,1,0,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 10 damage to itself.
+1347,1661,Lively Cutter,60,1,0,1,0,0,0,0,0,0,0,0,0,0,1,"If this Pokémon was healed during this turn, this attack does 200 more damage."
+1347,1662,Leaf Guard,140,2,1,1,0,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 50 less damage from attacks (after applying Weakness and Resistance)."
+1348,1663,Furtive Drop,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Place 1 damage counter on your opponent’s Active Pokémon.
+1349,1664,Matcha Spin,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"If you have 6 or more Pokémon that have the Hide ’n’ Sneak Ability in your discard pile, place 4 damage counters on each of your opponent’s Pokémon."
+1350,1665,Singe,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Your opponent’s Active Pokémon is now Burned.
+1350,1666,Lava Wall,120,3,1,0,2,0,0,0,0,0,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks from Burned Pokémon."
+1351,1667,Controlled Burn,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Discard the top card of your opponent’s deck.
+1351,1668,Bug Out,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,"Reveal the bottom 7 cards of your deck, and this attack does 50 damage for each Pokémon you find there that has the Bug Out attack. Then, shuffle any revealed Pokémon back into your deck. Discard the other cards."
+1352,1669,Controlled Burn,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,Discard the top 2 cards of your opponent’s deck.
+1352,1670,Heat Tackle,160,4,3,0,1,0,0,0,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+1353,1671,Best Punch,40,1,0,0,1,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing."
+1354,1672,Flame Legion,40,1,0,0,1,0,0,0,0,0,0,0,0,0,1,This attack does 40 more damage for each of your Benched Pokémon that has any {R} Energy attached.
+1355,1673,Pierce,30,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1356,1674,Hydro Jet,0,3,3,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 damage to 1 of your opponent’s Pokémon for each {W} Energy attached to this Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+1357,1675,Water Gun,40,2,0,0,0,2,0,0,0,0,0,0,0,0,0,
+1357,1676,Wave Splash,80,3,0,0,0,3,0,0,0,0,0,0,0,0,0,
+1358,1677,Surf,120,3,0,0,0,3,0,0,0,0,0,0,0,0,0,
+1358,1678,Falling Down,270,5,0,0,0,5,0,0,0,0,0,0,0,0,1,This Pokémon is now Asleep.
+1359,1679,Fossil Beatdown,10,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 30 more damage for each of your Benched Pokémon that has “Antique” in its name.
+1360,1680,Pound,20,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+1361,1681,Hyper Voice,40,1,0,0,0,1,0,0,0,0,0,0,0,0,0,
+1362,1682,Aqua Return,120,2,1,0,0,1,0,0,0,0,0,0,0,0,1,Shuffle this Pokémon and all attached cards into your deck.
+1363,1683,Draining Fin,20,2,0,0,0,2,0,0,0,0,0,0,0,0,1,Heal 20 damage from this Pokémon.
+1364,1684,Knuckle Justice,80,2,0,0,0,2,0,0,0,0,0,0,0,0,1,"If your opponent has exactly 1 Prize card remaining, this attack does 200 more damage."
+1365,1685,Collect,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,Draw a card.
+1365,1686,Tackle,30,2,0,0,0,0,2,0,0,0,0,0,0,0,0,
+1366,1687,Flashing Barrier,50,2,0,0,0,0,2,0,0,0,0,0,0,0,1,"During your opponent’s next turn, prevent all damage done to this Pokémon by attacks from Evolution Pokémon."
+1366,1688,Sonic Edge,110,3,0,0,0,0,3,0,0,0,0,0,0,0,1,This attack’s damage isn’t affected by any effects on your opponent’s Active Pokémon.
+1367,1689,Vise Grip,30,1,0,0,0,0,1,0,0,0,0,0,0,0,0,
+1367,1690,Ram,50,2,0,0,0,0,2,0,0,0,0,0,0,0,0,
+1368,1691,Quick Dive,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,This attack does 50 damage to 1 of your opponent’s Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+1368,1692,Giga Railgun,260,2,0,0,0,0,2,0,0,0,0,0,0,0,1,"If this Pokémon has no Voltaic {L} Energy attached, this attack does nothing."
+1369,1693,Thunderous Fist,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,This attack does 60 damage for each {L} Energy attached to this Pokémon.
+1369,1694,Zepto Turn,150,3,0,0,0,0,3,0,0,0,0,0,0,0,1,Switch this Pokémon with 1 of your Benched Pokémon.
+1370,1695,Thunder,90,2,0,0,0,0,2,0,0,0,0,0,0,0,1,This Pokémon also does 30 damage to itself.
+1371,1696,All-You-Can-Yeet,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,You may discard any number of cards from your hand.
+1371,1697,Headbutt,20,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1372,1698,All Out,50,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"If you have no cards in your hand, this attack does 160 more damage."
+1372,1699,Zen Headbutt,110,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+1373,1700,Intense Kiss,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"At the end of your opponent’s next turn, discard the Defending Pokémon and all attached cards."
+1373,1701,Psy Bolt,50,2,1,0,0,0,0,1,0,0,0,0,0,0,1,"Flip a coin. If heads, your opponent’s Active Pokémon is now Paralyzed."
+1374,1702,Hang Down,10,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+1375,1703,Puppet Pull,80,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"You may search your deck for a card and put it into your hand. Then, shuffle your deck."
+1376,1704,Spiritual End,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"If you have 13 or more Pokémon that have the Hide ’n’ Sneak Ability in your discard pile, choose 2 of your opponent’s Pokémon and quadruple the number of damage counters on each of them."
+1377,1705,Will-O-Wisp,20,1,0,0,0,0,0,1,0,0,0,0,0,0,0,
+1378,1706,Spreading Light,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"Search your deck for up to 3 Lampent and put them onto your Bench. Then, shuffle your deck."
+1379,1707,Phantom Maze,130,2,0,0,0,0,0,2,0,0,0,0,0,0,1,This attack does 50 more damage for each {C} in your opponent’s Active Pokémon’s Retreat Cost.
+1380,1708,Vengeful Anchor,30,1,0,0,0,0,0,1,0,0,0,0,0,0,1,"If you have 4 or more Pokémon that have the Hide ’n’ Sneak Ability in your discard pile, this attack does 140 more damage."
+1381,1709,Shadowy Knot,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,This attack does 30 damage for each {C} in your opponent’s Active Pokémon’s Retreat Cost.
+1382,1710,Ghostly Blow,100,2,0,0,0,0,0,2,0,0,0,0,0,0,1,Place 5 damage counters on 1 of your opponent’s Benched Pokémon.
+1383,1711,Low Kick,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
+1384,1712,Corkscrew Punch,50,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1385,1713,Push Down,70,2,0,0,0,0,0,0,2,0,0,0,0,0,1,Switch out your opponent’s Active Pokémon to the Bench. (Your opponent chooses the new Active Pokémon.)
+1386,1714,Rowdy Hammer,150,2,0,0,0,0,0,0,2,0,0,0,0,0,1,"During your next turn, attacks used by this Pokémon do 150 more damage to your opponent’s Active Pokémon (before applying Weakness and Resistance)."
+1387,1715,Call for Family,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Search your deck for up to 2 Basic Pokémon and put them onto your Bench. Then, shuffle your deck."
+1387,1716,Dig Claws,50,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
+1388,1717,Battle Claw,30,1,0,0,0,0,0,0,1,0,0,0,0,0,1,"If your opponent’s Active Pokémon is an Evolution Pokémon, this attack does 30 more damage."
+1388,1718,Gaia Impact,190,3,1,0,0,0,0,0,2,0,0,0,0,0,1,Discard all Energy from this Pokémon.
+1389,1719,Dusk Raid,110,2,0,0,0,0,0,0,0,2,0,0,0,0,1,"If your Benched Pokémon have any damage counters on them, this attack does 110 more damage."
+1389,1720,Abyss Eye,0,3,0,0,0,0,0,0,0,3,0,0,0,0,1,"If your opponent’s Active Pokémon is affected by a Special Condition, it is Knocked Out."
+1390,1721,Flap,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+1390,1722,Gust,20,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+1391,1723,Bone Sniper,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,This attack does 70 damage to 1 of your opponent’s Pokémon that has any Special Energy attached. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+1391,1724,Blasting Wind,120,3,1,0,0,0,0,0,0,2,0,0,0,0,0,
+1392,1725,Procurement,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Search your deck for an Item card, reveal it, and put it into your hand. Then, shuffle your deck."
+1392,1726,Spinning Attack,30,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+1393,1727,Perplex,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,Your opponent’s Active Pokémon is now Confused.
+1393,1728,Brain Crush,130,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"If your opponent’s Active Pokémon isn’t Confused, this attack does nothing."
+1394,1729,Gnaw,10,1,0,0,0,0,0,0,0,1,0,0,0,0,0,
+1394,1730,Rear Kick,30,2,1,0,0,0,0,0,0,1,0,0,0,0,0,
+1395,1731,Skill Thief,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"If you have no cards in your hand, choose an attack from 1 of your opponent’s Pokémon in play and use it as this attack."
+1395,1732,Sharp Fang,80,3,2,0,0,0,0,0,0,1,0,0,0,0,0,
+1396,1733,Wheely Draw,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"Shuffle your hand into your deck. Then, draw 6 cards."
+1396,1734,Hangry Blaster,40,2,0,0,0,0,0,0,0,2,0,0,0,0,1,This attack does 40 more damage for each damage counter on this Pokémon.
+1397,1735,Overhead Throw,30,1,0,0,0,0,0,0,0,1,0,0,0,0,1,This attack also does 30 damage to 1 of your Benched Pokémon. (Don’t apply Weakness and Resistance for Benched Pokémon.)
+1397,1736,Shadowy Whip,100,3,0,0,0,0,0,0,0,3,0,0,0,0,1,"If your Benched Pokémon have any Shadowy {D} Energy attached, this attack does 70 more damage."
+1398,1737,Bite,40,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+1399,1738,Bite,60,2,0,0,0,0,0,0,0,2,0,0,0,0,0,
+1399,1739,Plunging Headbutt,210,3,0,0,0,0,0,0,0,3,0,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 100 more damage from attacks (after applying Weakness and Resistance)."
+1400,1740,Whirling Envy,20,1,0,0,0,0,0,0,0,1,0,0,0,0,1,"If this Pokémon has 2 or more damage counters on it, this attack does 90 more damage. This attack’s damage isn’t affected by Weakness."
+1401,1741,Steel Cutter,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"Discard up to 2 Basic {M} Energy cards from your hand, and this attack does 40 damage for each card you discarded in this way."
+1402,1742,Smithereen Smash,50,2,1,0,0,0,0,0,0,0,1,0,0,0,1,Discard an Energy from your opponent’s Active Pokémon.
+1403,1743,Hammer In,160,3,1,0,0,0,0,0,0,0,2,0,0,0,0,
+1404,1744,Mirror Attack,10,1,0,0,0,0,0,0,0,0,1,0,0,0,1,"If your opponent’s Active Pokémon is a {M} Pokémon, this attack does 30 more damage."
+1405,1745,Gentle Slap,40,1,0,0,0,0,0,0,0,0,1,0,0,0,0,
+1405,1746,Metal Block,120,3,1,0,0,0,0,0,0,0,2,0,0,0,1,"During your opponent’s next turn, this Pokémon takes 100 less damage from attacks from Evolution Pokémon (after applying Weakness and Resistance)."
+1406,1747,Undermine,90,2,0,0,0,0,0,0,0,0,2,0,0,0,1,Discard the top 2 cards of your opponent’s deck.
+1406,1748,Maximum Drilling,200,3,0,0,0,0,0,0,0,0,3,0,0,0,1,"If this Pokémon has at least 2 extra Energy attached (in addition to this attack’s cost), this attack does 130 more damage."
+1407,1749,Double Stab,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,Flip 2 coins. This attack does 10 damage for each heads.
+1408,1750,Fly,30,1,1,0,0,0,0,0,0,0,0,0,0,0,1,"Flip a coin. If tails, this attack does nothing. If heads, during your opponent’s next turn, prevent all damage from and effects of attacks done to this Pokémon."
+1409,1751,Feather Rondo,60,1,1,0,0,0,0,0,0,0,0,0,0,0,1,This attack does 20 more damage for each Benched Pokémon (both yours and your opponent’s).
+1410,1752,Power Edge,40,2,2,0,0,0,0,0,0,0,0,0,0,0,0,
+1411,1753,Air Slash,130,3,3,0,0,0,0,0,0,0,0,0,0,0,1,Discard an Energy from this Pokémon.
+1412,1754,Challenging Delivery,0,2,2,0,0,0,0,0,0,0,0,0,0,0,1,"Flip 2 coins. If both of them are heads, search your deck for a Pokémon and put it onto your Bench. Then, shuffle your deck."
+1412,1755,Speed Wing,100,3,3,0,0,0,0,0,0,0,0,0,0,0,0,
