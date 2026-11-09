@@ -44,7 +44,8 @@ import torch
 from sb3_contrib import MaskablePPO
 from torch import nn
 
-from .encoding import RECENT_SLOTS, Decision, encode, recent_opponent_cards, visible_cards
+from .encoding import RECENT_SLOTS, Decision, HandMemory, PrizeMemory, encode, recent_opponent_cards, visible_cards
+from .collector import fit_obs
 from .engine import AGENT_DECK, TRAIN_ROOT, Game, attack_table, card_meta_table, load_deck, safe_attack_ids
 from .policy import EntityPolicy, PointerPolicy
 from .train import load_model
@@ -107,6 +108,7 @@ def _arch(policy) -> dict:
             "heads": ext.board[0].self_attn.num_heads,
             "board_layers": len(ext.board),
             "option_layers": len(ext.options),
+            "stop_token": ext.stop_token,
         }
     if isinstance(policy, PointerPolicy):
         return {
@@ -155,7 +157,7 @@ def _check_value(model: MaskablePPO, deck: list[int], bundle: Path, positions: i
                 d = Decision(game.obs)
                 features = encode(d, attacks, my_deck=deck, opp_seen=set(), opp_recent=(), card_meta=meta)
                 _, ours = net.evaluate({k: v.astype(np.float32) for k, v in features.items()})
-                sb3_obs = {k: torch.as_tensor(features[k][None].astype(np.float32)) for k in model.observation_space.spaces}
+                sb3_obs = {k: torch.as_tensor(v[None].astype(np.float32)) for k, v in fit_obs(features, model.observation_space).items()}
                 theirs = float(model.policy.predict_values(sb3_obs)[0, 0])
                 worst, seen = max(worst, abs(ours - theirs)), seen + 1
                 while not d.complete:
@@ -164,6 +166,22 @@ def _check_value(model: MaskablePPO, deck: list[int], bundle: Path, positions: i
                 game.select(d.picked)
             game.close()
     return worst
+
+
+def policy_arrays(policy, value: bool = False) -> dict[str, np.ndarray]:
+    """``policy.npz``'s contents: the weights ``submission/ptcg_policy/net.py`` runs, and its tables."""
+    keep = ("features_extractor.", "mlp_extractor.policy_net.", "action_net.",
+            "mlp_extractor.query.", "mlp_extractor.score.", "mlp_extractor.stop.")
+    if value:  # the lookahead scores positions with the critic
+        keep += ("mlp_extractor.value.", "value_net.")
+    # numpy, not torch: Kaggle's agent runtime has no torch (see submission/ptcg_policy/net.py).
+    arrays = {k: v.detach().cpu().numpy() for k, v in policy.state_dict().items() if k.startswith(keep)}
+    arrays["card_static"] = policy.features_extractor.card_static.cpu().numpy()
+    if hasattr(policy.features_extractor, "card_text"):
+        arrays["card_text"] = policy.features_extractor.card_text.cpu().numpy()
+    arrays["attack_table"] = attack_table()
+    arrays["card_meta"] = card_meta_table()
+    return arrays
 
 
 def _write_bundle(model: MaskablePPO, deck: list[int], out: Path, value: bool = False, rules: bool = True) -> None:
@@ -185,20 +203,8 @@ def _write_bundle(model: MaskablePPO, deck: list[int], out: Path, value: bool = 
     constants = "".join(f"{name} = {getattr(engine, name)!r}\n" for name in names)
     (package / "encoding.py").write_text(source.replace(engine_import[0], constants))
 
-    policy = model.policy
-    keep = ("features_extractor.", "mlp_extractor.policy_net.", "action_net.",
-            "mlp_extractor.query.", "mlp_extractor.score.", "mlp_extractor.stop.")
-    if value:  # the lookahead scores positions with the critic
-        keep += ("mlp_extractor.value.", "value_net.")
-    # numpy, not torch: Kaggle's agent runtime has no torch (see submission/ptcg_policy/net.py).
-    arrays = {k: v.detach().cpu().numpy() for k, v in policy.state_dict().items() if k.startswith(keep)}
-    arrays["card_static"] = policy.features_extractor.card_static.cpu().numpy()
-    if hasattr(policy.features_extractor, "card_text"):
-        arrays["card_text"] = policy.features_extractor.card_text.cpu().numpy()
-    arrays["attack_table"] = attack_table()
-    arrays["card_meta"] = card_meta_table()
-    np.savez(out / "policy.npz", **arrays)
-    (out / "arch.json").write_text(json.dumps(_arch(policy), indent=2) + "\n")
+    np.savez(out / "policy.npz", **policy_arrays(model.policy, value))
+    (out / "arch.json").write_text(json.dumps(_arch(model.policy), indent=2) + "\n")
     if rules:  # the decisions training's Match plays by rule (env.Match, rules=True)
         (out / "rules.json").write_text(json.dumps(
             {"counter_planner": True, "safe_attacks": sorted(safe_attack_ids())}) + "\n")
@@ -225,18 +231,23 @@ def _check_parity(model: MaskablePPO, deck: list[int], bundle: Path, positions: 
             game = Game(deck, deck)
             opp_seen: list[set[int]] = [set(), set()]
             recent: list[deque] = [deque(maxlen=RECENT_SLOTS), deque(maxlen=RECENT_SLOTS)]
+            known = [PrizeMemory(deck), PrizeMemory(deck)]
+            hands = [HandMemory(), HandMemory()]
             while not game.done and seen < positions:
                 d = Decision(game.obs)
                 mover = game.to_move
+                known[mover].observe(game.obs)
+                hands[mover].observe(game.obs)
                 opp_seen[mover].update(visible_cards(game.obs["current"], 1 - mover))
                 recent[mover].extend(recent_opponent_cards(game.obs, mover))
                 while not d.complete:
                     features = encode(d, attacks, my_deck=deck, opp_seen=opp_seen[mover],
-                                      opp_recent=recent[mover], card_meta=meta)
+                                      opp_recent=recent[mover], card_meta=meta, prized=known[mover].prized,
+                                      opp_hand=hands[mover].cards())
                     batch = {k: v[None].astype(np.float32) for k, v in features.items()}
                     # SB3's distribution holds log-probabilities, the bundle raw logits.
                     ours = torch.log_softmax(torch.as_tensor(net(batch)), dim=-1)
-                    sb3_obs = {k: torch.as_tensor(batch[k]) for k in model.observation_space.spaces}
+                    sb3_obs = {k: torch.as_tensor(v) for k, v in fit_obs(batch, model.observation_space).items()}
                     theirs = model.policy.get_distribution(sb3_obs).distribution.logits
                     worst = max(worst, float((ours - theirs).abs().max()))
                     seen += 1
@@ -283,6 +294,8 @@ def main() -> None:
     p.add_argument("--ismcts", action="store_true",
                    help="ISMCTS bundle (ptcg_policy/ismcts.py): ships the value head, ismcts.json, opp_decks.json")
     p.add_argument("--ismcts-seconds", type=float, default=1.0, help="most thinking time per searched pick")
+    p.add_argument("--ismcts-horizon", choices=("next_turn", "turn_end", "decision"),
+                   help="where the search's simulation hands over to the value head (default: ismcts.py's)")
     p.add_argument("--no-rules", action="store_true",
                    help="leave out rules.json, for a model trained with --no-rules")
     args = p.parse_args()
@@ -304,7 +317,8 @@ def main() -> None:
         if vdiff > 1e-4:
             raise SystemExit("bundle value head does not match the trained critic")
     if args.ismcts:
-        _ismcts_files(bundle, {"max_seconds": args.ismcts_seconds})
+        _ismcts_files(bundle, {"max_seconds": args.ismcts_seconds,
+                               **({"horizon": args.ismcts_horizon} if args.ismcts_horizon else {})})
 
     check = subprocess.run([sys.executable, "-I", "-c", PLAY_CHECK, str(args.check_games), str(bundle.resolve())],
                            cwd=bundle.parent, capture_output=True, text=True)

@@ -12,6 +12,11 @@ bf16 would need no scaler but Turing GPUs (T4) do not support it.
 
 Otherwise the update is SB3's, except that ``train/approx_kl`` and the other
 losses are averaged over every epoch rather than SB3's last one.
+
+With search distillation (``distill``, see ``ptcg_rl.distill``) the first
+``distill_steps`` minibatches of an update also take ``distill_coef`` x the
+cross-entropy between ISMCTS's root visit distribution and the policy, on
+``distill_batch`` searched positions drawn from the buffer.
 """
 
 from __future__ import annotations
@@ -25,9 +30,22 @@ from stable_baselines3.common.utils import explained_variance
 
 class PTCGPPO(MaskablePPO):
     amp: bool = False  # set by train.py; not saved with the model
+    distill = None  # a distill.DistillBuffer, set by train.py --distill-workers
+    distill_coef: float = 1.0
+    distill_batch: int = 256
+    distill_steps: int = 0  # minibatches of the next update that take the distillation loss
 
     def _excluded_save_params(self) -> list[str]:
-        return [*super()._excluded_save_params(), "amp", "_scaler"]
+        return [*super()._excluded_save_params(), "amp", "_scaler", "distill", "distill_coef", "distill_batch",
+                "distill_steps"]
+
+    def _distill_loss(self, amp: bool) -> torch.Tensor:
+        """Cross-entropy from the search's visit distribution to the policy, on a buffer minibatch."""
+        obs, masks, targets = self.distill.sample(self.distill_batch)
+        with torch.autocast("cuda", dtype=torch.float16, enabled=amp):
+            logits = self.policy.get_distribution(obs, action_masks=masks).distribution.logits
+        log_p = torch.log_softmax(logits.float(), dim=-1).clamp(min=-1e4)  # masked moves: -inf, target 0
+        return -(targets * log_p).sum(dim=-1).mean()
 
     def train(self) -> None:
         self.policy.set_training_mode(True)
@@ -41,6 +59,8 @@ class PTCGPPO(MaskablePPO):
             scaler = self._scaler = torch.amp.GradScaler("cuda")
 
         sums = torch.zeros(5, device=self.device)  # entropy, policy, value, clip fraction, approx KL
+        distill_sum, distill_n = torch.zeros((), device=self.device), 0
+        distill_left = self.distill_steps if self.distill is not None and len(self.distill) else 0
         n_batches = 0
         loss = torch.zeros((), device=self.device)
         continue_training = True
@@ -87,6 +107,13 @@ class PTCGPPO(MaskablePPO):
                         print(f"Early stopping at step {epoch} due to reaching max kl: {approx_kl.item():.2f}")
                     break
 
+                if distill_left > 0:
+                    distill_left -= 1
+                    distill_loss = self._distill_loss(amp)
+                    loss = loss + self.distill_coef * distill_loss
+                    distill_sum += distill_loss.detach()
+                    distill_n += 1
+
                 self.policy.optimizer.zero_grad(set_to_none=True)
                 if amp:
                     scaler.scale(loss).backward()
@@ -112,6 +139,9 @@ class PTCGPPO(MaskablePPO):
         self.logger.record("train/approx_kl", means[4])
         self.logger.record("train/loss", loss.item())
         self.logger.record("train/explained_variance", explained_var)
+        if distill_n:
+            self.logger.record("distill/loss", (distill_sum / distill_n).item())
+            self.logger.record("distill/steps", distill_n)
         self.logger.record("train/n_updates", self._n_updates, exclude="tensorboard")
         self.logger.record("train/clip_range", clip_range)
         if clip_range_vf is not None:

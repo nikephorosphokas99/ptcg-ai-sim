@@ -12,15 +12,23 @@ step so the policy only ever chooses a single index.
 
 from __future__ import annotations
 
+from collections import Counter
 from typing import TYPE_CHECKING
 
 import numpy as np
 
 from .engine import (
+    B_COIN, B_DEF_BURNED, B_DEF_DAMAGED, B_DEF_EVOLUTION, B_DEF_EX, B_DEF_POISONED, B_EXTRA_ENERGY,
+    B_OPP_PRIZES_AT_MOST, B_PER_BENCH_BOTH, B_PER_DEF_COUNTER, B_PER_DEF_ENERGY, B_PER_ENERGY_BOTH_ACTIVE,
+    B_PER_MY_BENCH, B_PER_OPP_BENCH, B_PER_OPP_PRIZE_TAKEN, B_PER_SELF_COUNTER, B_PER_SELF_TYPE_ENERGY,
+    B_SELF_DAMAGED, B_SELF_SPECIAL_ENERGY, B_SELF_TOOL, B_STADIUM, BONUS_AMOUNT, BONUS_KIND, BONUS_PARAM,
+    BENCH_EACH, BENCH_ONE, COUNTERS_EACH, COUNTERS_ONE, G_ATTACHED, G_FROM_BENCH, G_IN_PLAY, G_SELF_BENCHED,
+    G_STADIUM, GUARD_COUNTERS, GUARD_DAMAGE, GUARD_FIELDS, META_GUARD,
     ATT_ABILITY, ATT_BASIC_EX, ATT_ENERGY_AT_MOST, ATT_EX, ATT_SPECIAL_ENERGY, ATT_TERA, ATT_TOOL, ATT_TYPE,
     DEF_ENERGY_TYPE, DEF_NO_RULE_BOX, DEF_STEVENS, DEF_TYPE, FLAG_ABILITY, FLAG_BASIC, FLAG_EX, FLAG_RULE_BOX,
     FLAG_SPECIAL_ENERGY, FLAG_STEVENS, FLAG_TERA, LESS_AFTER_WR, LESS_BEFORE_WR, META_FLAGS, META_RULE,
-    N_ENERGY_TYPES, NO_DAMAGE, NO_DAMAGE_AT_LEAST, ON_BENCH, ON_IN_PLAY, ON_SELF, ON_STADIUM, ON_TOOL,
+    META_ATTACKS, META_NAME, META_PREV, N_CARD_ATTACKS, N_ENERGY_TYPES, NO_DAMAGE, NO_DAMAGE_AT_LEAST, ON_BENCH, ON_IN_PLAY, ON_SELF, ON_STADIUM,
+    ON_TOOL,
 )
 
 if TYPE_CHECKING:  # gymnasium is imported where needed, so the submission bundle runs without it
@@ -38,7 +46,13 @@ MISC_IDS = 3  # stadium, select.contextCard, select.effect
 DECK_SLOTS = 60  # my_unseen_ids / opp_seen_ids
 ATTACH_SLOTS = 8  # tools then energy cards attached to one Pokémon
 RECENT_SLOTS = 16  # opponent cards from the latest log events
-TACTICAL_FEATURES = 7  # per attack option, see _tactical
+TACTICAL_FEATURES = 10  # per attack option: 7 on the Active (_tactical), 3 on the Bench (v5, _bench_tactical)
+LEDGER_SLOTS = 40  # distinct cards in my decklist
+LEDGER_FEATURES = 14  # per distinct card, see _ledger
+LOG_MOVE_CARD = 6  # LogType.MoveCard
+LOG_MOVE_CARD_REVERSE = 7  # LogType.MoveCardReverse: a card moved face down (no id)
+LOG_PLAY, LOG_ATTACH, LOG_EVOLVE = 10, 11, 12  # LogType.Play / Attach / Evolve
+OPP_HAND_SLOTS = 20  # opp_hand_ids (v6)
 
 # AreaType
 DECK, HAND, DISCARD, ACTIVE, BENCH, PRIZE, STADIUM = 1, 2, 3, 4, 5, 6, 7
@@ -56,9 +70,17 @@ N_SELECT_TYPES = 11
 N_CONTEXTS = 49
 N_CONDITIONS = 5
 
-SLOT_FEATURES = 9 + N_ENERGY_TYPES
+THREAT_FEATURES = 5  # per board slot, see _threat
+OFFENSE_FEATURES = 3  # per board slot (v5), see _offense
+BENCH_THREAT_FEATURES = 3  # per board slot (v5), see _bench_threat
+THREAT_AT = 9 + N_ENERGY_TYPES
+OFFENSE_AT = THREAT_AT + THREAT_FEATURES
+BENCH_THREAT_AT = OFFENSE_AT + OFFENSE_FEATURES
+SLOT_FEATURES = BENCH_THREAT_AT + BENCH_THREAT_FEATURES
 OPTION_FEATURES = N_OPTION_TYPES + N_AREAS * 2 + 3 + 6 + N_CONDITIONS + 1
-GLOBAL_FEATURES = 9 + 2 * 13 + N_SELECT_TYPES + N_CONTEXTS + 7
+GLOBAL_FEATURES = 9 + 2 * 13 + N_SELECT_TYPES + N_CONTEXTS + 7 + 2  # last two: whose Stadium is in play
+
+OPT_OPPONENT = N_OPTION_TYPES + N_AREAS * 2 + 1  # opt_feats column: the option is the opponent's card
 
 _CONDITIONS = ("poisoned", "burned", "asleep", "paralyzed", "confused")
 
@@ -89,6 +111,11 @@ def observation_space(max_card_id: int) -> spaces.Dict:
         "opt_tgt_slot": spaces.Box(-1, SLOTS - 1, shape=(MAX_OPTIONS,), dtype=np.int32),  # board slot targeted
         "opt_tactical": feats(MAX_OPTIONS, TACTICAL_FEATURES),
         "opp_recent_ids": ids(RECENT_SLOTS),
+        # Deck ledger (v4): where each card of my list is, and whether the deck still holds it.
+        "ledger_ids": ids(LEDGER_SLOTS),
+        "ledger_feats": feats(LEDGER_SLOTS, LEDGER_FEATURES),
+        # v6: the opponent's hand cards known face up (HandMemory).
+        "opp_hand_ids": ids(OPP_HAND_SLOTS),
     })
 
 
@@ -119,9 +146,202 @@ def visible_cards(state: dict, player: int) -> list[int]:
 
 def unseen_own(deck: list[int], state: dict, player: int) -> list[int]:
     """Cards of ``deck`` not in view: what the deck and face-down prizes hold."""
-    from collections import Counter
-
     return sorted((Counter(deck) - Counter(visible_cards(state, player))).elements())
+
+
+def own_hidden(deck: list[int], state: dict, sel: dict, player: int) -> Counter:
+    """``player``'s cards in their deck and face-down Prize cards.
+
+    ``unseen_own`` also counts the cards out of every zone for the moment: those
+    being looked at and the card being played (an Ultra Ball while it resolves).
+    """
+    hidden = Counter(unseen_own(deck, state, player))
+    hidden -= Counter(c["id"] for c in state["looking"] or [] if c and c.get("playerIndex", player) == player)
+    effect = sel.get("effect")
+    if effect and effect.get("playerIndex", player) == player and effect.get("serial") not in _visible_serials(state, player):
+        hidden -= Counter([effect["id"]])  # not a Pokémon or Stadium in play using its own effect
+    return hidden
+
+
+def _visible_serials(state: dict, player: int) -> set:
+    ps = state["players"][player]
+    cards = [c for c in (ps["hand"] or []) + ps["discard"] + ps["prize"] if c]
+    for mon in ps["active"] + ps["bench"]:
+        if mon:
+            cards += [mon] + [c for c in mon["energyCards"] + mon["tools"] + mon["preEvolution"] if c]
+    cards += [c for c in state["stadium"] if c]
+    return {c.get("serial") for c in cards}
+
+
+def face_down_prizes(state: dict, player: int) -> int:
+    return sum(c is None for c in state["players"][player]["prize"])
+
+
+class PrizeMemory:
+    """One player's face-down Prize cards, once known.
+
+    Searching the deck shows all of it, so what of the player's list is neither
+    in the deck nor in view is prized: the prize check a player makes on their
+    first search. Prize cards taken later are named in the player's own log, so
+    the knowledge lasts until a card goes into the Prizes face down. Feed it
+    every observation the player receives, forced decisions included: each one
+    carries the log since the player's previous observation.
+    """
+
+    def __init__(self, deck: list[int]):
+        self.deck = deck
+        self.prized: Counter | None = None
+
+    def observe(self, obs: dict) -> None:
+        state, sel = obs.get("current"), obs.get("select") or {}
+        if state is None:
+            return
+        me = state["yourIndex"]
+        for log in obs.get("logs") or []:
+            if log.get("playerIndex") != me or log.get("type") not in (LOG_MOVE_CARD, LOG_MOVE_CARD_REVERSE):
+                continue
+            if log.get("type") == LOG_MOVE_CARD_REVERSE:  # face down, even to us: a Prize card we cannot name
+                if PRIZE in (log.get("toArea"), log.get("fromArea")):
+                    self.prized = None
+                continue
+            if log.get("toArea") == PRIZE:
+                self.prized = None
+            elif log.get("fromArea") == PRIZE and self.prized is not None:
+                self.prized[log.get("cardId")] -= 1
+                self.prized = +self.prized
+        shown = sel.get("deck")
+        if shown and len(shown) == state["players"][me]["deckCount"]:
+            hidden = own_hidden(self.deck, state, sel, me)
+            view = Counter(_cid(c) for c in shown)
+            rest = hidden - view
+            if not view - hidden and sum(rest.values()) == face_down_prizes(state, me):
+                self.prized = rest
+
+
+class HandMemory:
+    """The opponent's hand cards we have seen go into it face up, until they leave it.
+
+    No card-specific rules: the engine already decides what is public. A card
+    searched out and shown (Poke Pad, a Petrel-style reveal, a card picked from a
+    revealed look) reaches our log as a ``MOVE_CARD`` into their hand *with* its id;
+    an unrevealed search or a draw reaches us without one. A card leaves the hand
+    face up (played, attached, evolved, discarded: its serial is named) or face
+    down (``MOVE_CARD_REVERSE``: Judge, Unfair Stamp, our Special Red Card, a hand
+    put under the deck); a face-down exit could be any card, so it forgets them all.
+    Feed it every observation the player receives, forced decisions included.
+    """
+
+    def __init__(self) -> None:
+        self.known: dict[int, int] = {}  # serial -> card id
+
+    def observe(self, obs: dict) -> None:
+        state = obs.get("current")
+        if state is None:
+            return
+        opp = 1 - state["yourIndex"]
+        for log in obs.get("logs") or []:
+            if log.get("playerIndex") != opp:
+                continue
+            kind = log.get("type")
+            if kind == LOG_MOVE_CARD:
+                if log.get("fromArea") == HAND:
+                    self._drop(log.get("serial"), log.get("cardId"))
+                if log.get("toArea") == HAND and log.get("cardId"):
+                    self.known[log.get("serial")] = log["cardId"]
+            elif kind == LOG_MOVE_CARD_REVERSE and log.get("fromArea") == HAND:
+                self.known.clear()
+            elif kind in (LOG_PLAY, LOG_ATTACH, LOG_EVOLVE):
+                self.known.pop(log.get("serial"), None)
+        theirs = state["players"][opp]
+        if theirs.get("hand"):  # shown in full by some effect
+            self.known = {c["serial"]: c["id"] for c in theirs["hand"] if c}
+        elif len(self.known) > theirs["handCount"]:  # lost track: never claim more than they hold
+            self.known.clear()
+
+    def _drop(self, serial, cid) -> None:
+        if self.known.pop(serial, None) is None and cid:
+            # A copy we did not know left: it may have been the one we did (a serial we cannot match).
+            for s, c in list(self.known.items()):
+                if c == cid:
+                    del self.known[s]
+                    break
+
+    def cards(self) -> list[int]:
+        return sorted(self.known.values())
+
+
+def known_prizes(prized: Counter | None, hidden: Counter, face_down: int) -> Counter | None:
+    """The face-down Prize cards if ``prized`` (``PrizeMemory.prized``) still adds up, else None."""
+    if face_down == 0:
+        return Counter()
+    if prized is None:
+        return None
+    known = prized & hidden
+    return known if sum(known.values()) == face_down else None
+
+
+def _all_prized(copies: int, face_down: int, pool: int) -> float:
+    """Chance that all ``copies`` of a card among ``pool`` hidden cards are among the ``face_down`` Prizes."""
+    if copies > face_down:
+        return 0.0
+    p = 1.0
+    for i in range(copies):
+        p *= (face_down - i) / (pool - i)
+    return p
+
+
+def _ledger(deck: list[int], state: dict, sel: dict, me: int, prized: Counter | None,
+            card_meta: np.ndarray | None) -> tuple[np.ndarray, np.ndarray]:
+    """One row per distinct card of ``deck``: where its copies are, and what the deck still holds.
+
+    [copies in the list, in hand, in play, in discard, hidden (deck + face-down Prizes),
+    in the deck, prized, chance the deck holds at least one, Prize cards known,
+    the next Stage in the deck and the chance of at least one, the Stage after it likewise,
+    the Stage it evolves from in play]. Counts are / 4. In the deck and prized are exact
+    once ``prized`` is known (``PrizeMemory``), else expected values; Stages come from
+    ``card_meta`` (name and evolves-from ids), zero without it.
+    """
+    ids = np.zeros(LEDGER_SLOTS, dtype=np.int32)
+    f = np.zeros((LEDGER_SLOTS, LEDGER_FEATURES), dtype=np.float32)
+    if not deck:
+        return ids, f
+    ps = state["players"][me]
+    total = Counter(deck)
+    hand = Counter(_cid(c) for c in ps["hand"] or [] if c)
+    discard = Counter(_cid(c) for c in ps["discard"] if c)
+    in_play = Counter(visible_cards(state, me)) - hand - discard - Counter(_cid(c) for c in ps["prize"] if c)
+    hidden = own_hidden(deck, state, sel, me)
+    face_down = face_down_prizes(state, me)
+    known = known_prizes(prized, hidden, face_down)
+    pool = sum(hidden.values())
+
+    def in_deck(cids: list[int]) -> tuple[float, float]:
+        """(copies of ``cids`` in the deck, chance of at least one there)."""
+        h = sum(hidden[c] for c in cids)
+        if known is not None:
+            n = h - sum(known[c] for c in cids)
+            return float(n), float(n > 0)
+        if h == 0:
+            return 0.0, 0.0
+        return h * (pool - face_down) / pool, 1.0 - _all_prized(h, face_down, pool)
+
+    lines = card_meta is not None and card_meta.shape[1] > META_PREV
+    name = (lambda c: int(card_meta[c, META_NAME])) if lines else (lambda c: c)  # noqa: E731
+    prev = (lambda c: int(card_meta[c, META_PREV])) if lines else (lambda c: 0)  # noqa: E731
+    distinct = sorted(total)[:LEDGER_SLOTS]
+    evolves_to = lambda names: [c for c in distinct if prev(c) and prev(c) in names]  # noqa: E731
+    on_board = Counter(name(m["id"]) for m in ps["active"] + ps["bench"] if m)
+    for row, cid in enumerate(distinct):
+        ids[row] = cid
+        deck_n, deck_p = in_deck([cid])
+        nxt = evolves_to({name(cid)}) if lines else []
+        after = evolves_to({name(c) for c in nxt}) if nxt else []
+        nxt_n, nxt_p = in_deck(nxt) if nxt else (0.0, 0.0)
+        after_n, after_p = in_deck(after) if after else (0.0, 0.0)
+        f[row] = [total[cid] / 4.0, hand[cid] / 4.0, in_play[cid] / 4.0, discard[cid] / 4.0, hidden[cid] / 4.0,
+                  deck_n / 4.0, (hidden[cid] - deck_n) / 4.0, deck_p, float(known is not None),
+                  nxt_n / 4.0, nxt_p, after_n / 4.0, after_p, on_board[prev(cid)] / 4.0 if prev(cid) else 0.0]
+    return ids, f
 
 
 class Decision:
@@ -381,10 +601,22 @@ def _tactical(f: np.ndarray, opt: dict, state: dict, me: int, attack_table: np.n
     defender = _at(state["players"][1 - me]["active"], 0)
     if aid is None or not (0 <= aid < len(attack_table)) or attacker is None or defender is None:
         return
+    base, damage, weak, resist = _hit(state, me, attacker, defender, aid, attack_table, card_meta)
+    hp = float(defender["hp"])
+    f[:] = [base / 300.0, damage / 300.0, hp / 300.0, float(damage >= hp > 0),
+            card_meta[defender["id"], 3] / 3.0, float(weak), float(resist)]
+
+
+def _hit(state: dict, me: int, attacker: dict, defender: dict, aid: int, attack_table: np.ndarray,
+         card_meta: np.ndarray) -> tuple[float, float, bool, bool]:
+    """(base damage, damage done, Weakness applies, Resistance applies) when player ``me``'s Active
+    ``attacker`` uses attack ``aid`` on the other player's Active ``defender``, before the attack's text."""
     base = float(attack_table[aid, 0]) * 300.0
+    if attack_table.shape[1] > BONUS_KIND and attack_table[aid, BONUS_KIND]:
+        base += _bonus(attack_table[aid], state, me, attacker, defender, card_meta)
     a_type = card_meta[attacker["id"], 0]
-    weak = card_meta[defender["id"], 1] == a_type and a_type > 0
-    resist = card_meta[defender["id"], 2] == a_type and a_type > 0
+    weak = bool(card_meta[defender["id"], 1] == a_type and a_type > 0)
+    resist = bool(card_meta[defender["id"], 2] == a_type and a_type > 0)
     rules = _damage_rules(state, me, attacker, defender, card_meta) if card_meta.shape[1] > META_RULE else []
     before = sum(amount for effect, amount in rules if effect == LESS_BEFORE_WR)
     damage = max(0.0, base - before) * (2.0 if weak else 1.0) if base > 0 else 0.0
@@ -392,9 +624,182 @@ def _tactical(f: np.ndarray, opt: dict, state: dict, me: int, attack_table: np.n
     damage = max(0.0, damage - sum(amount for effect, amount in rules if effect == LESS_AFTER_WR))
     if any(effect == NO_DAMAGE or (effect == NO_DAMAGE_AT_LEAST and damage >= amount) for effect, amount in rules):
         damage = 0.0
-    hp = float(defender["hp"])
-    f[:] = [base / 300.0, damage / 300.0, hp / 300.0, float(damage >= hp > 0),
-            card_meta[defender["id"], 3] / 3.0, float(weak), float(resist)]
+    return base, damage, weak, resist
+
+
+def _threat(f: np.ndarray, mon: dict, owner: int, state: dict, attack_table: np.ndarray,
+            card_meta: np.ndarray) -> None:
+    """What losing ``mon`` (``owner``'s Pokémon in play) would cost, and whether the other
+    player's Active can take it.
+
+    [Prize cards the other player takes for knocking it out, that knockout wins them the game,
+    the most damage the other player's Active can do to it with one more Energy attached,
+    that knocks it out, it is knocked out with the Energy already attached]. The damage
+    columns are for an Active ``mon`` only (attacks hit the Active; Bench damage is left out),
+    and count Energy without its type. Zero without ``card_meta``'s attack columns.
+    """
+    prizes = int(card_meta[mon["id"], 3]) if 0 < mon["id"] < len(card_meta) else 1
+    taker = state["players"][1 - owner]
+    f[0] = prizes / 3.0
+    f[1] = float(prizes >= len(taker["prize"]) > 0)
+    attacker = _at(taker["active"], 0)
+    if (attacker is None or _at(state["players"][owner]["active"], 0) is not mon
+            or card_meta.shape[1] < META_ATTACKS + N_CARD_ATTACKS or not 0 < attacker["id"] < len(card_meta)):
+        return
+    energy, hp = len(attacker["energies"]), float(mon["hp"])
+    best = best_now = 0.0
+    for aid in card_meta[attacker["id"], META_ATTACKS:META_ATTACKS + N_CARD_ATTACKS]:
+        aid = int(aid)
+        if not 0 < aid < len(attack_table):
+            continue
+        cost = round(float(attack_table[aid, 1]) * 5)
+        if cost > energy + 1:
+            continue
+        _, damage, _, _ = _hit(state, 1 - owner, attacker, mon, aid, attack_table, card_meta)
+        best = max(best, damage)
+        if cost <= energy:
+            best_now = max(best_now, damage)
+    f[2:5] = [best / 300.0, float(best >= hp > 0), float(best_now >= hp > 0)]
+
+
+def _usable_attacks(mon: dict, card_meta: np.ndarray, attack_table: np.ndarray):
+    """(attack id, usable with the Energy attached now) for each of ``mon``'s attacks it could use
+    with one more Energy attached (Energy counted without its type)."""
+    if not 0 < mon["id"] < len(card_meta):
+        return
+    energy = len(mon["energies"])
+    for aid in card_meta[mon["id"], META_ATTACKS:META_ATTACKS + N_CARD_ATTACKS]:
+        aid = int(aid)
+        if 0 < aid < len(attack_table):
+            cost = round(float(attack_table[aid, 1]) * 5)
+            if cost <= energy + 1:
+                yield aid, cost <= energy
+
+
+def _offense(f: np.ndarray, mon: dict, owner: int, state: dict, attack_table: np.ndarray,
+             card_meta: np.ndarray) -> None:
+    """What ``mon`` (``owner``'s Pokémon in play, Active or Benched) could do to the other player's
+    Active Pokémon if it were attacking: [the most damage with one more Energy attached, after
+    Weakness, Resistance and the damage rules (``_damage_rules``: Crustle's Mysterious Rock Inn,
+    Cornerstone Mask Ogerpon ex, ...), that knocks it out, it knocks it out with the Energy already
+    attached]. Says which of our Pokémon can hurt a wall, so switching and setting up can aim for it."""
+    defender = _at(state["players"][1 - owner]["active"], 0)
+    if defender is None:
+        return
+    hp, best, ko_now = float(defender["hp"]), 0.0, False
+    for aid, now in _usable_attacks(mon, card_meta, attack_table):
+        _, damage, _, _ = _hit(state, owner, mon, defender, aid, attack_table, card_meta)
+        best = max(best, damage)
+        ko_now |= now and damage >= hp > 0
+    f[:] = [best / 300.0, float(best >= hp > 0), float(ko_now)]
+
+
+def _bench_guarded(state: dict, side: int, target: dict, attacker: dict, card_meta: np.ndarray) -> int:
+    """``GUARD_*`` bits of what protects ``side``'s Benched ``target`` from attacks by ``attacker``."""
+    ps = state["players"][side]
+    t_flags = int(card_meta[target["id"], META_FLAGS]) if 0 < target["id"] < len(card_meta) else 0
+    a_energy = len(attacker["energies"])
+    sources = [(target["id"], G_SELF_BENCHED)] + [(_cid(e), G_ATTACHED) for e in target["energyCards"] if e]
+    sources += [(m["id"], G_IN_PLAY) for m in ps["active"] + ps["bench"] if m]
+    sources += [(m["id"], G_FROM_BENCH) for m in ps["bench"] if m]
+    sources += [(_cid(s), G_STADIUM) for s in state["stadium"] or [] if s]
+    stops = 0
+    for cid, where in sources:
+        if not 0 < cid < len(card_meta):
+            continue
+        g_where, g_stops, no_rule_box, energy_at_most = (int(x) for x in card_meta[cid, META_GUARD:META_GUARD + GUARD_FIELDS])
+        if (g_where == where and not (no_rule_box and t_flags & FLAG_RULE_BOX)
+                and not (energy_at_most and a_energy > energy_at_most)):
+            stops |= g_stops
+    return stops
+
+
+def _bench_hit(state: dict, owner: int, attacker: dict, target: dict, aid: int, attack_table: np.ndarray,
+               card_meta: np.ndarray) -> tuple[float, float, bool]:
+    """(to one Benched Pokémon, to each, guarded) when ``owner``'s ``attacker`` uses attack ``aid`` and
+    ``target`` is one of the other player's Benched Pokémon: damage and damage counters (x10) that land
+    after the Bench guards (``_bench_guarded``: Shaymin's Flower Curtain, ...); guarded is whether a
+    guard stopped some of it."""
+    row = attack_table[aid]
+    dmg_one, dmg_each, ctr_one, ctr_each = (float(row[c]) for c in (BENCH_ONE, BENCH_EACH, COUNTERS_ONE, COUNTERS_EACH))
+    if not (dmg_one or dmg_each or ctr_one or ctr_each):
+        return 0.0, 0.0, False
+    stops = _bench_guarded(state, 1 - owner, target, attacker, card_meta)
+    if stops & GUARD_DAMAGE:
+        dmg_one = dmg_each = 0.0
+    if stops & GUARD_COUNTERS:
+        ctr_one = ctr_each = 0.0
+    guarded = bool(stops & GUARD_DAMAGE and (row[BENCH_ONE] or row[BENCH_EACH])
+                   or stops & GUARD_COUNTERS and (row[COUNTERS_ONE] or row[COUNTERS_EACH]))
+    each = max(dmg_each, ctr_each)
+    return max(dmg_one, ctr_one, each), each, guarded
+
+
+def _bench_threat(f: np.ndarray, mon: dict, owner: int, state: dict, attack_table: np.ndarray,
+                  card_meta: np.ndarray) -> None:
+    """What the other player's Active Pokémon could do to ``mon`` (``owner``'s Benched Pokémon) with one
+    more Energy attached: [the most damage landing on it (snipes, spread, damage counters), that knocks
+    it out, a Bench guard is stopping some of it]. Says when a Bench needs Shaymin."""
+    attacker = _at(state["players"][1 - owner]["active"], 0)
+    if attacker is None:
+        return
+    hp, best, guarded = float(mon["hp"]), 0.0, False
+    for aid, _ in _usable_attacks(attacker, card_meta, attack_table):
+        one, _, g = _bench_hit(state, 1 - owner, attacker, mon, aid, attack_table, card_meta)
+        best, guarded = max(best, one), guarded or g
+    f[:] = [best / 300.0, float(best >= hp > 0), float(guarded)]
+
+
+def _bench_tactical(f: np.ndarray, opt: dict, state: dict, me: int, attack_table: np.ndarray,
+                    card_meta: np.ndarray) -> None:
+    """What an attack would do to the opponent's Bench: [the most damage landing on one Benched
+    Pokémon, Benched Pokémon it knocks out (/ 3), a Bench guard stops some of it]."""
+    aid = opt.get("attackId")
+    attacker = _at(state["players"][me]["active"], 0)
+    if aid is None or not (0 < aid < len(attack_table)) or attacker is None:
+        return
+    best, each_kos, one_ko, guarded = 0.0, 0, False, False
+    for mon in state["players"][1 - me]["bench"]:
+        if mon is None:
+            continue
+        one, each, g = _bench_hit(state, me, attacker, mon, aid, attack_table, card_meta)
+        best, guarded = max(best, one), guarded or g
+        each_kos += int(each >= mon["hp"] > 0)
+        one_ko |= one >= mon["hp"] > 0
+    f[:] = [best / 300.0, max(each_kos, int(one_ko)) / 3.0, float(guarded)]
+
+
+def _bonus(row: np.ndarray, state: dict, me: int, attacker: dict, defender: dict, card_meta: np.ndarray) -> float:
+    """The attack's conditional extra damage (``engine._BONUS_RULES``) on this board; a coin flip counts half."""
+    kind, amount, param = int(row[BONUS_KIND]), float(row[BONUS_AMOUNT]), int(row[BONUS_PARAM])
+    mine, theirs = state["players"][me], state["players"][1 - me]
+    counters = lambda mon: max(0, mon["maxHp"] - mon["hp"]) // 10  # noqa: E731
+    special = lambda mon: any(int(card_meta[_cid(e), META_FLAGS]) & FLAG_SPECIAL_ENERGY  # noqa: E731
+                              for e in mon["energyCards"] if e)
+    times = {
+        B_STADIUM: any(state["stadium"] or []),
+        B_DEF_EX: int(card_meta[defender["id"], META_FLAGS]) & FLAG_EX,
+        B_PER_DEF_ENERGY: len(defender["energies"]),
+        B_DEF_DAMAGED: counters(defender) > 0,
+        B_PER_DEF_COUNTER: counters(defender),
+        B_PER_SELF_COUNTER: counters(attacker),
+        B_EXTRA_ENERGY: len(attacker["energies"]) - round(float(row[1]) * 5) >= param,
+        B_PER_BENCH_BOTH: sum(1 for m in mine["bench"] + theirs["bench"] if m),
+        B_PER_OPP_BENCH: sum(1 for m in theirs["bench"] if m),
+        B_PER_MY_BENCH: sum(1 for m in mine["bench"] if m),
+        B_PER_OPP_PRIZE_TAKEN: 6 - len(theirs["prize"]),
+        B_DEF_EVOLUTION: not int(card_meta[defender["id"], META_FLAGS]) & FLAG_BASIC,
+        B_DEF_POISONED: theirs["poisoned"],
+        B_DEF_BURNED: theirs["burned"],
+        B_PER_SELF_TYPE_ENERGY: sum(1 for e in attacker["energies"] if param >> int(e) & 1),
+        B_SELF_TOOL: any(attacker["tools"]),
+        B_SELF_SPECIAL_ENERGY: special(attacker),
+        B_OPP_PRIZES_AT_MOST: len(theirs["prize"]) <= param,
+        B_SELF_DAMAGED: counters(attacker) > 0,
+        B_PER_ENERGY_BOTH_ACTIVE: len(attacker["energies"]) + len(defender["energies"]),
+        B_COIN: 0.5,
+    }.get(kind, 0)
+    return amount * float(times)
 
 
 def _damage_rules(state: dict, me: int, attacker: dict, defender: dict,
@@ -430,7 +835,8 @@ def _damage_rules(state: dict, me: int, attacker: dict, defender: dict,
     for cid, where in sources:
         if not 0 < cid < len(card_meta):
             continue
-        rule_where, att, att_param, dfn, dfn_param, effect, amount = (int(x) for x in card_meta[cid, META_RULE:])
+        rule = card_meta[cid, META_RULE:META_RULE + 7]
+        rule_where, att, att_param, dfn, dfn_param, effect, amount = (int(x) for x in rule)
         if (rule_where == where and attacker_ok.get(att, lambda _: True)(att_param)
                 and defender_ok.get(dfn, lambda _: True)(dfn_param)):
             out.append((effect, amount))
@@ -439,14 +845,17 @@ def _damage_rules(state: dict, me: int, attacker: dict, defender: dict,
 
 def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | None = None,
            opp_seen: set[int] | None = None, opp_recent: list[int] | None = None,
-           card_meta: np.ndarray | None = None) -> dict[str, np.ndarray]:
+           card_meta: np.ndarray | None = None, prized: Counter | None = None,
+           opp_hand: list[int] | None = None) -> dict[str, np.ndarray]:
     """Encode a decision for the player to move.
 
     ``my_deck`` (their 60-card list) and ``opp_seen`` (opponent card ids seen
     so far this game, kept by the caller across decisions) fill the memory
     keys; ``opp_recent`` (the last opponent cards from the log) and
     ``card_meta`` (``engine.card_meta_table``, for attack tactics) fill the
-    entity policy's keys. Anything not given stays empty.
+    entity policy's keys; ``prized`` (the mover's ``PrizeMemory.prized``)
+    makes the deck ledger exact; ``opp_hand`` (the mover's ``HandMemory.cards()``)
+    names the opponent's hand cards known face up. Anything not given stays empty.
     """
     obs = decision.obs
     state, sel = obs["current"], obs["select"]
@@ -477,6 +886,9 @@ def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | No
         sel["remainEnergyCost"] / 5.0, len(decision.picked) / 5.0,
         float(len(decision.picked) >= decision.min), decision.n / MAX_OPTIONS,
     ]
+    stadium = _at(state["stadium"], 0)
+    if stadium:  # mine / theirs: the Stadium's card alone (misc_ids) does not say who played it
+        g[o + 7 + (stadium.get("playerIndex") != me)] = 1.0
 
     slot_ids = np.zeros(SLOTS, dtype=np.int32)
     slot_feats = np.zeros((SLOTS, SLOT_FEATURES), dtype=np.float32)
@@ -491,6 +903,14 @@ def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | No
             if mon is not None:
                 slot_ids[base + i] = mon["id"]
                 _slot(slot_feats[base + i], mon, is_active)
+                if card_meta is not None:
+                    row = slot_feats[base + i]
+                    _threat(row[THREAT_AT:OFFENSE_AT], mon, p, state, attack_table, card_meta)
+                    if card_meta.shape[1] >= META_GUARD + GUARD_FIELDS and attack_table.shape[1] > COUNTERS_EACH:
+                        _offense(row[OFFENSE_AT:BENCH_THREAT_AT], mon, p, state, attack_table, card_meta)
+                        if not is_active:
+                            _bench_threat(row[BENCH_THREAT_AT:SLOT_FEATURES], mon, p, state, attack_table,
+                                          card_meta)
                 attached = [_cid(c) for c in mon["tools"] + mon["energyCards"] if c][:ATTACH_SLOTS]
                 slot_attach[base + i, : len(attached)] = attached
 
@@ -505,7 +925,9 @@ def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | No
         opt_ids[i], opt_target_ids[i] = _resolve(state, sel, opt, me)
         opt_src[i], opt_tgt[i] = _option_slots(opt, me)
         if opt["type"] == ATTACK and card_meta is not None:
-            _tactical(opt_tactical[i], opt, state, me, attack_table, card_meta)
+            _tactical(opt_tactical[i, :7], opt, state, me, attack_table, card_meta)
+            if card_meta.shape[1] >= META_GUARD + GUARD_FIELDS and attack_table.shape[1] > COUNTERS_EACH:
+                _bench_tactical(opt_tactical[i, 7:], opt, state, me, attack_table, card_meta)
         f = opt_feats[i]
         k = _one_hot(f, 0, opt["type"], N_OPTION_TYPES)
         k = _one_hot(f, k, opt.get("area"), N_AREAS)
@@ -515,7 +937,7 @@ def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | No
         k += 3
         aid = opt.get("attackId")
         if aid is not None and 0 <= aid < len(attack_table):
-            f[k : k + 2] = attack_table[aid]
+            f[k : k + 2] = attack_table[aid, :2]
         f[k + 2] = (opt.get("index") or 0) / 10.0
         f[k + 3] = (opt.get("inPlayIndex") or 0) / 8.0
         f[k + 4] = (opt.get("number") or 0) / 10.0
@@ -525,6 +947,7 @@ def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | No
         f[k] = float(i in picked)
 
     my, opp = state["players"][me], state["players"][1 - me]
+    ledger_ids, ledger_feats = _ledger(my_deck, state, sel, me, prized, card_meta)
     return {
         "global": g,
         "slot_ids": slot_ids,
@@ -547,6 +970,9 @@ def encode(decision: Decision, attack_table: np.ndarray, my_deck: list[int] | No
         "opt_tgt_slot": opt_tgt,
         "opt_tactical": opt_tactical,
         "opp_recent_ids": _id_array(list(opp_recent)[-RECENT_SLOTS:] if opp_recent else [], RECENT_SLOTS),
+        "ledger_ids": ledger_ids,
+        "ledger_feats": ledger_feats,
+        "opp_hand_ids": _id_array(list(opp_hand) if opp_hand else [], OPP_HAND_SLOTS),
     }
 
 

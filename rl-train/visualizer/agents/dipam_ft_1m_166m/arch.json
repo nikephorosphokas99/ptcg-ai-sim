@@ -1,0 +1,8 @@
+{
+  "kind": "entity",
+  "dim": 128,
+  "heads": 4,
+  "board_layers": 2,
+  "option_layers": 2,
+  "stop_token": true
+}

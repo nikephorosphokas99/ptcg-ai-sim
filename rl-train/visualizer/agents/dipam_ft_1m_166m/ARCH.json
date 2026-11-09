@@ -1,0 +1,8 @@
+{
+  "family": "Entity-attention network (MaskablePPO actor)",
+  "parameters": 1019905,
+  "dim": 128,
+  "layers": 31,
+  "trainedBy": "self-play PPO, 166,068,224 steps",
+  "checkpoint": "local-1m-dipam-ft/step 166M -> policy.npz"
+}

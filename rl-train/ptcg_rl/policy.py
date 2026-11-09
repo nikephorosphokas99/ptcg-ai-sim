@@ -21,7 +21,8 @@ from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 from torch import nn
 from torch.nn import functional as F
 
-from .encoding import GLOBAL_FEATURES, MAX_OPTIONS, OPTION_FEATURES, SLOT_FEATURES, SLOTS, TACTICAL_FEATURES
+from .encoding import (LEDGER_FEATURES, MAX_OPTIONS, OPT_OPPONENT, OPTION_FEATURES, SLOTS,
+                       TACTICAL_FEATURES)
 from .engine import card_table
 
 _BAGS = ("hand_ids", "my_discard_ids", "opp_discard_ids", "view_ids")
@@ -39,11 +40,11 @@ class PTCGExtractor(BaseFeaturesExtractor):
         self.register_buffer("card_static", table, persistent=False)
         self.embedding = nn.Embedding(n_cards, 32, padding_idx=0)
         self.card = nn.Sequential(nn.Linear(32 + table.shape[1], card_dim), nn.ReLU())
-        self.slot = nn.Sequential(nn.Linear(card_dim + SLOT_FEATURES, card_dim), nn.ReLU())
+        self.slot = nn.Sequential(nn.Linear(card_dim + observation_space["slot_feats"].shape[-1], card_dim), nn.ReLU())
         self.option = nn.Sequential(
             nn.Linear(2 * card_dim + OPTION_FEATURES, 64), nn.ReLU(), nn.Linear(64, option_dim), nn.ReLU()
         )
-        self.globals = nn.Sequential(nn.Linear(GLOBAL_FEATURES, 128), nn.ReLU())
+        self.globals = nn.Sequential(nn.Linear(observation_space["global"].shape[-1], 128), nn.ReLU())
 
     def card_vectors(self) -> torch.Tensor:
         """Every card's representation, row 0 (padding / face-down) zeroed.
@@ -101,8 +102,8 @@ class PointerExtractor(BaseFeaturesExtractor):
         self.register_buffer("card_static", table, persistent=False)
         self.embedding = nn.Embedding(table.shape[0], 32, padding_idx=0)
         self.card = nn.Sequential(nn.Linear(32 + table.shape[1], card_dim), nn.ReLU())
-        self.slot = nn.Sequential(nn.Linear(card_dim + SLOT_FEATURES, card_dim), nn.ReLU())
-        self.globals = nn.Sequential(nn.Linear(GLOBAL_FEATURES, 128), nn.ReLU())
+        self.slot = nn.Sequential(nn.Linear(card_dim + observation_space["slot_feats"].shape[-1], card_dim), nn.ReLU())
+        self.globals = nn.Sequential(nn.Linear(observation_space["global"].shape[-1], 128), nn.ReLU())
         board = SLOTS * card_dim + len(_POINTER_BAGS) * card_dim + 3 * card_dim + 128
         self.board = nn.Sequential(nn.Linear(board, 512), nn.ReLU(), nn.Linear(512, state_dim), nn.ReLU())
         self.option = nn.Sequential(
@@ -203,31 +204,39 @@ _ENTITY_PILES = ("my_discard_ids", "opp_discard_ids", "view_ids", "my_unseen_ids
 
 
 class EntityExtractor(BaseFeaturesExtractor):
-    """Global state (``dim``) followed by one token per option slot (``dim`` each)."""
+    """Global state (``dim``) followed by one token per option slot (``dim`` each), then STOP's (``dim``)
+    when ``stop_token``."""
 
     def __init__(self, observation_space: spaces.Dict, dim: int = 128, heads: int = 4,
-                 board_layers: int = 2, option_layers: int = 2, ff: int = 256):
+                 board_layers: int = 2, option_layers: int = 2, ff: int = 256, stop_token: bool = False):
         from .cardtext import card_text_table
 
         static = torch.as_tensor(card_table())
         text = torch.as_tensor(card_text_table())
-        super().__init__(observation_space, dim + MAX_OPTIONS * dim)
+        super().__init__(observation_space, dim + MAX_OPTIONS * dim + (dim if stop_token else 0))
         self.dim = dim
+        # STOP as one more option token: a learned vector that goes through the option decoder with the
+        # real options (seeing them, what is already picked, and the board) and is scored by the same head.
+        # Without it STOP is scored from the board summary alone (models before run D).
+        self.stop_token = stop_token
+        if stop_token:
+            self.stop_embed = nn.Parameter(torch.randn(dim) * 0.02)
         self.register_buffer("card_static", static, persistent=False)
         self.register_buffer("card_text", text, persistent=False)
         self.embedding = nn.Embedding(static.shape[0], 32, padding_idx=0)
         self.card = nn.Sequential(nn.Linear(32 + static.shape[1] + text.shape[1], dim), nn.ReLU(),
                                   nn.Linear(dim, dim))
-        self.slot = nn.Linear(2 * dim + SLOT_FEATURES + 2, dim)  # card, attachments, features, side
+        # card, attachments, features (as many as the model was built with), side
+        self.slot = nn.Linear(2 * dim + observation_space["slot_feats"].shape[-1] + 2, dim)
         self.pile = nn.Linear(dim, dim)
-        self.globals = nn.Linear(GLOBAL_FEATURES, dim)
+        self.globals = nn.Linear(observation_space["global"].shape[-1], dim)
         # learned type markers: hand, each pile, stadium, context card, effect card
         self.kind = nn.Embedding(1 + len(_ENTITY_PILES) + 3, dim)
         self.board = nn.ModuleList(
             nn.TransformerEncoderLayer(dim, heads, ff, dropout=0.0, batch_first=True, norm_first=True)
             for _ in range(board_layers)
         )
-        self.option = nn.Linear(2 * dim + OPTION_FEATURES + TACTICAL_FEATURES, dim)
+        self.option = nn.Linear(2 * dim + OPTION_FEATURES + observation_space["opt_tactical"].shape[-1], dim)
         self.option_src = nn.Linear(dim, dim, bias=False)
         self.option_tgt = nn.Linear(dim, dim, bias=False)
         self.options = nn.ModuleList(
@@ -236,6 +245,28 @@ class EntityExtractor(BaseFeaturesExtractor):
         )
         self.state = nn.Sequential(nn.LayerNorm(dim), nn.Linear(dim, dim), nn.ReLU())
         self.out_norm = nn.LayerNorm(dim)
+        # Deck ledger (v4, when the space has it): one vector per distinct card of our list,
+        # added to the global token and to our hand, board and option tokens of that card.
+        # The projections start at zero, so a v3 model upgraded to v4 plays as before.
+        self.has_ledger = "ledger_ids" in observation_space.spaces
+        if self.has_ledger:
+            self.ledger = nn.Sequential(nn.Linear(dim + LEDGER_FEATURES, dim), nn.ReLU(), nn.Linear(dim, dim))
+            self.ledger_global = nn.Linear(dim, dim, bias=False)
+            self.ledger_slot = nn.Linear(dim, dim, bias=False)
+            self.ledger_hand = nn.Linear(dim, dim, bias=False)
+            self.ledger_option = nn.Linear(dim, dim, bias=False)
+            self.zero_ledger()
+        # Opponent's known hand (v6, HandMemory): the sum of its cards' vectors, projected into
+        # the global token. Starts at zero, so an upgraded v5 model plays exactly as before.
+        self.has_opp_hand = "opp_hand_ids" in observation_space.spaces
+        if self.has_opp_hand:
+            self.opp_hand = nn.Linear(dim, dim, bias=False)
+            nn.init.zeros_(self.opp_hand.weight)
+
+    def zero_ledger(self) -> None:
+        """Start the ledger's projections at zero (again after SB3's orthogonal init)."""
+        for layer in (self.ledger_global, self.ledger_slot, self.ledger_hand, self.ledger_option):
+            nn.init.zeros_(layer.weight)
 
     def card_vectors(self) -> torch.Tensor:
         table = self.card(torch.cat([self.embedding.weight, self.card_static, self.card_text], dim=-1))
@@ -263,6 +294,26 @@ class EntityExtractor(BaseFeaturesExtractor):
         hand_ids = obs["hand_ids"][:, : max(1, int((obs["hand_ids"] > 0).sum(dim=1).max()))]
         hand = cards(hand_ids) + self.kind.weight[0]
         hand_absent = hand_ids <= 0
+        glob = self.globals(obs["global"]).unsqueeze(1)
+        if self.has_ledger:
+            ledger_ids = obs["ledger_ids"].long()
+            ledger_present = ledger_ids > 0
+            ledger = self.ledger(torch.cat([cards(ledger_ids), obs["ledger_feats"]], dim=-1))
+            ledger = ledger * ledger_present.unsqueeze(-1)
+
+            def ledger_of(ids: torch.Tensor) -> torch.Tensor:
+                """Each id's ledger vector, zero for cards not in our list."""
+                match = (ids.long().unsqueeze(-1) == ledger_ids.unsqueeze(1)) & ledger_present.unsqueeze(1)
+                return match.to(ledger.dtype) @ ledger
+
+            mine = torch.zeros(SLOTS, 1, device=table.device)
+            mine[: SLOTS // 2] = 1.0
+            slots = slots + self.ledger_slot(ledger_of(obs["slot_ids"]) * mine)
+            hand = hand + self.ledger_hand(ledger_of(hand_ids))
+            count = ledger_present.sum(dim=1, keepdim=True).clamp(min=1)
+            glob = glob + self.ledger_global(ledger.sum(dim=1) / count).unsqueeze(1)
+        if self.has_opp_hand:
+            glob = glob + self.opp_hand(cards(obs["opp_hand_ids"]).sum(dim=1) / 10.0).unsqueeze(1)
         # A pile is the sum of its cards' vectors, i.e. per-card counts times the table:
         # far cheaper than looking up and summing up to 60 vectors per pile.
         width = max(obs[k].shape[1] for k in _ENTITY_PILES)
@@ -273,7 +324,6 @@ class EntityExtractor(BaseFeaturesExtractor):
         piles = self.pile(counts @ table / 10.0) + self.kind.weight[1:1 + len(_ENTITY_PILES)]
         misc = cards(obs["misc_ids"]) + self.kind.weight[1 + len(_ENTITY_PILES):]
         misc_absent = obs["misc_ids"] <= 0
-        glob = self.globals(obs["global"]).unsqueeze(1)
         tokens = torch.cat([glob, slots, hand, piles, misc], dim=1)
         absent = torch.cat([torch.zeros(b, 1, dtype=torch.bool, device=table.device), slot_absent, hand_absent,
                             torch.zeros(b, piles.shape[1], dtype=torch.bool, device=table.device), misc_absent], dim=1)
@@ -292,31 +342,46 @@ class EntityExtractor(BaseFeaturesExtractor):
         n = max(1, int((~opt_absent).sum(dim=1).max()))
         o = {k: obs[k][:, :n] for k in ("opt_ids", "opt_target_ids", "opt_feats", "opt_tactical", "opt_src_slot", "opt_tgt_slot")}
         opt_absent = opt_absent[:, :n].clone()
-        opt_absent[:, 0] &= ~opt_absent.all(dim=1)  # never mask every option (attention over nothing is NaN)
+        if not self.stop_token:  # the STOP token is never masked, so attention always has a key
+            opt_absent[:, 0] &= ~opt_absent.all(dim=1)  # never mask every option (attention over nothing is NaN)
         options = self.option(torch.cat([cards(o["opt_ids"]), cards(o["opt_target_ids"]),
                                          o["opt_feats"], o["opt_tactical"]], dim=-1))
         options = options + self.option_src(gather(o["opt_src_slot"])) + self.option_tgt(gather(o["opt_tgt_slot"]))
+        if self.has_ledger:
+            ours = (o["opt_feats"][..., OPT_OPPONENT] <= 0).unsqueeze(-1)
+            options = options + self.ledger_option(ledger_of(o["opt_ids"]) * ours)
+        if self.stop_token:
+            options = torch.cat([options, self.stop_embed.to(options.dtype).expand(b, 1, d)], dim=1)
+            opt_absent = torch.cat([opt_absent, torch.zeros_like(opt_absent[:, :1])], dim=1)
         for layer in self.options:
             options = layer(options, tokens, tgt_key_padding_mask=opt_absent, memory_key_padding_mask=absent)
-        options = F.pad(self.out_norm(options), (0, 0, 0, MAX_OPTIONS - n))  # padded slots are masked out anyway
-        return torch.cat([state, options.reshape(b, -1)], dim=-1)
+        options = self.out_norm(options)
+        stop = [options[:, n]] if self.stop_token else []
+        options = F.pad(options[:, :n], (0, 0, 0, MAX_OPTIONS - n))  # padded slots are masked out anyway
+        return torch.cat([state, options.reshape(b, -1), *stop], dim=-1)
 
 
 class EntityHead(nn.Module):
-    """SB3 ``mlp_extractor``: actor latent is the 65 logits (one per option, then STOP)."""
+    """SB3 ``mlp_extractor``: actor latent is the 65 logits (one per option, then STOP).
 
-    def __init__(self, dim: int, hidden: int = 128, value_dim: int = 256):
+    With ``stop_token`` STOP's logit comes from its decoder token through the options' ``score`` head;
+    otherwise from the state through a head of its own (``stop``)."""
+
+    def __init__(self, dim: int, hidden: int = 128, value_dim: int = 256, stop_token: bool = False):
         super().__init__()
-        self.dim = dim
+        self.dim, self.stop_token = dim, stop_token
         self.latent_dim_pi, self.latent_dim_vf = MAX_OPTIONS + 1, value_dim
         self.score = nn.Sequential(nn.Linear(dim, hidden), nn.ReLU(), nn.Linear(hidden, 1))
-        self.stop = nn.Sequential(nn.Linear(dim, hidden), nn.ReLU(), nn.Linear(hidden, 1))
+        if not stop_token:
+            self.stop = nn.Sequential(nn.Linear(dim, hidden), nn.ReLU(), nn.Linear(hidden, 1))
         self.value = nn.Sequential(nn.Linear(dim, value_dim), nn.Tanh(), nn.Linear(value_dim, value_dim), nn.Tanh())
 
     def forward_actor(self, features: torch.Tensor) -> torch.Tensor:
         state = features[:, : self.dim]
-        options = features[:, self.dim:].reshape(-1, MAX_OPTIONS, self.dim)
-        return torch.cat([self.score(options).squeeze(-1), self.stop(state)], dim=-1)
+        end = self.dim + MAX_OPTIONS * self.dim
+        options = features[:, self.dim:end].reshape(-1, MAX_OPTIONS, self.dim)
+        stop = self.score(features[:, end:]) if self.stop_token else self.stop(state)
+        return torch.cat([self.score(options).squeeze(-1), stop], dim=-1)
 
     def forward_critic(self, features: torch.Tensor) -> torch.Tensor:
         return self.value(features[:, : self.dim])
@@ -333,12 +398,17 @@ class EntityPolicy(MaskableMultiInputActorCriticPolicy):
         super().__init__(*args, **kwargs)
 
     def _build_mlp_extractor(self) -> None:
-        self.mlp_extractor = EntityHead(self.features_extractor.dim)
+        self.mlp_extractor = EntityHead(self.features_extractor.dim, stop_token=self.features_extractor.stop_token)
 
     def _build(self, lr_schedule) -> None:
         super()._build(lr_schedule)
         self.action_net = nn.Identity()
-        for layer in (self.mlp_extractor.score[-1], self.mlp_extractor.stop[-1]):
+        heads = [self.mlp_extractor.score] + ([] if self.mlp_extractor.stop_token else [self.mlp_extractor.stop])
+        for layer in (h[-1] for h in heads):
             nn.init.orthogonal_(layer.weight, gain=0.01)
             nn.init.zeros_(layer.bias)
+        if self.features_extractor.has_ledger:
+            self.features_extractor.zero_ledger()
+        if getattr(self.features_extractor, "has_opp_hand", False):
+            nn.init.zeros_(self.features_extractor.opp_hand.weight)
         self.optimizer = self.optimizer_class(self.parameters(), lr=lr_schedule(1), **self.optimizer_kwargs)

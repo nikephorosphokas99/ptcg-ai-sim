@@ -203,7 +203,9 @@ def deck_name(bundle: Path) -> str:
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("agent", type=Path, help="submission .zip or bundle folder")
-    p.add_argument("--opponents", nargs="*", help="benchmark folder names (default: all with a deck.csv)")
+    p.add_argument("--opponents", nargs="*",
+                   help="benchmark folder names (default: all with a deck.csv), or paths to other agents "
+                        "(submission .zip or bundle folder), e.g. a frozen earlier model")
     p.add_argument("--games", type=int, default=100, help="games per opponent")
     p.add_argument("--parallel", type=int, default=8, help="games in flight per opponent")
     p.add_argument("--timeout", type=float, default=30.0, help="seconds an agent may take per decision")
@@ -215,8 +217,9 @@ def main() -> None:
     compat_cg()  # built once, before the agent threads start
     opponents = [d for d in sorted(BENCHMARKS.iterdir()) if (d / "main.py").is_file() and (d / "deck.csv").is_file()]
     if args.opponents:
-        opponents = [d for d in opponents if d.name in args.opponents]
-    print(f"{args.agent} ({deck_name(agent)}) vs {len(opponents)} rule-based agents, {args.games} games each\n")
+        paths = [Path(o) for o in args.opponents if Path(o).suffix == ".zip" or Path(o).is_dir()]
+        opponents = [d for d in opponents if d.name in args.opponents] + [resolve_agent(o) for o in paths]
+    print(f"{args.agent} ({deck_name(agent)}) vs {len(opponents)} opponents, {args.games} games each\n")
     print(f"{'opponent':<20} {'deck':<24} {'win rate':>9} {'±95%':>6} {'scored':>7} {'stalled':>8} "
           f"{'errors us/them':>15} {'slowest move':>13}")
 

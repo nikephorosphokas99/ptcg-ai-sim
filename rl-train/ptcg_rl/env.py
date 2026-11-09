@@ -31,8 +31,10 @@ from pathlib import Path
 import numpy as np
 
 from .bots import bot_deck, bot_move, load_bot, random_legal
-from .encoding import RECENT_SLOTS, CounterPlanner, Decision, encode, recent_opponent_cards, visible_cards
-from .engine import Game, all_attacks, all_cards, attack_table, card_meta_table, load_deck, safe_attack_ids
+from .encoding import (ATTACK, BENCH_SLOTS, BENCH_THREAT_AT, END, OFFENSE_AT, RECENT_SLOTS, CounterPlanner, Decision,
+                       HandMemory, PrizeMemory, encode, recent_opponent_cards, visible_cards)
+from .engine import (G_IN_PLAY, META_GUARD, META_RULE, NO_DAMAGE, ON_SELF, Game, all_attacks, all_cards, attack_table,
+                     card_meta_table, load_deck, safe_attack_ids)
 
 
 BASIC_ENERGY = range(1, 9)  # basic energy card ids, equal to the energy type they provide
@@ -130,7 +132,8 @@ class Match:
 
         Finished games report ``info["usage"]``: per game, the learner seat's cards
         played, evolutions, attacks and Abilities by card name (from the engine log
-        and the learner's own picks; the game's very last events can be missed).
+        and the learner's own picks; the game's very last events can be missed),
+        and the tactics counts of ``_note_tactics`` ("tactics: ...").
         """
         self.agent_deck = load_deck(agent_deck)
         self.opponent_decks = {Path(p).stem: load_deck(p) for p in opponent_decks or []}
@@ -195,9 +198,12 @@ class Match:
         self._decks = decks
         self._seen: list[set[int]] = [set(), set()]  # opponent cards each seat has seen
         self._recent = [deque(maxlen=RECENT_SLOTS), deque(maxlen=RECENT_SLOTS)]
+        self._prizes_known = [PrizeMemory(decks[0]), PrizeMemory(decks[1])]
+        self._hands = [HandMemory(), HandMemory()]  # each seat's view of the other's hand
         for planner in self._planners or ():
             planner.reset()
         self._usage = Counter()
+        self._learner_obs = None
         self._sacrifice_turn = None
         self._game = Game(*decks)
         self._observe()
@@ -215,6 +221,7 @@ class Match:
         penalty = self._wasted_energy(int(action)) if learner_moved and self.energy_penalty else 0.0
         if learner_moved:
             self._note_ability(int(action))
+            self._note_tactics(int(action))
         if self._decision.apply(int(action)):
             self._select(self._decision.picked)
             self._decision = None
@@ -251,6 +258,56 @@ class Match:
             return StepResult(reward, done=True, truncated=True, turn=turn, info={**info, "usage": dict(self._usage)})
         return StepResult(reward, turn=turn)
 
+    def _note_tactics(self, action: int) -> None:
+        """Count, for the learner, the plays the v5 features are about. At the end of each of its
+        turns (an attack or End Turn): whether the opponent's Active threatens its Bench and a Bench
+        guard (Shaymin, Rabsca) is in play; whether the opponent's Active is a wall (an Ability that
+        prevents attack damage: Crustle, Cornerstone Mask Ogerpon ex) and one of its Pokémon could
+        do 100+ damage to it. Per attack: blocked to 0 by a wall, and against a wall, by which Pokémon and with
+        what result. ``train.py`` charts the ratios as tactics/*."""
+        obs, f = self._game.obs, self._learner_obs
+        sel = obs.get("select") or {}
+        if f is None or action >= len(sel.get("option") or []):
+            return
+        kind = sel["option"][action].get("type")
+        if kind not in (ATTACK, END):
+            return
+        u, meta = self._usage, self._meta
+        ids, slots = f["slot_ids"], f["slot_feats"]
+        mine = ids[:1 + BENCH_SLOTS]
+        opp_active = int(ids[1 + BENCH_SLOTS])
+        bench = slots[1:1 + BENCH_SLOTS]
+        if (bench[:, BENCH_THREAT_AT] > 0).any() or (bench[:, BENCH_THREAT_AT + 2] > 0).any():
+            u["tactics: turns Bench threatened"] += 1
+            if any(0 < c < len(meta) and meta[c, META_GUARD] == G_IN_PLAY for c in mine):
+                u["tactics: turns Bench threatened, guard in play"] += 1
+        wall = (0 < opp_active < len(meta) and meta[opp_active, META_RULE] == ON_SELF
+                and meta[opp_active, META_RULE + 5] == NO_DAMAGE)
+        if wall:
+            u["tactics: turns vs a wall"] += 1
+            if (slots[:1 + BENCH_SLOTS, OFFENSE_AT][mine > 0] >= 100 / 300).any():  # a real answer: 100+ damage
+                u["tactics: turns vs a wall, answer in play"] += 1
+        # Marnie's Impidimp / Morgrem / Grimmsnarl ex need at most 2 Energy (attacks {D}, {D}{D}, {D}{D};
+        # retreat 1-2): more than 3 is waste, whether attached by hand or by Punk Up.
+        me = (obs.get("current") or {}).get("players", [None, None])[self.seat]
+        for mon in (me["active"] + me["bench"]) if me else []:
+            name = self._card_names.get(mon["id"], "") if mon else ""
+            if name.startswith("Marnie's "):
+                u[f"tactics: turns {name} in play"] += 1
+                u[f"tactics: turns {name} over 3 Energy"] += int(len(mon["energies"]) > 3)
+        if kind != ATTACK:
+            return
+        tac = f["opt_tactical"][action]
+        u["tactics: attacks"] += 1
+        if tac[0] > 0 and tac[1] <= 0:
+            u["tactics: attacks blocked to 0"] += 1
+            if tac.shape[0] > 7 and tac[7] <= 0:
+                u["tactics: attacks blocked to 0, no Bench damage"] += 1
+        if wall:
+            u["tactics: attacks vs a wall"] += 1
+            u["tactics: attacks vs a wall that did damage"] += int(tac[1] > 0)
+            u[f"tactics: attacks vs a wall by {self._card_names.get(int(mine[0]), int(mine[0]))}"] += 1
+
     def _note_ability(self, action: int) -> None:
         """Count the learner's Ability uses by card, and mark a self-Knock-Out one for the refund."""
         obs = self._game.obs
@@ -280,7 +337,9 @@ class Match:
         mover = self._game.to_move
         self._seen[mover].update(visible_cards(self._game.obs["current"], 1 - mover))
         obs = encode(d, self._attacks, my_deck=self._decks[mover], opp_seen=self._seen[mover],
-                     opp_recent=self._recent[mover], card_meta=self._meta)
+                     opp_recent=self._recent[mover], card_meta=self._meta,
+                     prized=self._prizes_known[mover].prized, opp_hand=self._hands[mover].cards())
+        self._learner_obs = obs if mover == self.seat else None
         return Turn(obs, d.mask(), mover == self.seat)
 
     def _select(self, picks: list[int]) -> None:
@@ -288,12 +347,14 @@ class Match:
         self._observe()
 
     def _observe(self) -> None:
-        """Every observation a seat receives feeds that seat's recent-events memory,
-        forced decisions included: the submission sees those too."""
+        """Every observation a seat receives feeds that seat's recent-events and Prize
+        memories, forced decisions included: the submission sees those too."""
         obs = self._game.obs
         if obs.get("current") is not None and not self._game.done:
             me = obs["current"]["yourIndex"]
             self._recent[me].extend(recent_opponent_cards(obs, me))
+            self._prizes_known[me].observe(obs)
+            self._hands[me].observe(obs)
             if me == self.seat:  # each seat's logs hold the events since its own last observation
                 self._count_usage(obs.get("logs") or [])
 

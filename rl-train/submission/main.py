@@ -38,7 +38,7 @@ import json  # noqa: E402
 import numpy as np  # noqa: E402
 
 from ptcg_policy.encoding import (  # noqa: E402
-    RECENT_SLOTS, CounterPlanner, Decision, encode, recent_opponent_cards, visible_cards)
+    RECENT_SLOTS, CounterPlanner, Decision, HandMemory, PrizeMemory, encode, recent_opponent_cards, visible_cards)
 from ptcg_policy.net import load  # noqa: E402
 
 # ISMCTS bundles (``export --ismcts``) ship ismcts.json and search with the engine of
@@ -74,6 +74,8 @@ class _Policy:
         """Forget the last game: opponent cards seen so far feed the policy's memory."""
         self.opp_seen: set[int] = set()
         self.opp_recent: deque[int] = deque(maxlen=RECENT_SLOTS)
+        self.prizes_known = PrizeMemory(self.deck) if self.net is not None else None
+        self.opp_hand = HandMemory()  # the opponent's hand cards known face up
         self.last_turn = -1
         if self.planner is not None:
             self.planner.reset()
@@ -81,6 +83,7 @@ class _Policy:
     def _load(self) -> None:
         self.net, self.attack_table, self.card_meta = load(_resolve("policy.npz").parent)
         self.deck = read_deck_csv()
+        self.prizes_known = PrizeMemory(self.deck)
         # rules.json (written by export): the decisions training plays by rule rather
         # than by policy, so the agent plays them here exactly as it trained.
         rules_path = _resolve("rules.json")
@@ -103,6 +106,8 @@ class _Policy:
         # Every observation feeds the recent-events memory, forced decisions included,
         # exactly as training's Match does.
         self.opp_recent.extend(recent_opponent_cards(obs, state["yourIndex"]))
+        self.prizes_known.observe(obs)
+        self.opp_hand.observe(obs)
         planned = self.planner.pick(obs) if self.planner is not None else None
         if planned is not None:
             return [planned]
@@ -116,11 +121,13 @@ class _Policy:
             # Training updates the memory only when a seat faces a real choice.
             self.opp_seen.update(visible_cards(state, 1 - state["yourIndex"]))
             features = encode(decision, self.attack_table, my_deck=self.deck, opp_seen=self.opp_seen,
-                              opp_recent=self.opp_recent, card_meta=self.card_meta)
+                              opp_recent=self.opp_recent, card_meta=self.card_meta,
+                              prized=self.prizes_known.prized, opp_hand=self.opp_hand.cards())
             logits = self.net({k: v[None].astype(np.float32) for k, v in features.items()})[0]
             action = int(np.where(mask, logits, -np.inf).argmax())
             if self.search is not None:
-                searched = self.search.choose(obs, decision, self.opp_seen, self.opp_recent)
+                searched = self.search.choose(obs, decision, self.opp_seen, self.opp_recent,
+                                              self.prizes_known.prized, self.opp_hand.cards())
                 action = action if searched is None else searched
             if decision.apply(action):
                 break

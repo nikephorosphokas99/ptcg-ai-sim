@@ -46,6 +46,12 @@ from .engine import TRAIN_ROOT, card_table
 from .storage import SampleStore
 
 SELF, RANDOM, BASELINE = "self", "random", "baseline"
+FIXED = "fixed:"  # prefix of other fixed opponents (train.py --fixed-opponents), kept like the baseline
+
+
+def _permanent(name: str) -> bool:
+    """Opponents never evicted or rotated out: random, the baseline and the --fixed-opponents."""
+    return name in (RANDOM, BASELINE) or name.startswith(FIXED)
 
 
 @dataclass
@@ -59,6 +65,8 @@ class Stats:
     baseline_by_deck: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
     # Learner-seat outcomes by opponent deck, against the learner itself and its snapshots
     by_deck: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
+    # Learner-seat reward summed over each finished game, by opponent
+    returns: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
     # Learner-seat card usage summed over usage_games finished games (Match info["usage"])
     usage: Counter = field(default_factory=Counter)
     usage_games: int = 0
@@ -109,6 +117,16 @@ def _launch_workers(match_kwargs: dict, n_workers: int, per_worker: int, seed: i
     return procs, conns
 
 
+def fit_obs(obs: dict, space) -> dict:
+    """``obs`` cut to the keys and feature widths of a model built for ``space``.
+
+    Encodings only ever add keys, or feature columns at the end of a key (e.g. the
+    threat columns of ``slot_feats``), so an older model reads exactly what it trained on.
+    """
+    return {k: obs[k][..., : s.shape[-1]] if obs[k].shape[-1] > s.shape[-1] else obs[k]
+            for k, s in space.spaces.items()}
+
+
 def frozen_copy(policy, device: torch.device):
     """An inference-only copy of an SB3 policy.
 
@@ -139,6 +157,7 @@ class SelfPlayCollector:
         store_capacity: int = 0,
         deterministic: bool = False,
         pool: dict[str, torch.nn.Module | None] | None = None,
+        eval_frac: float = 0.0,
         n_groups: int = 2,
         seed: int = 0,
     ):
@@ -155,13 +174,18 @@ class SelfPlayCollector:
             store_capacity: samples kept on the GPU; 0 records nothing
                 (evaluation). Must exceed the samples recorded while one game is
                 in progress plus one rollout, or old trajectories get dropped.
-            pool: initial opponents by name (default: just the random player).
+            pool: initial opponents by name (default: just the random player; {} for none).
+            eval_frac: with it above 0, the permanent opponents (random, baseline, fixed)
+                are evaluation only: they play this share of new games, whose
+                samples are never recorded, and new training games draw from
+                the learner and its snapshots alone. At 0 they are training opponents.
             n_groups: worker groups that alternate, overlapping game play with
                 inference.
         """
         self.policy, self.device = policy, device
         self.gamma, self.gae_lambda = gamma, gae_lambda
         self.self_play_frac, self.max_pool = self_play_frac, max_pool
+        self.eval_frac = eval_frac
         self.active_snapshots = active_snapshots
         self.record = store_capacity > 0
         self.deterministic = deterministic
@@ -176,12 +200,13 @@ class SelfPlayCollector:
         n_groups = max(1, min(n_groups, n_workers))
         self._groups = [list(range(g, n_workers, n_groups)) for g in range(n_groups)]
         self._pending = [False] * n_groups
-        self.pool: dict[str, torch.nn.Module | None] = dict(pool or {RANDOM: None})
+        self.pool: dict[str, torch.nn.Module | None] = dict(pool if pool is not None else {RANDOM: None})
         self._active = list(self.pool)
 
         self._learner_turn = np.zeros(self.n, bool)
         self._opponent = np.full(self.n, SELF, dtype=object)
         self._length = np.zeros(self.n, int)
+        self._return = np.zeros(self.n, np.float64)
         # Open trajectories by (game, is the match's learner seat):
         # rows of [store id, action, value, log_prob, reward].
         self._traj: dict[tuple[int, bool], list[list]] = defaultdict(list)
@@ -200,7 +225,7 @@ class SelfPlayCollector:
     def add_opponent(self, name: str, policy: torch.nn.Module) -> None:
         """Freeze a copy of ``policy``; keeps random + the newest ``max_pool``."""
         self.pool[name] = frozen_copy(policy, self.device)
-        snapshots = [k for k in self.pool if k not in (RANDOM, BASELINE)]
+        snapshots = [k for k in self.pool if not _permanent(k)]
         if len(snapshots) > self.max_pool:
             del self.pool[snapshots[0]]
         self.rotate_opponents()
@@ -216,19 +241,27 @@ class SelfPlayCollector:
 
     def rotate_opponents(self) -> None:
         """Re-draw which snapshots new games may face: the newest plus random older ones."""
-        snapshots = [k for k in self.pool if k not in (RANDOM, BASELINE)]
+        snapshots = [k for k in self.pool if not _permanent(k)]
         active = snapshots[-1:]
         older = snapshots[:-1]
         n_more = min(len(older), max(self.active_snapshots - 1, 0))
         active += [older[i] for i in self._rng.choice(len(older), n_more, replace=False)] if n_more else []
-        self._active = [k for k in (RANDOM, BASELINE) if k in self.pool] + active
+        self._active = [k for k in self.pool if _permanent(k) and not self.eval_frac] + active
+
+    def evaluators(self) -> list[str]:
+        """Opponents played for evaluation only (see ``eval_frac``)."""
+        return [k for k in self.pool if _permanent(k)] if self.eval_frac > 0 else []
 
     def _new_game(self, i: int, learner: bool) -> None:
-        if self.record and self._rng.random() < self.self_play_frac:
-            self._opponent[i] = SELF
+        evaluators = self.evaluators()
+        if self.record and evaluators and self._rng.random() < self.eval_frac:
+            self._opponent[i] = evaluators[self._rng.integers(len(evaluators))]
+        elif (self.record and self._rng.random() < self.self_play_frac) or not self._active:
+            self._opponent[i] = SELF  # an empty pool (no random player, no snapshot yet): self-play
         else:
             self._opponent[i] = self._active[self._rng.integers(len(self._active))]
         self._length[i] = 0
+        self._return[i] = 0.0
         self._learner_turn[i] = learner
 
     # -- collection -------------------------------------------------------------
@@ -292,7 +325,7 @@ class SelfPlayCollector:
             stored = obs
             # Each policy gets only the keys it was built with, so older
             # architectures (fewer keys) can play against newer ones.
-            obs = {k: obs[k] for k in policy.observation_space.spaces}
+            obs = fit_obs(obs, policy.observation_space)
             if policy is not self.policy:
                 dist = policy.get_distribution(obs, action_masks=masks)
                 actions[idx] = dist.get_actions(deterministic=self.deterministic).cpu().numpy()
@@ -303,7 +336,8 @@ class SelfPlayCollector:
             if not self.record:
                 continue
             seats = self._learner_turn[idx]
-            learning = seats | (self._opponent[idx] == SELF)
+            evaluating = np.isin(self._opponent[idx], self.evaluators())
+            learning = (seats | (self._opponent[idx] == SELF)) & ~evaluating
             if learning.any():
                 sel = torch.as_tensor(np.flatnonzero(learning), device=self.device)
                 ids = self.store.add({k: t[sel] for k, t in stored.items()},
@@ -334,6 +368,7 @@ class SelfPlayCollector:
                 if traj:
                     traj[-1][4] += sign * reward
         self._length[i] += 1
+        self._return[i] += reward
         if not done:
             self._learner_turn[i] = learner
             return
@@ -344,10 +379,14 @@ class SelfPlayCollector:
             # Bot games are decided inside the worker; the collector's draw for them is unused.
             opponent = f"bot:{info['bot']}" if info.get("bot") else self._opponent[i]
             self.stats.outcomes[opponent].append(info["outcome"])
+            self.stats.returns[opponent].append(float(self._return[i]))
             self.stats.bot_failures += info.get("bot_failures", 0)
-            if self._opponent[i] == BASELINE:
+            # Per-deck results count training games only (they set --adaptive-opponents' weights);
+            # evaluation games are charted as eval/* in train.py.
+            evaluation = self._opponent[i] in self.evaluators()
+            if self._opponent[i] == BASELINE and not evaluation:
                 self.stats.baseline_by_deck[info["opp_deck"]].append(info["outcome"])
-            if not info.get("bot") and self._opponent[i] != RANDOM:
+            if not info.get("bot") and self._opponent[i] != RANDOM and not evaluation:
                 self.stats.by_deck[info["opp_deck"]].append(info["outcome"])
         if "usage" in info:
             self.stats.usage.update(info["usage"])

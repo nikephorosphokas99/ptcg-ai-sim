@@ -22,6 +22,7 @@ _BAGS = ("hand_ids", "my_discard_ids", "opp_discard_ids", "view_ids")
 _POINTER_BAGS = _BAGS + ("my_unseen_ids", "opp_seen_ids")
 _ENTITY_PILES = ("my_discard_ids", "opp_discard_ids", "view_ids", "my_unseen_ids", "opp_seen_ids", "opp_recent_ids")
 _SLOTS = 18
+_OPT_OPPONENT = 44  # opt_feats column: the option is the opponent's card (encoding.OPT_OPPONENT)
 
 
 def _relu(x: np.ndarray) -> np.ndarray:
@@ -45,6 +46,7 @@ class Net:
     def __init__(self, params: dict[str, np.ndarray], arch: dict):
         self.p = {k: v.astype(np.float32) for k, v in params.items()}
         self.arch = arch
+        self._entity_table = None  # every card's vector, computed on first use (the same for every observation)
 
     def _lin(self, name: str, x: np.ndarray) -> np.ndarray:
         return x @ self.p[f"{name}.weight"].T + self.p[f"{name}.bias"]
@@ -96,11 +98,19 @@ class Net:
 
     def _entity(self, obs: dict[str, np.ndarray], with_state: bool = False):
         p, fe = self.p, "features_extractor"
-        rows = np.concatenate([p[f"{fe}.embedding.weight"], p["card_static"], p["card_text"]], axis=-1)
-        table = self._lin(f"{fe}.card.2", _relu(self._lin(f"{fe}.card.0", rows)))
-        table[0] = 0.0
+        if self._entity_table is None:
+            rows = np.concatenate([p[f"{fe}.embedding.weight"], p["card_static"], p["card_text"]], axis=-1)
+            self._entity_table = self._lin(f"{fe}.card.2", _relu(self._lin(f"{fe}.card.0", rows)))
+            self._entity_table[0] = 0.0
+        table = self._entity_table
         cards = lambda ids: table[np.clip(np.asarray(ids).astype(np.int64), 0, len(table) - 1)]  # noqa: E731
         kind = p[f"{fe}.kind.weight"]
+
+        # Encodings only add feature columns at the end of a key: read as many as the model was built with
+        # (as collector.fit_obs does in training), so a bundle of an older model runs on a newer encoding.py.
+        d = kind.shape[1]
+        obs = dict(obs, slot_feats=obs["slot_feats"][:, : p[f"{fe}.slot.weight"].shape[1] - 2 * d - 2],
+                   opt_tactical=obs["opt_tactical"][:, : p[f"{fe}.option.weight"].shape[1] - 2 * d - obs["opt_feats"].shape[-1]])
 
         side = np.zeros((_SLOTS, 2), dtype=np.float32)
         side[: _SLOTS // 2, 0] = 1.0
@@ -115,6 +125,24 @@ class Net:
         misc_at = np.flatnonzero(obs["misc_ids"] > 0)
         misc = cards(obs["misc_ids"][misc_at]) + kind[1 + len(_ENTITY_PILES) + misc_at]
         glob = self._lin(f"{fe}.globals", obs["global"][None])
+        ledger_of = None
+        if f"{fe}.ledger.0.weight" in p:  # v4: the deck ledger, see EntityExtractor
+            ledger_ids = obs["ledger_ids"].astype(np.int64)
+            listed = ledger_ids > 0
+            ledger = self._lin(f"{fe}.ledger.2", _relu(self._lin(
+                f"{fe}.ledger.0", np.concatenate([cards(ledger_ids), obs["ledger_feats"]], axis=-1))))
+            ledger = ledger * listed[:, None]
+
+            def ledger_of(ids: np.ndarray) -> np.ndarray:
+                match = (np.asarray(ids).astype(np.int64)[:, None] == ledger_ids[None, :]) & listed[None, :]
+                return match.astype(np.float32) @ ledger
+
+            mine = (np.arange(_SLOTS) < _SLOTS // 2).astype(np.float32)[:, None]
+            slots = slots + (ledger_of(obs["slot_ids"]) * mine) @ p[f"{fe}.ledger_slot.weight"].T
+            hand = hand + ledger_of(obs["hand_ids"][obs["hand_ids"] > 0]) @ p[f"{fe}.ledger_hand.weight"].T
+            glob = glob + (ledger.sum(axis=0) / max(int(listed.sum()), 1)) @ p[f"{fe}.ledger_global.weight"].T
+        if f"{fe}.opp_hand.weight" in p and "opp_hand_ids" in obs:  # v6: the opponent's known hand
+            glob = glob + (cards(obs["opp_hand_ids"]).sum(axis=0) / 10.0)[None] @ p[f"{fe}.opp_hand.weight"].T
         tokens = np.concatenate([glob, slots[present], hand, piles, misc], axis=0)
         for i in range(self.arch["board_layers"]):
             name = f"{fe}.board.{i}"
@@ -131,7 +159,15 @@ class Net:
         options = self._lin(f"{fe}.option", np.concatenate(
             [cards(obs["opt_ids"][:n]), cards(obs["opt_target_ids"][:n]), obs["opt_feats"][:n], obs["opt_tactical"][:n]], axis=-1))
         options = options + gather(src) @ p[f"{fe}.option_src.weight"].T + gather(tgt) @ p[f"{fe}.option_tgt.weight"].T
-        keep = np.flatnonzero(real[:n]) if real[:n].any() else np.array([0])
+        if ledger_of is not None:
+            ours = (obs["opt_feats"][:n, _OPT_OPPONENT] <= 0).astype(np.float32)[:, None]
+            options = options + (ledger_of(obs["opt_ids"][:n]) * ours) @ p[f"{fe}.ledger_option.weight"].T
+        stop_token = bool(self.arch.get("stop_token"))
+        if stop_token:  # STOP as one more option token, never masked (see EntityExtractor)
+            options = np.concatenate([options, p[f"{fe}.stop_embed"][None]], axis=0)
+            keep = np.append(np.flatnonzero(real[:n]), n)
+        else:
+            keep = np.flatnonzero(real[:n]) if real[:n].any() else np.array([0])
         for i in range(self.arch["option_layers"]):
             name = f"{fe}.options.{i}"
             x = self._ln(f"{name}.norm1", options)
@@ -139,6 +175,8 @@ class Net:
             options = options + self._attention(f"{name}.multihead_attn", self._ln(f"{name}.norm2", options), tokens)
             options = options + self._ff(name, self._ln(f"{name}.norm3", options))
         options = self._ln(f"{fe}.out_norm", options)
+        stop = options[n:n + 1] if stop_token else None
+        options = options[:n]
 
         head = "mlp_extractor"
         # Padded option slots are always masked in play; score them as the torch model does
@@ -146,7 +184,10 @@ class Net:
         padded = self._lin(f"{head}.score.2", _relu(self._lin(f"{head}.score.0", np.zeros((1, options.shape[1]), np.float32))))[0, 0]
         logits = np.full(65, padded, dtype=np.float32)
         logits[:n] = self._lin(f"{head}.score.2", _relu(self._lin(f"{head}.score.0", options)))[:, 0]
-        logits[-1] = self._lin(f"{head}.stop.2", _relu(self._lin(f"{head}.stop.0", state)))[0]
+        if stop_token:
+            logits[-1] = self._lin(f"{head}.score.2", _relu(self._lin(f"{head}.score.0", stop)))[0, 0]
+        else:
+            logits[-1] = self._lin(f"{head}.stop.2", _relu(self._lin(f"{head}.stop.0", state)))[0]
         return (logits, state) if with_state else logits
 
     def _common(self, obs: dict[str, np.ndarray], bags: tuple[str, ...]):

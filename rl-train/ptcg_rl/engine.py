@@ -223,6 +223,19 @@ DEF_ANY, DEF_TYPE, DEF_ENERGY_TYPE, DEF_NO_RULE_BOX, DEF_STEVENS = range(5)
 NO_DAMAGE, NO_DAMAGE_AT_LEAST, LESS_AFTER_WR, LESS_BEFORE_WR = 1, 2, 3, 4
 META_FLAGS, META_RULE = 4, 5  # card_meta columns: flags, then the 7 rule fields
 _RULE_FIELDS = 7  # where, attacker condition, its param, defender condition, its param, effect, amount
+META_NAME = META_RULE + _RULE_FIELDS  # card_meta: name id, then evolves-from id
+META_PREV = META_NAME + 1
+META_ATTACKS, N_CARD_ATTACKS = META_PREV + 1, 2  # card_meta: the card's attack ids, 0 for none
+# card_meta: what protects Benched Pokémon from attacks (``_BENCH_GUARDS``; zeros for none):
+# where the card has to be, what it stops (GUARD_* bits), only Pokémon without a Rule Box, only
+# from attackers with at most this much Energy attached (0: any).
+META_GUARD = META_ATTACKS + N_CARD_ATTACKS
+GUARD_FIELDS = 4
+# Where: the Pokémon itself while Benched; any of the owner's Pokémon in play (its Ability covers
+# the whole Bench); one of the owner's Benched Pokémon (covers all of the owner's Pokémon); the
+# Stadium (both players' Benches); an Energy card attached to the Benched Pokémon.
+G_SELF_BENCHED, G_IN_PLAY, G_FROM_BENCH, G_STADIUM, G_ATTACHED = 1, 2, 3, 4, 5
+GUARD_DAMAGE, GUARD_COUNTERS = 1, 2  # attack damage; damage counters put on by attack effects
 
 _TYPE_SYMBOLS = {"C": 0, "G": 1, "R": 2, "W": 3, "L": 4, "P": 5, "F": 6, "D": 7, "M": 8, "N": 9}
 _TYPES = r"((?:\{\w\}(?:, | or |, or )?)+)"  # "{G}, {R}, {W}, or {L}"
@@ -283,6 +296,37 @@ _DAMAGE_RULES = [
 ]
 
 
+# Ability, Stadium and Energy texts that protect Benched Pokémon from attacks (Shaymin's Flower
+# Curtain, Rabsca, Battle Cage, ...), as (pattern, where, what it stops, Rule Box-less only,
+# attacker Energy at most: an int or the match group holding it).
+_BENCH_GUARDS = [
+    (r"prevent all damage done to your benched pokémon that don't have a rule box by attacks from your opponent's",
+     G_IN_PLAY, GUARD_DAMAGE, 1, 0),
+    (r"prevent all damage from and effects of attacks from your opponent's pokémon done to your benched pokémon",
+     G_IN_PLAY, GUARD_DAMAGE | GUARD_COUNTERS, 0, 0),
+    (r"as long as this pokémon is on your bench, prevent all damage from and effects of attacks",
+     G_SELF_BENCHED, GUARD_DAMAGE | GUARD_COUNTERS, 0, 0),
+    (r"as long as this pokémon is on your bench, prevent all damage done to this pokémon by attacks",
+     G_SELF_BENCHED, GUARD_DAMAGE, 0, 0),
+    (r"on your bench, prevent all damage done to each of your pokémon by attacks from your opponent's pokémon "
+     r"that have (\d+) or less energy", G_FROM_BENCH, GUARD_DAMAGE, 0, 1),
+    (r"prevent all damage counters from being placed on benched pokémon \(both yours and your opponent's\) "
+     r"by effects of attacks", G_STADIUM, GUARD_COUNTERS, 0, 0),
+    (r"is on your bench, prevent all damage done to it by attacks", G_ATTACHED, GUARD_DAMAGE, 0, 0),
+]
+
+
+def _bench_guard(card: dict) -> tuple[int, ...] | None:
+    """The first ``_BENCH_GUARDS`` entry one of the card's texts matches, as the ``GUARD_FIELDS`` fields."""
+    for skill in card["skills"]:
+        text = re.sub(r"\s+", " ", skill["text"].replace("’", "'")).lower()
+        for pattern, where, stops, no_rule_box, energy in _BENCH_GUARDS:
+            m = re.search(pattern, text)
+            if m:
+                return where, stops, no_rule_box, int(m[energy]) if energy else 0
+    return None
+
+
 def _damage_rule(card: dict) -> tuple[int, ...] | None:
     """The first ``_DAMAGE_RULES`` entry one of the card's texts matches, as the 7 rule fields."""
     for skill in card["skills"]:
@@ -298,16 +342,20 @@ def _damage_rule(card: dict) -> tuple[int, ...] | None:
 @lru_cache(maxsize=1)
 def card_meta_table() -> np.ndarray:
     """Per card id: [type, Weakness type, Resistance type, Prize cards if Knocked Out, flags,
-    damage rule (7 fields)].
+    damage rule (7 fields), name id, evolves-from id, attack ids (2), Bench guard (4 fields)].
 
     Types are ``EnergyType`` values, -1 for no Weakness / Resistance; Prize cards
     are 1, 2 for Pokémon ex, 3 for Mega Evolution Pokémon ex. Flags are ``FLAG_*`` bits. The
     damage rule (``_DAMAGE_RULES``; zeros for none) is an Ability, Pokémon Tool or Stadium
     that prevents or reduces attack damage. Used for the attack features in
-    ``encoding._tactical``.
+    ``encoding._tactical``. The name id is the lowest card id with the card's name, so
+    reprints compare equal; evolves-from is the name id of the Pokémon it evolves from (0 for
+    none). Used for evolution lines in ``encoding.encode``'s deck ledger. Attack ids (0 for
+    none) let ``encoding._threat`` work out what each Pokémon in play can hit for. The Bench
+    guard (``_BENCH_GUARDS``; zeros for none) protects Benched Pokémon (``encoding._bench_hit``).
     """
     cards = all_cards()
-    table = np.full((max(cards) + 1, META_RULE + _RULE_FIELDS), -1, dtype=np.int16)
+    table = np.full((max(cards) + 1, META_GUARD + GUARD_FIELDS), -1, dtype=np.int16)
     table[:, META_FLAGS:] = 0
     for cid, c in cards.items():
         prizes = 3 if c["megaEx"] else 2 if c["ex"] else 1
@@ -321,7 +369,18 @@ def card_meta_table() -> np.ndarray:
             | FLAG_SPECIAL_ENERGY * (c["cardType"] == 6))
         rule = _damage_rule(c)
         if rule:
-            table[cid, META_RULE:] = rule
+            table[cid, META_RULE:META_NAME] = rule
+        guard = _bench_guard(c)
+        if guard:
+            table[cid, META_GUARD:META_GUARD + GUARD_FIELDS] = guard
+    name_id: dict[str, int] = {}
+    for cid in sorted(cards):
+        name_id.setdefault(cards[cid]["name"], cid)
+    for cid, c in cards.items():
+        table[cid, META_NAME] = name_id[c["name"]]
+        table[cid, META_PREV] = name_id.get(c["evolvesFrom"] or "", 0)
+        attacks = list(c["attacks"])[:N_CARD_ATTACKS]
+        table[cid, META_ATTACKS:META_ATTACKS + N_CARD_ATTACKS] = attacks + [0] * (N_CARD_ATTACKS - len(attacks))
     return table
 
 
@@ -339,13 +398,99 @@ def _expected_damage(attack: dict) -> float:
     return float(m[1]) if m else 0.0
 
 
+# Conditional extra damage ("If a Stadium is in play, this attack does 60 more damage."), as
+# attack_table columns BONUS_KIND, BONUS_AMOUNT (raw damage), BONUS_PARAM; encoding._bonus checks
+# the condition on the board. Only conditions the board shows are covered.
+BONUS_KIND, BONUS_AMOUNT, BONUS_PARAM = 2, 3, 4
+(B_STADIUM, B_DEF_EX, B_PER_DEF_ENERGY, B_DEF_DAMAGED, B_PER_DEF_COUNTER, B_PER_SELF_COUNTER, B_EXTRA_ENERGY,
+ B_PER_BENCH_BOTH, B_PER_OPP_BENCH, B_PER_MY_BENCH, B_PER_OPP_PRIZE_TAKEN, B_DEF_EVOLUTION, B_DEF_POISONED,
+ B_DEF_BURNED, B_PER_SELF_TYPE_ENERGY, B_SELF_TOOL, B_SELF_SPECIAL_ENERGY, B_OPP_PRIZES_AT_MOST, B_SELF_DAMAGED,
+ B_PER_ENERGY_BOTH_ACTIVE, B_COIN) = range(1, 22)
+_BONUS_RULES = [
+    (r"if a stadium is in play, this attack does (\d+) more damage", B_STADIUM, None),
+    (r"if your opponent's active pokémon is a pokémon \{ex\}, this attack does (\d+) more damage", B_DEF_EX, None),
+    (r"this attack does (\d+) more damage for each energy attached to your opponent's active pokémon",
+     B_PER_DEF_ENERGY, None),
+    (r"if your opponent's active pokémon already has any damage counters on it, this attack does (\d+) more damage",
+     B_DEF_DAMAGED, None),
+    (r"this attack does (\d+) more damage for each damage counter on your opponent's active pokémon",
+     B_PER_DEF_COUNTER, None),
+    (r"this attack does (\d+) more damage for each damage counter on this pokémon", B_PER_SELF_COUNTER, None),
+    (r"if this pokémon has at least (\d+) extra energy attached \(in addition to this attack's cost\), "
+     r"this attack does (\d+) more damage", B_EXTRA_ENERGY, "first"),
+    (r"this attack does (\d+) more damage for each benched pokémon \(both yours and your opponent's\)",
+     B_PER_BENCH_BOTH, None),
+    (r"this attack does (\d+) more damage for each of your opponent's benched pokémon", B_PER_OPP_BENCH, None),
+    (r"this attack does (\d+) more damage for each of your benched pokémon", B_PER_MY_BENCH, None),
+    (r"this attack does (\d+) more damage for each prize card your opponent has taken", B_PER_OPP_PRIZE_TAKEN, None),
+    (r"if your opponent's active pokémon is an evolution pokémon, this attack does (\d+) more damage",
+     B_DEF_EVOLUTION, None),
+    (r"if your opponent's active pokémon is poisoned, this attack does (\d+) more damage", B_DEF_POISONED, None),
+    (r"if your opponent's active pokémon is burned, this attack does (\d+) more damage", B_DEF_BURNED, None),
+    (r"this attack does (\d+) more damage for each (\{\w\}) energy attached to this pokémon",
+     B_PER_SELF_TYPE_ENERGY, "type"),
+    (r"if this pokémon has a pokémon tool attached, this attack does (\d+) more damage", B_SELF_TOOL, None),
+    (r"if this pokémon has any special energy attached, this attack does (\d+) more damage",
+     B_SELF_SPECIAL_ENERGY, None),
+    (r"if your opponent has (\d+) or fewer prize cards remaining, this attack does (\d+) more damage",
+     B_OPP_PRIZES_AT_MOST, "first"),
+    (r"if this pokémon has any damage counters on it, this attack does (\d+) more damage", B_SELF_DAMAGED, None),
+    (r"this attack does (\d+) more damage for each energy attached to both active pokémon",
+     B_PER_ENERGY_BOTH_ACTIVE, None),
+    (r"flip a coin\. if heads, this attack does (\d+) more damage", B_COIN, None),
+]
+
+
+def _damage_bonus(attack: dict) -> tuple[int, int, int]:
+    """(kind, amount, param) of the attack's conditional extra damage; zeros for none."""
+    text = re.sub(r"\s+", " ", (attack.get("text") or "").replace("’", "'")).lower()
+    for pattern, kind, extra in _BONUS_RULES:
+        m = re.search(pattern, text)
+        if m:
+            if extra == "first":  # "at least 2 extra Energy ... 120 more": the param comes first
+                return kind, int(m[2]), int(m[1])
+            if extra == "type":
+                return kind, int(m[1]), _type_mask(m[2])
+            return kind, int(m[1]), 0
+    return 0, 0, 0
+
+
+# What an attack does to the opponent's Benched Pokémon, as attack_table columns (raw damage;
+# damage counters x10): damage to one of them (a "1 of your opponent's Pokémon" snipe counts),
+# damage to each, damage counters on one (or "in any way you like"), damage counters on each.
+# Weakness and Resistance never apply to the Bench. Conditions in the text are not checked.
+BENCH_ONE, BENCH_EACH, COUNTERS_ONE, COUNTERS_EACH = 5, 6, 7, 8
+_N = r"(?:1|2|3|one|two)"
+_BENCH_REACH = [
+    (r"does (\d+) damage to each of your opponent's benched pokémon(?! for)", BENCH_EACH, 1),
+    (r"does (\d+) damage to each benched pokémon \(both yours and your opponent's\)", BENCH_EACH, 1),
+    (r"does (\d+) damage to each of your opponent's pokémon(?! for)", BENCH_EACH, 1),
+    (rf"does (\d+) damage to {_N} of your opponent's (?:benched )?pokémon(?! for| that)", BENCH_ONE, 1),
+    (rf"(?:put|place) (\d+) damage counters? on {_N} of your opponent's (?:benched )?pokémon(?! for)", COUNTERS_ONE, 10),
+    (r"(?:put|place) (\d+) damage counters? on your opponent's (?:benched )?pokémon in any way", COUNTERS_ONE, 10),
+    (r"(?:put|place) (\d+) damage counters? on each of your opponent's (?:benched )?pokémon", COUNTERS_EACH, 10),
+]
+
+
+def _bench_reach(attack: dict) -> tuple[float, float, float, float]:
+    """The attack's (``BENCH_ONE``, ``BENCH_EACH``, ``COUNTERS_ONE``, ``COUNTERS_EACH``) in raw damage."""
+    text = re.sub(r"\s+", " ", (attack.get("text") or "").replace("’", "'")).lower()
+    out = [0.0] * 4
+    for pattern, column, scale in _BENCH_REACH:
+        for m in re.finditer(pattern, text):
+            out[column - BENCH_ONE] = max(out[column - BENCH_ONE], float(m[1]) * scale)
+    return tuple(out)
+
+
 @lru_cache(maxsize=1)
 def attack_table() -> np.ndarray:
-    """(damage, energy cost) per attack id, scaled; damage is the expected damage for coin flips."""
+    """Per attack id: (damage, energy cost) scaled, damage being the expected damage for coin flips,
+    then its conditional extra damage (``BONUS_KIND``, ``BONUS_AMOUNT``, ``BONUS_PARAM``), then what it
+    does to the opponent's Bench (``BENCH_ONE`` .. ``COUNTERS_EACH``, raw damage)."""
     attacks = all_attacks()
-    table = np.zeros((max(attacks) + 1, 2), dtype=np.float32)
+    table = np.zeros((max(attacks) + 1, 9), dtype=np.float32)
     for aid, a in attacks.items():
-        table[aid] = (_expected_damage(a) / 300.0, len(a["energies"]) / 5.0)
+        table[aid] = (_expected_damage(a) / 300.0, len(a["energies"]) / 5.0, *_damage_bonus(a), *_bench_reach(a))
     return table
 
 

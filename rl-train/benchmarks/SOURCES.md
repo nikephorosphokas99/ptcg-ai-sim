@@ -14,7 +14,7 @@ copied in: the harness puts the official bindings
 | `venusaur_v1` | mega-venusaur-ex-deck-v1-rule-based-agent | the notebook's hard-coded list |
 | `dragapult_sample` | a-sample-rule-based-agent-dragapult-ex-deck | not in the notebook (a Kaggle dataset): `visualizer/decks/dragapult.csv`, the official sample list its code is written for |
 | `lucario_sample` | a-sample-rule-based-agent-mega-lucario-ex-deck | likewise: `visualizer/decks/mega_lucario_ex.csv` |
-| `iono_sample` | a-sample-rule-based-agent-iono-s-deck | **missing** — add `deck.csv` to enable |
-| `abomasnow_sample` | a-sample-rule-based-agent-mega-abomasnow-ex-deck | **missing** — add `deck.csv` to enable |
+| `iono_sample` | a-sample-rule-based-agent-iono-s-deck | not in the notebook: written from the decklist in its `main.py` (card-ID constants with counts) |
+| `abomasnow_sample` | a-sample-rule-based-agent-mega-abomasnow-ex-deck | likewise, from the decklist in its `main.py` |
 
 A folder without `deck.csv` is skipped.
